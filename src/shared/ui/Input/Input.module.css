@@ -1,0 +1,41 @@
+.root {
+  position: relative;
+  width: 100%;
+}
+
+.input {
+  background: var(--input-background);
+  border: none;
+  outline: none;
+  border-radius: var(--border-radius-15);
+  padding: 14px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  font-size: 16px;
+  width: 100%;
+  color: var(--black);
+}
+
+.input::placeholder {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--input-placeholder);
+}
+
+.input_with_icon {
+  padding: 15px 41px 15px 43px;
+}
+
+.icon {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 15px;
+  left: 14px;
+  color: var(--input-placeholder);
+}

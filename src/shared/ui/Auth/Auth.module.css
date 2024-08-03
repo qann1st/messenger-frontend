@@ -1,0 +1,34 @@
+.root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: var(--chat-background);
+  color: var(--black);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  max-width: 320px;
+  width: 100%;
+}
+
+.form_info {
+  text-align: center;
+}
+
+.error {
+  height: 0;
+  font-size: 14px;
+  color: rgb(223, 83, 83);
+}
+
+.text {
+  font-size: 14px;
+  color: var(--black);
+  text-decoration: none;
+}
