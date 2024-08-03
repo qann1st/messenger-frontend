@@ -1,0 +1,38 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  max-width: 420px;
+  min-width: 220px;
+  width: 100%;
+  padding: var(--spacing-10) var(--spacing-5) 0;
+  background: var(--sidebar-background);
+  height: 100%;
+}
+
+.relative {
+  position: relative;
+  display: flex;
+}
+
+.link {
+  color: var(--black);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 32px;
+  transition: var(--transition);
+}
+
+.link:hover {
+  opacity: 0.7;
+}
+
+.input {
+  margin-bottom: var(--spacing-10);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: var(--spacing-8);
+}
