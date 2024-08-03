@@ -1,0 +1,9 @@
+.root {
+  height: 100%;
+  width: 5px;
+  background-color: var(--sidebar-background);
+  cursor: ew-resize;
+  user-select: none;
+  display: flex;
+  justify-content: flex-end;
+}

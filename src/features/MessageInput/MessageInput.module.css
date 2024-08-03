@@ -1,0 +1,105 @@
+.root {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: transparent;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-direction: column;
+  z-index: 1;
+}
+
+.input {
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 14px 20px;
+  font-weight: 600;
+  font-size: 16px;
+  overflow-y: auto;
+  scrollbar-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+  scrollbar-width: thin;
+  resize: none;
+  transition: var(--transition);
+  color: var(--black);
+  max-height: 94px;
+  width: 100%;
+  white-space: pre-wrap;
+}
+
+.input_wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.input_reply {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.input:hover {
+  scrollbar-color: #c1c1c1 rgba(0, 0, 0, 0);
+}
+
+.input::placeholder {
+  color: var(--input-placeholder);
+}
+
+.content {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon {
+  color: var(--message-background);
+  margin: 0 10px;
+  font-size: 24px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.icon:hover {
+  opacity: 0.7;
+}
+
+.button {
+  border: none;
+  background-color: transparent;
+}
+
+@keyframes fadeIn {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+    visibility: hidden;
+  }
+  to {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+}
+
+.preview {
+  padding: 10px 20px 0;
+  animation: fadeIn 0.2s ease-in-out forwards;
+}
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  max-width: 1280px;
+  flex-direction: column;
+  width: 100%;
+  gap: 10px;
+  background: var(--message-input-background);
+  border-radius: var(--border-radius-15);
+}

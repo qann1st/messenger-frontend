@@ -1,0 +1,23 @@
+.user_info {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  padding: 10px 15px;
+  color: var(--black);
+  background-color: var(--sidebar-background);
+}
+
+.user_title {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.text {
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--black);
+}
+
+.online {
+  color: var(--message-background);
+}
