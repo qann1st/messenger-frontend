@@ -1,0 +1,59 @@
+body[theme='light'] {
+  --white: #ffffff;
+  --black: #000000;
+
+  --user-subtitle-color: #696969;
+
+  --active-user-badge-background: #2b5278;
+  --active-user-subtitle-color: rgba(255, 255, 255, 0.45);
+
+  --message-background: #476cff;
+  --message-background-transparent: rgba(55, 82, 166, 0.1);
+  --message-input-background: #ffffff;
+  --recipient-message-background: #ffffff;
+  --recipient-message-text: #000000;
+  --recipient-reply-text: #ffffff;
+
+  --context-menu-background: rgba(255, 255, 255, 0.7);
+  --context-item-hover-background: rgba(0, 0, 0, 0.2);
+
+  --input-background: #e2e2e2;
+  --input-placeholder: #696969;
+
+  --sidebar-background: #f8f8f8;
+  --chat-background: #ffffff;
+
+  --avatar-gradient: linear-gradient(var(--white), 8%, #81cb6a);
+
+  --color-error: #e53935;
+}
+
+body[theme='dark'] {
+  --white: #ffffff;
+  --black: #ffffff;
+
+  --user-subtitle-color: #a9a9a9;
+
+  --active-user-badge-background: #1e3a56;
+  --active-user-subtitle-color: rgba(255, 255, 255, 0.65);
+
+  --message-background: #476cff;
+  --message-background-transparent: rgba(55, 82, 166, 0.1);
+  --message-input-background: #212425;
+  --recipient-message-background: #212425;
+  --recipient-message-text: #ffffff;
+  --recipient-reply-text: #000000;
+
+  --context-menu-background: rgba(0, 0, 0, 0.2);
+  --context-item-hover-background: rgba(0, 0, 0, 0.4);
+
+  --input-background: #464646;
+  --input-placeholder: #a9a9a9;
+
+  --sidebar-background: #212425;
+  --chat-background: #181a1b;
+
+  --avatar-gradient: linear-gradient(var(--black), 8%, #5a9f46);
+
+  --color-error: #e53935;
+}

@@ -1,0 +1,61 @@
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border: 5px solid var(--message-background);
+  border-bottom-color: transparent;
+  border-radius: var(--border-radius-circle);
+  display: inline-block;
+  animation: rotation 1s linear infinite;
+}
+
+.wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--black);
+}
+
+.wrapper_background {
+  background: var(--chat-background);
+}
+
+.layout {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+body {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+.no-view-transition::view-transition-old(root) {
+  animation: none;
+}
+
+.no-view-transition::view-transition-new(root) {
+  animation: none;
+}
+
+.reverse::view-transition-old(root) {
+  background: none;
+  z-index: 2;
+}

@@ -1,0 +1,30 @@
+:root {
+  --border-radius-1: 2px;
+  --border-radius-2: 4px;
+  --border-radius-3: 6px;
+  --border-radius-4: 8px;
+  --border-radius-5: 10px;
+  --border-radius-6: 12px;
+  --border-radius-8: 16px;
+  --border-radius-10: 20px;
+  --border-radius-12: 24px;
+  --border-radius-15: 30px;
+  --border-radius-circle: 50%;
+  --border-width-regular: 1px;
+  --control-height-small: 40px;
+  --control-height-medium: 48px;
+  --control-height-large: 56px;
+  --icon-small: 18px;
+  --icon-medium: 20px;
+  --icon-large: 24px;
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-7: 28px;
+  --spacing-8: 32px;
+  --spacing-9: 36px;
+  --spacing-10: 40px;
+}
