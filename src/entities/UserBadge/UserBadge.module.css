@@ -1,0 +1,90 @@
+.root {
+  width: 100%;
+  border-radius: 40px;
+  display: flex;
+  transition: var(--transition);
+  opacity: 1;
+  position: relative;
+  text-decoration: none;
+  overflow: hidden;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  min-height: 75px;
+}
+
+.avatar {
+  z-index: 1;
+  left: 0;
+  position: absolute;
+}
+
+.root:hover {
+  opacity: 0.8;
+}
+
+.active {
+  background-color: var(--active-user-badge-background);
+}
+
+.info {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: left;
+  height: 100%;
+  width: 100%;
+  gap: 1px;
+  padding: 0 5px 0 90px;
+}
+
+.name {
+  color: var(--black);
+  font-weight: 700;
+  font-size: 16px;
+  text-wrap: nowrap;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.name_active {
+  color: var(--white);
+}
+
+.subtitle {
+  color: var(--user-subtitle-color);
+  font-weight: 700;
+  font-size: 11px;
+  text-wrap: nowrap;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 260px;
+  width: 100%;
+  padding-right: 8px;
+}
+
+.subtitle_active {
+  color: var(--active-user-subtitle-color);
+}
+
+.ripple {
+  background: rgba(255, 255, 255, 0.2);
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  position: absolute;
+  animation: ripple 0.8s ease-in-out;
+}
+
+@keyframes ripple {
+  from {
+    opacity: 1;
+    transform: scale(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2);
+  }
+}
