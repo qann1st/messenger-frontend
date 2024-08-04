@@ -82,6 +82,11 @@
   margin-left: 7px;
   gap: var(--spacing-1);
   user-select: none;
+  color: var(--white);
+}
+
+.message_info_reverse {
+  color: var(--black);
 }
 
 .preview_reverse {

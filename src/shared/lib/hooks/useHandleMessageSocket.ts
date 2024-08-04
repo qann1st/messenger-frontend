@@ -18,7 +18,7 @@ export const useHandleMessageSocket = () => {
     queryClient.setQueryData(['chat', message.chatId], (oldData: ChatWithPagination) => {
       const user = getUser();
 
-      if (!user) {
+      if (!user || message.sender.id === user.id) {
         return;
       }
 

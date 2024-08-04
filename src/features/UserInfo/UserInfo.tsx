@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, memo } from 'react';
 import { IoArrowBack } from 'react-icons/io5';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -9,7 +9,7 @@ import styles from './UserInfo.module.css';
 
 import { TUserInfoProps } from './UserInfo.types';
 
-const UserInfo: FC<TUserInfoProps> = ({ recipient, hasAvatar = true }) => {
+const UserInfo: FC<TUserInfoProps> = memo(({ recipient, hasAvatar = true }) => {
   const { type, lastChat, setLastChat } = useMobileStore();
   const params = useParams();
   const dialogId = params.dialogId ?? (type !== 'desktop' ? lastChat : '');
@@ -56,6 +56,6 @@ const UserInfo: FC<TUserInfoProps> = ({ recipient, hasAvatar = true }) => {
       </div>
     </div>
   );
-};
+});
 
 export { UserInfo };

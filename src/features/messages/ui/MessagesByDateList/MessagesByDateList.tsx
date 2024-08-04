@@ -23,6 +23,7 @@ const MessagesByDateList: FC<TMessagesByDateListProps> = memo(({ groupedMessages
               sender={message.sender}
               isEdited={message.isEdited}
               updatedAt={message.updatedAt}
+              status={message.status}
             />
           </div>
         ))}

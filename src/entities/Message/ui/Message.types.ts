@@ -5,7 +5,8 @@ export type TMessageProps = {
   replyMessage: Message;
   content: string;
   hasAvatar: boolean;
-  isEdited?: boolean;
   createdAt: string;
   updatedAt: string;
+  status: Message['status'];
+  isEdited?: boolean;
 };

@@ -137,7 +137,6 @@ const MessagesList: FC<TMessagesListProps> = memo(({ groupedMessages, isLoading,
     },
   ];
 
-
   return (
     <div
       className={classNames(

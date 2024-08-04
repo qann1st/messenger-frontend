@@ -1,4 +1,5 @@
 import { type FC, useCallback, useEffect, useState } from 'react';
+import { memo } from 'react';
 
 import { classNames, useMobileStore } from '~/shared';
 
@@ -6,7 +7,7 @@ import styles from './Resizer.module.css';
 
 import type { TResizerProps } from './Resizer.types';
 
-const Resizer: FC<TResizerProps> = ({ elementRef }) => {
+const Resizer: FC<TResizerProps> = memo(({ elementRef }) => {
   const [isResizing, setIsResizing] = useState(false);
   const { type } = useMobileStore();
 
@@ -78,6 +79,6 @@ const Resizer: FC<TResizerProps> = ({ elementRef }) => {
       className={classNames(styles.root, type !== 'desktop' && styles.root_mobile)}
     />
   );
-};
+});
 
 export { Resizer };

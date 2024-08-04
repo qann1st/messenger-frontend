@@ -46,6 +46,7 @@ export interface Message {
   /** @format date-time */
   updatedAt: string;
   isEdited: boolean;
+  status?: 'pending' | 'success' | 'error';
 }
 
 export interface Chat {

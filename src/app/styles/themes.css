@@ -28,6 +28,8 @@ body[theme='light'] {
   --avatar-gradient: linear-gradient(var(--white), 8%, #81cb6a);
 
   --color-error: #e53935;
+  --color-recipient-error: #d46a6a;
+  --color-message-error: #e57373;
 }
 
 body[theme='dark'] {
@@ -60,4 +62,6 @@ body[theme='dark'] {
   --avatar-gradient: linear-gradient(var(--black), 8%, #5a9f46);
 
   --color-error: #e53935;
+  --color-recipient-error: #d46a6a;
+  --color-message-error: #e57373;
 }
