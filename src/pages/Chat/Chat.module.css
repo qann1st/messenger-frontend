@@ -16,6 +16,11 @@
   min-width: 100vw;
 }
 
+.mobile {
+  transform: translateX(-100vw);
+  min-width: 100vw;
+}
+
 .slide {
   transform: translateX(0);
 }

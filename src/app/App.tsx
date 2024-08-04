@@ -14,7 +14,7 @@ const App: FC = () => {
   const { type, lastChat, setType } = useMobileStore();
   const { theme } = useThemeStore();
 
-  const dialogId = useParams().dialogId ?? (type === 'tablet' ? lastChat : '');
+  const dialogId = useParams().dialogId ?? (type !== 'desktop' ? lastChat : '');
 
   useEffect(() => {
     fetchUser();

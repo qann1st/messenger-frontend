@@ -52,7 +52,8 @@ const Resizer: FC<TResizerProps> = ({ elementRef }) => {
   useEffect(() => {
     if (type === 'mobile') {
       if (elementRef.current) {
-        elementRef.current.style.width = '100%';
+        elementRef.current.style.width = '100vw';
+        elementRef.current.style.maxWidth = '100%';
       }
     }
 

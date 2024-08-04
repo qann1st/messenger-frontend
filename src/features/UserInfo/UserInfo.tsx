@@ -12,7 +12,7 @@ import { TUserInfoProps } from './UserInfo.types';
 const UserInfo: FC<TUserInfoProps> = ({ recipient, hasAvatar = true }) => {
   const { type, lastChat, setLastChat } = useMobileStore();
   const params = useParams();
-  const dialogId = params.dialogId ?? (type === 'tablet' ? lastChat : '');
+  const dialogId = params.dialogId ?? (type !== 'desktop' ? lastChat : '');
 
   const navigate = useNavigate();
 

@@ -22,7 +22,7 @@ const Chat: FC = () => {
   const { type, lastChat } = useMobileStore();
 
   const params = useParams();
-  const dialogId = params.dialogId ?? (type === 'tablet' ? lastChat : '');
+  const dialogId = params.dialogId ?? (type !== 'desktop' ? lastChat : '');
   const navigate = useNavigate();
 
   const { isLoading, data, error } = useQuery({
@@ -74,6 +74,7 @@ const Chat: FC = () => {
         styles.root,
         isDark && styles.root_dark,
         type === 'tablet' && styles.tablet,
+        type === 'mobile' && styles.mobile,
         !params.dialogId && styles.slide,
       )}
     >

@@ -18,7 +18,7 @@ const Sidebar = () => {
       className={classNames(
         styles.relative,
         type !== 'desktop' && styles.relative_mobile,
-        type === 'tablet' && dialogId && styles.slide,
+        type !== 'tablet' && dialogId && styles.slide,
       )}
     >
       <div

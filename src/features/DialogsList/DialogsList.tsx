@@ -19,7 +19,7 @@ import styles from './DialogsList.module.css';
 const DialogsList = () => {
   const { type, lastChat } = useMobileStore();
 
-  const dialogId = useParams().dialogId ?? (type === 'tablet' ? lastChat : '');
+  const dialogId = useParams().dialogId ?? (type !== 'desktop' ? lastChat : '');
 
   const { socket, user, setUser } = useUserStore();
   const { contextMenu, contextMenuRef, showContextMenu, hideContextMenu } = useContextMenu<HTMLAnchorElement>();
