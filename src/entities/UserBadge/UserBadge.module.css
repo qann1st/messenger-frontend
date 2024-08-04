@@ -78,6 +78,11 @@
   animation: ripple 0.8s ease-in-out;
 }
 
+.link {
+  text-decoration: none;
+  color: var(--black);
+}
+
 @keyframes ripple {
   from {
     opacity: 1;

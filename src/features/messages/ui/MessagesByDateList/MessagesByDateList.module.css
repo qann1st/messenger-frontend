@@ -1,7 +1,7 @@
 .dateGroup {
   display: flex;
   flex-direction: column-reverse;
-  gap: 3px;
+  gap: var(--spacing-1);
 }
 
 .info {

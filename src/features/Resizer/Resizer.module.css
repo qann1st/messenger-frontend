@@ -7,3 +7,8 @@
   display: flex;
   justify-content: flex-end;
 }
+
+.root_mobile {
+  width: 0;
+  background-color: transparent;
+}

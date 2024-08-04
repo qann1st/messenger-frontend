@@ -6,7 +6,7 @@ export const highlightMessage = (text: string, styles: CSSModuleClasses, isMyMes
   const italicPattern = /__(.*?)__/g;
   let highlightedText = text.replace(
     linkPattern,
-    `<a class="${classNames(styles.link, isMyMessage && styles.my_link)}" href="$1" target="_blank">$1</a>`,
+    `<a class="${classNames(styles.link, isMyMessage && styles.my_link)}" href="$1" target="_blank" rel="nofollow noreferrer">$1</a>`,
   );
   if (highlightedText.match(boldPattern) && highlightedText.match(italicPattern)) {
     highlightedText = highlightedText.replace(boldPattern, `<em class="${styles.boldItalic}">$1</em>`);

@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 
 import { useMessageStore } from '~/entities';
 import { ContextMenu, type Message as TMessage, classNames, useContextMenu, useUserStore } from '~/shared';
+import { Skeleton } from '~/shared/ui/Skeleton';
 
 import styles from './MessagesList.module.css';
 
@@ -102,7 +103,7 @@ const MessagesList: FC<TMessagesListProps> = memo(({ groupedMessages, isLoading,
     socket.emit('delete-message', {
       messageId: selectedMessage?.id,
       roomId: dialogId,
-      recipient: recipient.id,
+      recipient: recipient?.id,
     });
   };
 
@@ -136,13 +137,6 @@ const MessagesList: FC<TMessagesListProps> = memo(({ groupedMessages, isLoading,
     },
   ];
 
-  if (isLoading) {
-    return (
-      <div className={classNames(styles.root, styles.root_center)}>
-        <div className='loader'></div>
-      </div>
-    );
-  }
 
   return (
     <div
@@ -158,17 +152,33 @@ const MessagesList: FC<TMessagesListProps> = memo(({ groupedMessages, isLoading,
       )}
       ref={scrollRef}
     >
-      <MessagesByDateList groupedMessages={groupedMessages} messages={messages} onContextMenu={handleContextMenu} />
-      <ContextMenu
-        ref={contextMenuRef}
-        isToggled={contextMenu.toggled}
-        posX={contextMenu.position.x}
-        posY={contextMenu.position.y}
-        buttons={buttons}
-      />
-      <button onClick={handleArrowClick} className={classNames(styles.arrow, isArrowVisible && styles.arrow_visible)}>
-        <GoChevronDown size={32} />
-      </button>
+      {isLoading || !groupedMessages || !messages ? (
+        <div className={styles.skeletons}>
+          {new Array(30).fill(null).map((_, i) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <span key={i} style={{ alignSelf: Math.random() > 0.5 ? 'flex-end' : 'flex-start' }}>
+              <Skeleton.Rectangle className={styles.skeleton} height={46} />
+            </span>
+          ))}
+        </div>
+      ) : (
+        <>
+          <MessagesByDateList groupedMessages={groupedMessages} messages={messages} onContextMenu={handleContextMenu} />
+          <ContextMenu
+            ref={contextMenuRef}
+            isToggled={contextMenu.toggled}
+            posX={contextMenu.position.x}
+            posY={contextMenu.position.y}
+            buttons={buttons}
+          />
+          <button
+            onClick={handleArrowClick}
+            className={classNames(styles.arrow, isArrowVisible && styles.arrow_visible)}
+          >
+            <GoChevronDown size={32} />
+          </button>
+        </>
+      )}
     </div>
   );
 });

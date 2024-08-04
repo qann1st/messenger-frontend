@@ -1,9 +1,9 @@
 import { type FC, useEffect } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useParams } from 'react-router-dom';
 import { io } from 'socket.io-client';
 
 import { Chat, Home, SignIn, SignInApprove, SignUp, SignUpApprove } from '~/pages';
-import { useThemeStore, useUserStore } from '~/shared';
+import { useMobileStore, useThemeStore, useUserStore } from '~/shared';
 
 import { AuthOutlet, NonAuthOutlet, Providers } from './Providers';
 import { MainLayout } from './Providers/MainLayout';
@@ -11,10 +11,31 @@ import './styles';
 
 const App: FC = () => {
   const { fetchUser, fetching, setSocket } = useUserStore();
+  const { type, lastChat, setType } = useMobileStore();
   const { theme } = useThemeStore();
+
+  const dialogId = useParams().dialogId ?? (type === 'tablet' ? lastChat : '');
 
   useEffect(() => {
     fetchUser();
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const newType = window.matchMedia('(max-width: 600px)').matches
+        ? 'mobile'
+        : window.matchMedia('(max-width: 992px)').matches
+          ? 'tablet'
+          : 'desktop';
+
+      setType(newType);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   useEffect(() => {
@@ -42,7 +63,7 @@ const App: FC = () => {
       <Routes>
         <Route element={<AuthOutlet />}>
           <Route element={<MainLayout />}>
-            <Route index element={<Home />} />
+            <Route index element={dialogId ? <Chat /> : <Home />} />
             <Route path=':dialogId' element={<Chat />} />
           </Route>
         </Route>

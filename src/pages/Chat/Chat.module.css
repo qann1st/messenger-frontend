@@ -1,13 +1,23 @@
 .root {
   width: 100%;
   position: relative;
-  background: url('https://web.telegram.org/a/chat-bg-br.f34cc96fbfb048812820.png');
+  background: url('/assets/background.png');
   background-size: cover;
   background-position: center;
+  transition: var(--transition);
 }
 
 .root_dark {
   background: var(--chat-background);
+}
+
+.tablet {
+  transform: translateX(-50vw);
+  min-width: 100vw;
+}
+
+.slide {
+  transform: translateX(0);
 }
 
 .background {
@@ -18,7 +28,7 @@
   justify-content: center;
   &::before {
     content: '';
-    background: url('https://web.telegram.org/a/chat-bg-pattern-light.ee148af944f6580293ae.png');
+    background: url('/assets/pattern-light.png');
     background-size: 510px auto;
     background-position: top auto;
     mix-blend-mode: overlay;
@@ -32,7 +42,7 @@
 
 .background_dark {
   &::before {
-    background: url('https://web.telegram.org/a/chat-bg-pattern-dark.ad38368a9e8140d0ac7d.png');
+    background: url('/assets/pattern-dark.png');
     mix-blend-mode: unset;
     background-size: 510px auto;
     background-position: top auto;

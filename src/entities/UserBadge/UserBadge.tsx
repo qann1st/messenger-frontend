@@ -96,7 +96,7 @@ const UserBadge: FC<TUserBadgeProps> = memo(
               <p
                 className={classNames(styles.subtitle, isActive && styles.subtitle_active)}
                 dangerouslySetInnerHTML={{
-                  __html: highlightMessage(lastMessage?.split('\\n').join(' ') ?? '', styles, isActive),
+                  __html: highlightMessage(lastMessage?.split('\\n').join(' ') ?? '', styles, false),
                 }}
               />
             )}

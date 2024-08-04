@@ -7,11 +7,40 @@
   padding: var(--spacing-10) var(--spacing-5) 0;
   background: var(--sidebar-background);
   height: 100%;
+  transition: var(--transition);
+}
+
+.root_slide {
+  animation: slide 0.2s ease-in-out;
+  min-width: 0;
+}
+
+@keyframes slide {
+  0% {
+    min-width: 220px;
+  }
+  100% {
+    min-width: 0;
+  }
 }
 
 .relative {
   position: relative;
   display: flex;
+  transition: var(--transition);
+  transform: translateX(0);
+}
+
+.mobile {
+  max-width: 100%;
+}
+
+.relative_mobile {
+  width: 100%;
+}
+
+.slide {
+  transform: translateX(-100%);
 }
 
 .link {

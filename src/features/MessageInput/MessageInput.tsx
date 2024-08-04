@@ -5,7 +5,7 @@ import { IoSend } from 'react-icons/io5';
 import { useParams } from 'react-router-dom';
 
 import { useMessageStore } from '~/entities';
-import { type Message, MessagePreview, classNames, useUserStore } from '~/shared';
+import { type Message, MessagePreview, classNames, useInputAutofocus, useUserStore } from '~/shared';
 
 import styles from './MessageInput.module.css';
 
@@ -29,6 +29,8 @@ const MessageInput: FC<TMessageInputProps> = memo(({ recipient }) => {
   } = useMessageStore();
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
+  useInputAutofocus(textAreaRef);
 
   const handleSubmit = (e?: FormEvent<HTMLFormElement>) => {
     if (e) {
@@ -97,7 +99,7 @@ const MessageInput: FC<TMessageInputProps> = memo(({ recipient }) => {
     if (textAreaRef.current) {
       textAreaRef.current.focus();
     }
-  }, [inputValue, isVisibleEditMessage, isVisibleReplyMessage]);
+  }, [isVisibleEditMessage, isVisibleReplyMessage]);
 
   return (
     <form onSubmit={handleSubmit} className={styles.root}>

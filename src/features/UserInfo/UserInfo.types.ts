@@ -1,6 +1,6 @@
 import { User } from '~/shared';
 
 export type TUserInfoProps = {
-  recipient: User;
+  recipient?: User;
   hasAvatar?: boolean;
 };

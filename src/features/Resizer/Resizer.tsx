@@ -1,6 +1,6 @@
 import { type FC, useCallback, useEffect, useState } from 'react';
 
-import { useThemeStore } from '~/shared';
+import { classNames, useMobileStore } from '~/shared';
 
 import styles from './Resizer.module.css';
 
@@ -8,7 +8,7 @@ import type { TResizerProps } from './Resizer.types';
 
 const Resizer: FC<TResizerProps> = ({ elementRef }) => {
   const [isResizing, setIsResizing] = useState(false);
-  const { theme } = useThemeStore();
+  const { type } = useMobileStore();
 
   const resizeElement = useCallback(
     (e: MouseEvent) => {
@@ -49,10 +49,32 @@ const Resizer: FC<TResizerProps> = ({ elementRef }) => {
     }
   }, []);
 
+  useEffect(() => {
+    if (type === 'mobile') {
+      if (elementRef.current) {
+        elementRef.current.style.width = '100%';
+      }
+    }
+
+    if (type === 'tablet') {
+      if (elementRef.current) {
+        elementRef.current.style.width = '50vw';
+        elementRef.current.style.maxWidth = '100%';
+      }
+    }
+
+    if (type === 'desktop') {
+      if (elementRef.current) {
+        elementRef.current.style.width = localStorage.getItem('sidebarWidth') ?? '400px';
+      }
+    }
+  }, [type]);
+
   return (
-    <div onMouseDown={() => setIsResizing(true)} className={styles.root}>
-      <hr color={theme === 'dark' ? '#212425' : '#ffffff'} />
-    </div>
+    <div
+      onMouseDown={() => setIsResizing(true)}
+      className={classNames(styles.root, type !== 'desktop' && styles.root_mobile)}
+    />
   );
 };
 

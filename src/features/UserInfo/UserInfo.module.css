@@ -21,3 +21,13 @@
 .online {
   color: var(--message-background);
 }
+
+.rect {
+  margin-bottom: 8px;
+}
+
+.back {
+  background-color: transparent;
+  border: none;
+  color: var(--black);
+}

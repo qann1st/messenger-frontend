@@ -10,13 +10,16 @@ import {
   getRecipientFromUsers,
   useContextMenu,
   useHandleOnlineSocket,
+  useMobileStore,
   useUserStore,
 } from '~/shared';
 
 import styles from './DialogsList.module.css';
 
 const DialogsList = () => {
-  const { dialogId } = useParams();
+  const { type, lastChat } = useMobileStore();
+
+  const dialogId = useParams().dialogId ?? (type === 'tablet' ? lastChat : '');
 
   const { socket, user, setUser } = useUserStore();
   const { contextMenu, contextMenuRef, showContextMenu, hideContextMenu } = useContextMenu<HTMLAnchorElement>();
