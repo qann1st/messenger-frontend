@@ -1,6 +1,7 @@
 import { type FC, memo, useRef } from 'react';
 import { BiErrorCircle } from 'react-icons/bi';
 import { FaRegClock } from 'react-icons/fa';
+import { IoCheckmark } from 'react-icons/io5';
 
 import { Avatar, MessagePreview, classNames, formatCreatedTime, highlightMessage, useUserStore } from '~/shared';
 
@@ -50,8 +51,8 @@ const Message: FC<TMessageProps> = memo(
                 {isEdited && 'edited'} {formattedTime}
               </p>
               {status === 'pending' && <FaRegClock size={12} style={{ marginBottom: '2px' }} />}
-              {/* {(status === 'success' || !status) && <IoCheckmark />} */}
-              {true && (
+              {(status === 'success' || !status) && <IoCheckmark />}
+              {status === 'error' && (
                 <BiErrorCircle
                   color={isMyMessage ? 'var(--color-message-error)' : 'var(--color-recipient-error)'}
                   size={16}
