@@ -57,6 +57,7 @@
   align-items: flex-end;
   margin-left: 7px;
   gap: 3px;
+  user-select: none;
 }
 
 .preview_reverse {

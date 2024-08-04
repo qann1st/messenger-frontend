@@ -1,7 +1,16 @@
 import { type FC, memo, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { Avatar, User, classNames, messengerApi, rippleAnimation, useSearchStore, useUserStore } from '~/shared';
+import {
+  Avatar,
+  User,
+  classNames,
+  highlightMessage,
+  messengerApi,
+  rippleAnimation,
+  useSearchStore,
+  useUserStore,
+} from '~/shared';
 
 import styles from './UserBadge.module.css';
 
@@ -84,9 +93,12 @@ const UserBadge: FC<TUserBadgeProps> = memo(
               {firstName} {lastName}
             </p>
             {lastMessage && (
-              <p className={classNames(styles.subtitle, isActive && styles.subtitle_active)}>
-                {lastMessage?.split('\\n').join(' ')}
-              </p>
+              <p
+                className={classNames(styles.subtitle, isActive && styles.subtitle_active)}
+                dangerouslySetInnerHTML={{
+                  __html: highlightMessage(lastMessage?.split('\\n').join(' ') ?? '', styles, isActive),
+                }}
+              />
             )}
           </div>
         </Link>
