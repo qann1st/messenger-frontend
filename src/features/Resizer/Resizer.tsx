@@ -50,6 +50,13 @@ const Resizer: FC<TResizerProps> = ({ elementRef }) => {
   }, []);
 
   useEffect(() => {
+    if (type === 'desktop') {
+      if (elementRef.current) {
+        elementRef.current.style.width = localStorage.getItem('sidebarWidth') ?? '400px';
+        elementRef.current.style.maxWidth = '30vw';
+      }
+    }
+
     if (type === 'mobile') {
       if (elementRef.current) {
         elementRef.current.style.width = '100vw';
@@ -61,12 +68,6 @@ const Resizer: FC<TResizerProps> = ({ elementRef }) => {
       if (elementRef.current) {
         elementRef.current.style.width = '50vw';
         elementRef.current.style.maxWidth = '100%';
-      }
-    }
-
-    if (type === 'desktop') {
-      if (elementRef.current) {
-        elementRef.current.style.width = localStorage.getItem('sidebarWidth') ?? '400px';
       }
     }
   }, [type]);

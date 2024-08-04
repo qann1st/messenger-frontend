@@ -68,7 +68,7 @@ const SignInApprove: FC = () => {
     >
       <Input
         type='text'
-        name='code'
+        name='approveCode'
         onChange={handleChange}
         value={values.approveCode}
         placeholder='Approve code'

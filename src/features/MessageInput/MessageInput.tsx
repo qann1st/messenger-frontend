@@ -97,7 +97,18 @@ const MessageInput: FC<TMessageInputProps> = memo(({ recipient }) => {
 
   useEffect(() => {
     if (textAreaRef.current) {
-      textAreaRef.current.focus();
+      const inputs = document.querySelectorAll('input');
+
+      let inputInFocus = false;
+      inputs.forEach((input) => {
+        if (document.activeElement === input) {
+          inputInFocus = true;
+        }
+      });
+
+      if (!inputInFocus) {
+        textAreaRef.current.focus();
+      }
     }
   }, [isVisibleEditMessage, isVisibleReplyMessage]);
 
