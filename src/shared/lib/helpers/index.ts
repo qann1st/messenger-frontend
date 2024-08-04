@@ -4,4 +4,5 @@ export * from './formatMessageDate';
 export * from './formatOnlineDate';
 export * from './getRecipientFromUsers';
 export * from './groupMessageByDate';
+export * from './highlightMessage';
 export * from './rippleAnimation';

@@ -10,7 +10,7 @@
 }
 
 .dialogs:hover {
-  scrollbar-color: #c1c1c1 rgba(0, 0, 0, 0);
+  scrollbar-color: var(--scrollbar-color) rgba(0, 0, 0, 0);
 }
 
 .text {

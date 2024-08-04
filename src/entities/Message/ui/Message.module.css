@@ -62,3 +62,29 @@
 .preview_reverse {
   color: #000;
 }
+
+.link {
+  color: var(--black);
+  transition: var(--transition);
+}
+
+.link:hover {
+  opacity: 0.8;
+}
+
+.my_link {
+  color: var(--white);
+}
+
+.bold {
+  font-weight: 600;
+}
+
+.italic {
+  font-style: italic;
+}
+
+.boldItalic {
+  font-style: italic;
+  font-weight: 600;
+}

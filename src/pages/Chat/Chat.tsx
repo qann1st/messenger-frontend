@@ -37,7 +37,7 @@ const Chat: FC = () => {
     if (scrollRef.current && user && data && data.data[0] && data.data[0].sender.id === user.id) {
       scrollRef.current.scrollTo({ behavior: 'smooth', top: scrollRef.current.scrollHeight });
     }
-  }, [data?.data, scrollRef.current]);
+  }, [data?.groupedMessages]);
 
   useEffect(() => {
     if (error) {

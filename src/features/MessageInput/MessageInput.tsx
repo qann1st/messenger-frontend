@@ -5,7 +5,7 @@ import { IoSend } from 'react-icons/io5';
 import { useParams } from 'react-router-dom';
 
 import { useMessageStore } from '~/entities';
-import { type Message, MessagePreview, classNames, useUserStore } from '~/shared';
+import { type Message, MessagePreview, classNames, useOutsideClick, useUserStore } from '~/shared';
 
 import styles from './MessageInput.module.css';
 
@@ -24,9 +24,13 @@ const MessageInput: FC<TMessageInputProps> = memo(({ recipient }) => {
     setIsVisibleEditMessage,
     inputValue,
     setInputValue,
+    setEditMessage,
+    setReplyMessage,
   } = useMessageStore();
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
+  useOutsideClick(textAreaRef, () => textAreaRef.current?.focus());
 
   const handleSubmit = (e?: FormEvent<HTMLFormElement>) => {
     if (e) {
@@ -46,6 +50,7 @@ const MessageInput: FC<TMessageInputProps> = memo(({ recipient }) => {
           content: formattedMessage,
           recipient,
         });
+        setEditMessage(null);
         setIsVisibleEditMessage(false);
       } else {
         socket?.emit('message', {
@@ -54,6 +59,7 @@ const MessageInput: FC<TMessageInputProps> = memo(({ recipient }) => {
           chatId: dialogId,
           replyMessage: replyMessage?.id,
         });
+        setReplyMessage(null);
         setIsVisibleReplyMessage(false);
       }
 
@@ -88,6 +94,12 @@ const MessageInput: FC<TMessageInputProps> = memo(({ recipient }) => {
 
     textAreaRef.current.style.height = `${height > 94 ? 94 : height}px`;
   }, [inputValue]);
+
+  useEffect(() => {
+    if (textAreaRef.current) {
+      textAreaRef.current.focus();
+    }
+  }, [inputValue, isVisibleEditMessage, isVisibleReplyMessage]);
 
   return (
     <form onSubmit={handleSubmit} className={styles.root}>

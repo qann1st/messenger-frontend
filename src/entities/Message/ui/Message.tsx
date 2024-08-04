@@ -1,6 +1,6 @@
 import { type FC, memo } from 'react';
 
-import { Avatar, MessagePreview, classNames, formatCreatedTime, useUserStore } from '~/shared';
+import { Avatar, MessagePreview, classNames, formatCreatedTime, highlightMessage, useUserStore } from '~/shared';
 
 import styles from './Message.module.css';
 
@@ -29,15 +29,18 @@ const Message: FC<TMessageProps> = memo(
             />
           )}
           <div className={styles.content_info}>
-            <p className={styles.text}>
+            <div>
               {content.split('\\n').map((line, i) => (
                 // eslint-disable-next-line react/no-array-index-key
                 <span key={i}>
-                  {line}
+                  <p
+                    className={styles.text}
+                    dangerouslySetInnerHTML={{ __html: highlightMessage(line, styles, isMyMessage) }}
+                  />
                   {i < content.split('\\n').length - 1 && <br />}
                 </span>
               ))}
-            </p>
+            </div>
             <div className={styles.message_info}>
               <p className={styles.time} title={`${formatCreatedTime(createdAt, updatedAt)}`}>
                 {isEdited && 'edited'} {formattedTime}

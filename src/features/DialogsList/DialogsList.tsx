@@ -56,8 +56,8 @@ const DialogsList = () => {
     <div className={styles.dialogs}>
       {user?.dialogs.length ? (
         user.dialogs.map((dialog) => {
-          const recipient = getRecipientFromUsers(dialog.users, user.id);
-          const messages = dialog.messages[0];
+          const recipient = getRecipientFromUsers(dialog.users ?? [], user.id ?? '');
+          const messages = dialog?.messages[0] ?? [];
 
           return (
             <UserBadge

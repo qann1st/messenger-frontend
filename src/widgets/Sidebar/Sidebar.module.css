@@ -1,7 +1,7 @@
 .root {
   display: flex;
   flex-direction: column;
-  max-width: 420px;
+  max-width: 30vw;
   min-width: 220px;
   width: 100%;
   padding: var(--spacing-10) var(--spacing-5) 0;
