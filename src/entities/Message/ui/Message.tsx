@@ -51,7 +51,7 @@ const Message: FC<TMessageProps> = memo(
                 {isEdited && 'edited'} {formattedTime}
               </p>
               {status === 'pending' && <FaRegClock size={12} style={{ marginBottom: '2px' }} />}
-              {(status === 'success' || !status) && <IoCheckmark />}
+              {(status === 'success' || !status) && isMyMessage && <IoCheckmark />}
               {status === 'error' && (
                 <BiErrorCircle
                   color={isMyMessage ? 'var(--color-message-error)' : 'var(--color-recipient-error)'}
