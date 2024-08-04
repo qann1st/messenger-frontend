@@ -18,11 +18,15 @@ const Sidebar = () => {
       className={classNames(
         styles.relative,
         type !== 'desktop' && styles.relative_mobile,
-        type !== 'tablet' && dialogId && styles.slide,
+        type !== 'desktop' && dialogId && styles.slide,
       )}
     >
       <div
-        className={classNames(styles.root, type === 'mobile' && styles.mobile, dialogId && styles.root_slide)}
+        className={classNames(
+          styles.root,
+          type === 'mobile' && styles.mobile,
+          dialogId && type !== 'desktop' && styles.root_slide,
+        )}
         ref={sidebarRef}
       >
         <div className={styles.header}>
