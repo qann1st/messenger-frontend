@@ -22,7 +22,7 @@ const DialogsList = () => {
   const dialogId = useParams().dialogId ?? (type !== 'desktop' ? lastChat : '');
 
   const { socket, user, setUser } = useUserStore();
-  const { contextMenu, contextMenuRef, showContextMenu, hideContextMenu } = useContextMenu<HTMLAnchorElement>();
+  const { contextMenu, contextMenuRef, showContextMenu, hideContextMenu } = useContextMenu();
 
   const [selectedDialog, setSelectedDialog] = useState<Chat | null>(null);
 
