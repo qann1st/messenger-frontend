@@ -156,7 +156,11 @@ const MessagesList: FC<TMessagesListProps> = memo(({ groupedMessages, isLoading,
           {new Array(30).fill(null).map((_, i) => (
             // eslint-disable-next-line react/no-array-index-key
             <span key={i} style={{ alignSelf: Math.random() > 0.5 ? 'flex-end' : 'flex-start' }}>
-              <Skeleton.Rectangle className={styles.skeleton} height={46} />
+              <Skeleton.Rectangle
+                className={styles.skeleton}
+                width={100 * (Math.random() > 0.5 ? 2 : 1)}
+                height={46 * (Math.random() > 0.5 ? 2 : 1)}
+              />
             </span>
           ))}
         </div>

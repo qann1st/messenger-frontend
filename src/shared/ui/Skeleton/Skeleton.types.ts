@@ -7,13 +7,13 @@ export type TSkeletonCircleProps = TSkeletonProps & {
 };
 
 export type TSkeletonRectangleProps = TSkeletonProps & {
-  width?: number;
-  height?: number;
+  width?: number | string;
+  height?: number | string;
 };
 
 export type TSkeletonComponentProps = TSkeletonProps & {
   type: 'circle' | 'rectangle';
-  size?: number;
-  width?: number;
-  height?: number;
+  size?: number | string;
+  width?: number | string;
+  height?: number | string;
 };

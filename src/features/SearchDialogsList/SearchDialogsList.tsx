@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 
 import { UserBadge } from '~/entities';
 import { useSearchStore } from '~/shared';
+import { Skeleton } from '~/shared/ui/Skeleton';
 
 import styles from './SearchDialogsList.module.css';
 
@@ -12,8 +13,11 @@ const SearchDialogsList = () => {
 
   if (fetching) {
     return (
-      <div className='wrapper'>
-        <div className='loader' />
+      <div className={styles.dialogs}>
+        {new Array(10).fill(null).map((_, i) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <Skeleton.Rectangle key={i} className={styles.skeleton} width='100%' height='75px' />
+        ))}
       </div>
     );
   }
