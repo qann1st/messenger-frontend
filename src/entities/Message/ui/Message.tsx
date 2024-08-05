@@ -1,4 +1,4 @@
-import { type FC, memo, useRef } from 'react';
+import { type FC, memo, useEffect, useRef, useState } from 'react';
 import { BiErrorCircle } from 'react-icons/bi';
 import { FaRegClock } from 'react-icons/fa';
 import { IoCheckmark } from 'react-icons/io5';
@@ -16,12 +16,24 @@ const Message: FC<TMessageProps> = memo(
     const { openModal, setImageLink } = useImageModalStore();
 
     const messageRef = useRef<HTMLDivElement>(null);
+    const imageRef = useRef<HTMLImageElement>(null);
+
+    const [smallMessage, setSmallMessage] = useState(false);
 
     const date = new Date(updatedAt !== createdAt ? updatedAt : createdAt);
     const timeFormatter = new Intl.DateTimeFormat('default', { hour: '2-digit', minute: '2-digit', hour12: false });
     const formattedTime = timeFormatter.format(date);
 
     const isMyMessage = sender.id === user?.id;
+
+    useEffect(() => {
+      console.log(imageRef.current?.width);
+      if (imageRef.current) {
+        if (imageRef.current.width && imageRef.current.width < 321) {
+          setSmallMessage(true);
+        }
+      }
+    }, [imageRef.current]);
 
     return (
       <div ref={messageRef} className={classNames(styles.root, isMyMessage && styles.reverse)}>
@@ -32,6 +44,7 @@ const Message: FC<TMessageProps> = memo(
             !isMyMessage && styles.content_reverse,
             images.length && replyMessage.content && styles.content_image_reply,
             images.length && styles.content_image,
+            smallMessage && styles.small_message,
           )}
         >
           {replyMessage.chatId && (
@@ -48,6 +61,7 @@ const Message: FC<TMessageProps> = memo(
                 setImageLink(images[0]);
                 openModal();
               }}
+              ref={imageRef}
               className={classNames(styles.image, replyMessage && styles.image_reply, !content && styles.only_image)}
               src={images[0]}
               alt=''

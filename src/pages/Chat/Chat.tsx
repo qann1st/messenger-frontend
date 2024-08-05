@@ -75,18 +75,31 @@ const Chat: FC = () => {
 
   const handleDragStart = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    setDragging(true);
+    if (!dragging) {
+      setDragging(true);
+    }
+  };
+
+  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    if (!dragging) {
+      setDragging(true);
+    }
   };
 
   const handleDragLeave = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    setDragging(false);
+    if (dragging) {
+      setDragging(false);
+    }
   };
 
   const handleDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    setDragging(false);
+    if (dragging) {
+      setDragging(false);
+    }
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0 && recipient) {
       openModal();
       messengerApi.uploadFile(e.dataTransfer.files[0]).then((images) => {
@@ -109,11 +122,11 @@ const Chat: FC = () => {
         !params.dialogId && styles.slide,
       )}
       onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
-      onDragOver={handleDragStart}
       onDrop={handleDrop}
     >
-      {dragging && <div className={styles.drag_area}>Drop here!</div>}
+      <div className={classNames(dragging && styles.dragging)} />
       <UserInfo recipient={recipient} />
       <div className={classNames(styles.background, isDark && styles.background_dark)}>
         <MessagesList

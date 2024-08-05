@@ -27,11 +27,11 @@
   position: relative;
   display: flex;
   transition: var(--transition);
-  transform: translateX(0);
 }
 
 .mobile {
   max-width: 100%;
+  transform: translateX(0);
 }
 
 .relative_mobile {

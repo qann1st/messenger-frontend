@@ -45,6 +45,12 @@
   position: relative;
 }
 
+.small_message {
+  max-width: 320px;
+  display: flex;
+  align-items: center;
+}
+
 .content_info {
   display: flex;
   justify-content: space-between;
@@ -74,6 +80,7 @@
 .image {
   border-top-left-radius: var(--border-radius-8);
   border-top-right-radius: var(--border-radius-8);
+  max-width: fit-content;
   width: auto;
   height: auto;
 }
