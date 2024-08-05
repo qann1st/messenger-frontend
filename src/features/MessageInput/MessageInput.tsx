@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import { ChangeEvent, type FC, FormEvent, KeyboardEvent, memo, useEffect, useRef } from 'react';
 import { BsReply } from 'react-icons/bs';
 import { GoPaperclip } from 'react-icons/go';
@@ -48,7 +49,8 @@ const MessageInput: FC<TMessageInputProps> = memo(
       setEditMessage,
       setReplyMessage,
     } = useMessageStore();
-    const { isModalOpen, openModal, closeModal, setFile, setRecipient, setDialogId } = useImageSendModalStore();
+    const { isModalOpen, openModal, closeModal, setFile, setRecipient, setDialogId, setError } =
+      useImageSendModalStore();
 
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
     const filesInputRef = useRef<HTMLInputElement>(null);
@@ -231,15 +233,27 @@ const MessageInput: FC<TMessageInputProps> = memo(
 
     const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
       if (e.target.files) {
+        setFile('');
+        setRecipient('');
+        setDialogId('');
         openModal();
-        messengerApi.uploadFile(e.target.files[0]).then((data) => {
-          setFile(data[0]);
-          setRecipient(recipient);
-          setDialogId(dialogId ?? '');
-          if (textAreaRef.current) {
-            textAreaRef.current.blur();
-          }
-        });
+        messengerApi
+          .uploadFile(e.target.files[0])
+          .then((data) => {
+            setFile(data[0]);
+            setRecipient(recipient);
+            setDialogId(dialogId ?? '');
+            if (textAreaRef.current) {
+              textAreaRef.current.blur();
+            }
+          })
+          .catch((err) => {
+            if (err instanceof AxiosError) {
+              if (err.code === '413') {
+                setError('File too large');
+              }
+            }
+          });
       }
     };
 
