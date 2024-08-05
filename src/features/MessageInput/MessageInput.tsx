@@ -222,6 +222,9 @@ const MessageInput: FC<TMessageInputProps> = memo(
 
     const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
       if (e.target.files) {
+        setFile('');
+        setRecipient('');
+        setDialogId( '');
         openModal();
         messengerApi.uploadFile(e.target.files[0]).then((data) => {
           setFile(data[0]);

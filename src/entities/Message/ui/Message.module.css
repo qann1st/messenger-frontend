@@ -74,6 +74,8 @@
 .image {
   border-top-left-radius: var(--border-radius-8);
   border-top-right-radius: var(--border-radius-8);
+  width: auto;
+  height: auto;
 }
 
 .message_preview {
