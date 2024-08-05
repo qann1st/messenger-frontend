@@ -81,13 +81,8 @@
   transition: var(--transition);
 }
 
-.icon:hover {
-  color: var(--message-background);
-}
-
 .icon_button {
   color: var(--outline-icon-button-color);
-  margin: 0 10px;
   font-size: 24px;
   cursor: pointer;
   transition: var(--transition);
@@ -99,8 +94,24 @@
   align-items: center;
 }
 
+.input_voice {
+  padding-left: 20px;
+}
+
+.paper_clip {
+  margin: 0 10px;
+}
+
 .icon_button:hover {
   color: var(--message-background);
+}
+
+.icon:hover {
+  color: var(--message-background);
+}
+
+.button_delete:hover {
+  color: var(--color-error);
 }
 
 .button {
@@ -135,4 +146,31 @@
   gap: 10px;
   background: var(--message-input-background);
   border-radius: var(--border-radius-15);
+}
+
+.record_info {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--black);
+}
+
+.recording {
+  width: 12.5px;
+  height: 12.5px;
+  border-radius: var(--border-radius-circle);
+  background-color: var(--color-error);
+  animation: infinite 1s recording;
+}
+
+@keyframes recording {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }

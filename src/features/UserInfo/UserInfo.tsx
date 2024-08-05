@@ -2,8 +2,7 @@ import { FC, memo } from 'react';
 import { IoArrowBack } from 'react-icons/io5';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { Avatar, classNames, formatOnlineDate, useMobileStore } from '~/shared';
-import { Skeleton } from '~/shared/ui/Skeleton';
+import { Avatar, Skeleton, classNames, formatOnlineDate, useMobileStore } from '~/shared';
 
 import styles from './UserInfo.module.css';
 

@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { classNames } from '~/shared/lib';
+import { classNames } from '~/shared';
 
 import styles from './Skeleton.module.css';
 

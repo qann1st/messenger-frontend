@@ -26,6 +26,7 @@ const MessagesByDateList: FC<TMessagesByDateListProps> = memo(({ groupedMessages
               status={message.status}
               readed={message.readed ?? []}
               images={message.images ?? []}
+              voiceMessage={message.voiceMessage}
             />
           </div>
         ))}

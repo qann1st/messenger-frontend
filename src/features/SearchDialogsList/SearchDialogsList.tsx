@@ -1,8 +1,7 @@
 import { useParams } from 'react-router-dom';
 
 import { UserBadge } from '~/entities';
-import { useSearchStore } from '~/shared';
-import { Skeleton } from '~/shared/ui/Skeleton';
+import { Skeleton, useSearchStore } from '~/shared';
 
 import styles from './SearchDialogsList.module.css';
 

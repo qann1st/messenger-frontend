@@ -18,9 +18,10 @@ export const useHandleMessageSocket = () => {
     queryClient.setQueryData(['chat', message.chatId], (oldData: ChatWithPagination) => {
       const user = getUser();
 
-      if (!user || message.sender.id === user.id) {
+      if (!user || (message.sender.id === user.id && !message.voiceMessage)) {
         return;
       }
+      console.log(message);
 
       const dialog = user.dialogs.find((d) => d.id === message.chatId);
 
@@ -161,23 +162,27 @@ export const useHandleMessageSocket = () => {
         return oldData;
       }
 
-      const readedIds = [dialog[0].id, dialog[1].id];
+      if (oldData) {
+        const readedIds = [dialog[0].id, dialog[1].id];
 
-      const updatedData = oldData.data.map((msg) => ({ ...msg, readed: readedIds }));
+        const updatedData = oldData.data.map((msg) => ({ ...msg, readed: readedIds }));
 
-      const updatedGroupedMessages = Object.keys(oldData.groupedMessages).reduce(
-        (acc, key) => {
-          acc[key] = oldData.groupedMessages[key].map((msg) => ({ ...msg, readed: readedIds }));
-          return acc;
-        },
-        {} as { [key: string]: Message[] },
-      );
+        const updatedGroupedMessages = Object.keys(oldData.groupedMessages).reduce(
+          (acc, key) => {
+            acc[key] = oldData.groupedMessages[key].map((msg) => ({ ...msg, readed: readedIds }));
+            return acc;
+          },
+          {} as { [key: string]: Message[] },
+        );
 
-      return {
-        ...oldData,
-        data: updatedData,
-        groupedMessages: updatedGroupedMessages,
-      };
+        return {
+          ...oldData,
+          data: updatedData,
+          groupedMessages: updatedGroupedMessages,
+        };
+      }
+
+      return oldData;
     });
   };
 

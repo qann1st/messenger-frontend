@@ -6,6 +6,7 @@ export const useMessageStore = create<TMessageState>((set, get) => ({
   replyMessage: null,
   isVisibleReplyMessage: false,
   isVisibleEditMessage: false,
+  isAudioMessage: false,
   selectedMessage: null,
   editMessage: null,
   inputValue: '',
@@ -18,4 +19,5 @@ export const useMessageStore = create<TMessageState>((set, get) => ({
   setEditMessage: (message) => set({ editMessage: message }),
   getReplyMessage: () => get().replyMessage,
   setOtherInputFocus: (value) => set({ otherInputFocus: value }),
+  setIsAudioMessage: (value) => set({ isAudioMessage: value }),
 }));

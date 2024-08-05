@@ -37,7 +37,8 @@ const MessagePreview: FC<TMessagePreviewProps> = memo(
               {message?.sender.firstname}
             </p>
             <p className={classNames(styles.reply_text, isColor && styles.reply_text_black)}>
-              {message?.content ? message.content.split('\\n').join(' ') : 'Photo'}
+              {message?.voiceMessage && '🎤 Voice message'}
+              {message?.content ? message.content.split('\\n').join(' ') : message?.images?.[0] && 'Photo'}
             </p>
           </div>
         </div>
@@ -55,7 +56,8 @@ const MessagePreview: FC<TMessagePreviewProps> = memo(
               {message?.sender.firstname}
             </p>
             <p className={classNames(styles.reply_text, isColor && styles.reply_text_black)}>
-              {message?.content ? message.content.split('\\n').join(' ') : 'Photo'}
+              {message?.voiceMessage && '🎤 Voice message'}
+              {message?.content ? message.content.split('\\n').join(' ') : message?.images?.[0] && 'Photo'}
             </p>
           </div>
         </div>

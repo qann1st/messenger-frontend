@@ -98,6 +98,21 @@
   max-width: 95vw;
 }
 
+.message_preview_voice {
+  padding-bottom: 10px;
+}
+
+.skeleton {
+  display: flex;
+  gap: 10px;
+}
+
+.skeleton_text {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
 .content_reverse {
   background: var(--recipient-message-background);
 }

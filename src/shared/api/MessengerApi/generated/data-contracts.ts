@@ -48,6 +48,7 @@ export interface Message {
   updatedAt: string;
   isEdited?: boolean;
   readed?: string[];
+  voiceMessage?: string;
   status?: 'pending' | 'success' | 'error';
 }
 

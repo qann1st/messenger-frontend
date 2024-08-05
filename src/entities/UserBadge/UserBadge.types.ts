@@ -10,5 +10,6 @@ export type TUserBadgeProps = {
   isSearch?: boolean;
   userId?: string;
   lastMessageImage?: string[];
+  lastMessageVoice?: string;
   showContextMenu?: (e: MouseEvent<HTMLAnchorElement>) => void;
 };

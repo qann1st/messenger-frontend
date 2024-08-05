@@ -24,6 +24,7 @@ const UserBadge: FC<TUserBadgeProps> = memo(
     isOnline,
     lastMessage,
     lastMessageImage,
+    lastMessageVoice,
     isActive,
     href,
     userId,
@@ -72,9 +73,7 @@ const UserBadge: FC<TUserBadgeProps> = memo(
             <p className={classNames(styles.name, isActive && styles.name_active)}>
               {firstName} {lastName}
             </p>
-            <p className={classNames(styles.subtitle, isActive && styles.subtitle_active)}>
-              {lastMessage?.split('\\n').join(' ')}
-            </p>
+            <p className={classNames(styles.subtitle, isActive && styles.subtitle_active)}>{lastMessage}</p>
           </div>
         </button>
       );
@@ -116,7 +115,8 @@ const UserBadge: FC<TUserBadgeProps> = memo(
                 />
               )}
               <p className={classNames(styles.subtitle, isActive && styles.subtitle_active)}>
-                {!lastMessage && 'Photo'}
+                {lastMessageImage?.[0] && 'Photo'}
+                {lastMessageVoice && '🎤 Voice message'}
               </p>
             </div>
           </div>

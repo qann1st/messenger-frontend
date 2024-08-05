@@ -72,6 +72,7 @@ const DialogsList = () => {
               lastName={recipient?.lastname}
               lastMessage={messages?.content ?? ''}
               lastMessageImage={messages.images}
+              lastMessageVoice={messages.voiceMessage}
               showContextMenu={(e) => handleContextMenu(e, dialog)}
             />
           );

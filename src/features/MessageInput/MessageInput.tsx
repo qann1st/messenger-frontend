@@ -1,7 +1,8 @@
-import { ChangeEvent, type FC, FormEvent, KeyboardEvent, memo, useEffect, useRef } from 'react';
-import { BsReply } from 'react-icons/bs';
+import { ChangeEvent, type FC, FormEvent, KeyboardEvent, memo, useEffect, useRef, useState } from 'react';
+import { BsReply, BsTrash } from 'react-icons/bs';
 import { GoPaperclip } from 'react-icons/go';
 import { HiOutlinePencil } from 'react-icons/hi2';
+import { MdOutlineKeyboardVoice } from 'react-icons/md';
 import { VscSend } from 'react-icons/vsc';
 import { useParams } from 'react-router-dom';
 
@@ -14,8 +15,8 @@ import {
   type Message,
   MessagePreview,
   classNames,
+  formatMilliseconds,
   messengerApi,
-  useInputAutofocus,
   useUserStore,
 } from '~/shared';
 
@@ -31,6 +32,9 @@ const MessageInput: FC<TMessageInputProps> = memo(
     inputValue,
     setInputValue,
     file,
+    isVoice,
+    onStopRecording,
+    onCancelRecording,
     isDisabled = false,
     haveButtons = true,
     type = 'absolute',
@@ -42,6 +46,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
       editMessage,
       isVisibleEditMessage,
       replyMessage,
+      setIsAudioMessage,
       isVisibleReplyMessage,
       setIsVisibleReplyMessage,
       setIsVisibleEditMessage,
@@ -51,17 +56,23 @@ const MessageInput: FC<TMessageInputProps> = memo(
     const { isModalOpen, openModal, closeModal, setFile, setRecipient, setDialogId, setError } =
       useImageSendModalStore();
 
+    const [timer, setTimer] = useState(0);
+
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
     const filesInputRef = useRef<HTMLInputElement>(null);
 
     const queryClient = useQueryClient();
 
-    useInputAutofocus(textAreaRef);
-
     const handleSubmit = (e?: FormEvent<HTMLFormElement>) => {
       if (e) {
         e.preventDefault();
       }
+
+      if (isVoice && onStopRecording) {
+        onStopRecording();
+        return;
+      }
+
       if ((!inputValue.length && !isModalOpen) || isDisabled) {
         return;
       }
@@ -206,6 +217,10 @@ const MessageInput: FC<TMessageInputProps> = memo(
     };
 
     const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+      if (isVoice) {
+        return;
+      }
+
       setInputValue(e.target.value);
     };
 
@@ -231,6 +246,18 @@ const MessageInput: FC<TMessageInputProps> = memo(
         textAreaRef.current.focus();
       }
     }, [isVisibleEditMessage, isVisibleReplyMessage]);
+
+    useEffect(() => {
+      if (isVoice) {
+        const timeout = setInterval(() => {
+          setTimer((prev) => prev + 10);
+        }, 10);
+
+        return () => {
+          clearTimeout(timeout);
+        };
+      }
+    }, []);
 
     const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
       if (e.target.files) {
@@ -295,9 +322,9 @@ const MessageInput: FC<TMessageInputProps> = memo(
                 />
               )}
               <div className={styles.input_wrapper}>
-                {haveButtons && (
+                {haveButtons && !isVoice && (
                   <button onClick={() => filesInputRef.current?.click()} className={styles.icon_button}>
-                    <GoPaperclip />
+                    <GoPaperclip className={styles.paper_clip} />
                   </button>
                 )}
                 <textarea
@@ -306,14 +333,54 @@ const MessageInput: FC<TMessageInputProps> = memo(
                   value={inputValue}
                   onKeyDown={handleKeyDown}
                   onChange={handleChange}
-                  className={classNames(styles.input, isVisibleReplyMessage && styles.input_reply)}
+                  className={classNames(
+                    styles.input,
+                    isVisibleReplyMessage && styles.input_reply,
+                    isVoice && styles.input_voice,
+                  )}
                   ref={textAreaRef}
                   rows={inputValue.includes('\n') ? 2 : 1}
                   maxLength={1000}
                 />
-                <button className={styles.button} type='submit'>
-                  <VscSend className={styles.icon} />
-                </button>
+                {isVoice && type === 'absolute' && isVoice && (
+                  <div className={styles.record_info}>
+                    <div className={styles.recording} />
+                    <p>{formatMilliseconds(timer)}</p>
+                    <button
+                      className={styles.icon_button}
+                      onClick={() => {
+                        if (onCancelRecording) {
+                          onCancelRecording();
+                        }
+                        setIsAudioMessage(false);
+                      }}
+                    >
+                      <BsTrash size={24} className={classNames(styles.icon, styles.button_delete)} />
+                    </button>
+                  </div>
+                )}
+                {isVoice && type === 'absolute' && (
+                  <button
+                    className={styles.icon_button}
+                    onClick={async () => {
+                      if (onStopRecording) {
+                        onStopRecording();
+                      }
+                    }}
+                  >
+                    <VscSend className={styles.icon} />
+                  </button>
+                )}
+                {inputValue.length === 0 && !isVoice && type === 'absolute' && (
+                  <button className={styles.icon_button} onClick={() => setIsAudioMessage(true)} type='submit'>
+                    <MdOutlineKeyboardVoice size={24} className={styles.icon} />
+                  </button>
+                )}
+                {((inputValue.length !== 0 && !isVoice) || type !== 'absolute') && (
+                  <button className={styles.icon_button} type='submit'>
+                    <VscSend className={styles.icon} />
+                  </button>
+                )}
               </div>
             </div>
           </div>

@@ -3,10 +3,11 @@ import { BiErrorCircle } from 'react-icons/bi';
 import { FaRegClock } from 'react-icons/fa';
 import { IoCheckmark, IoCheckmarkDone } from 'react-icons/io5';
 
-import { useImageModalStore } from '~/features/ImageModal';
+import { Waveform, useImageModalStore } from '~/features';
 import {
   Avatar,
   MessagePreview,
+  Skeleton,
   classNames,
   formatCreatedTime,
   highlightMessage,
@@ -19,7 +20,20 @@ import styles from './Message.module.css';
 import { TMessageProps } from './Message.types';
 
 const Message: FC<TMessageProps> = memo(
-  ({ sender, content, isEdited, updatedAt, replyMessage, hasAvatar, readed, createdAt, images, status }) => {
+  ({
+    sender,
+    content,
+    isEdited,
+    updatedAt,
+    replyMessage,
+    hasAvatar,
+    voiceMessage,
+    readed,
+    createdAt,
+    images,
+    status,
+    voiceLoading = false,
+  }) => {
     const { user } = useUserStore();
     const { openModal, setImageLink } = useImageModalStore();
     const { type } = useMobileStore();
@@ -60,10 +74,24 @@ const Message: FC<TMessageProps> = memo(
             <MessagePreview
               type='message'
               isColor={!isMyMessage}
-              className={classNames(styles.message_preview, images[0] && styles.message_preview_reply)}
+              className={classNames(
+                styles.message_preview,
+                images[0] && styles.message_preview_reply,
+                voiceMessage && styles.message_preview_voice,
+              )}
               message={replyMessage}
               image={replyMessage.images[0]}
             />
+          )}
+          {!voiceLoading && voiceMessage && <Waveform isMyMessage={isMyMessage} src={voiceMessage} />}
+          {voiceLoading && voiceMessage && (
+            <div className={styles.skeleton}>
+              <Skeleton.Circle />
+              <div className={styles.skeleton_text}>
+                <Skeleton.Rectangle width={140} height={25} />
+                <Skeleton.Rectangle width={40} height={15} />
+              </div>
+            </div>
           )}
           {images[0] && (
             <img
@@ -93,7 +121,7 @@ const Message: FC<TMessageProps> = memo(
             )}
           >
             <div>
-              {content.split('\\n').map((line, i) => (
+              {content?.split('\\n').map((line, i) => (
                 // eslint-disable-next-line react/no-array-index-key
                 <span key={i}>
                   <p
@@ -107,7 +135,7 @@ const Message: FC<TMessageProps> = memo(
             <div
               className={classNames(
                 styles.message_info,
-                !content && styles.empty,
+                !content && images[0] && styles.empty,
                 !isMyMessage && styles.message_info_reverse,
               )}
             >
@@ -118,9 +146,12 @@ const Message: FC<TMessageProps> = memo(
                 {isEdited && 'edited'} {formattedTime}
               </p>
               {status === 'pending' && <FaRegClock size={12} style={{ marginBottom: '2px' }} />}
-              {(status === 'success' || !status) &&
-                isMyMessage &&
-                (readed.length > 1 && readed.includes(user.id) ? <IoCheckmarkDone /> : <IoCheckmark />)}
+              {isMyMessage &&
+                ((status === 'success' || !status) && readed.length >= 2 && readed.includes(user.id) ? (
+                  <IoCheckmarkDone />
+                ) : (
+                  <IoCheckmark />
+                ))}
               {status === 'error' && (
                 <BiErrorCircle
                   color={isMyMessage ? 'var(--color-message-error)' : 'var(--color-recipient-error)'}

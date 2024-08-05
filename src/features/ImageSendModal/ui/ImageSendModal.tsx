@@ -4,7 +4,7 @@ import { IoClose } from 'react-icons/io5';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 
-import { MessageInput } from '~/features/MessageInput';
+import { MessageInput } from '~/features';
 import { queryClient } from '~/shared';
 
 import styles from './ImageSendModal.module.css';

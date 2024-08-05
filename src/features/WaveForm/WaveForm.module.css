@@ -1,0 +1,45 @@
+.root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.waveform {
+  max-width: 280px;
+  min-width: 140px;
+  
+  @media (max-width: 600px) {
+    max-width: 50vw;
+    min-width: 150px;
+  }
+}
+
+.button {
+  background-color: var(--message-background);
+  color: var(--white);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: var(--border-radius-circle);
+  padding: 5px;
+}
+
+.button_my {
+  color: var(--message-background);
+  background-color: var(--white);
+}
+
+.content {
+  display: flex;
+  gap: 5px;
+  flex-direction: column;
+}
+
+.timer {
+  color: var(--black);
+}
+
+.timer_my {
+  color: var(--white);
+}

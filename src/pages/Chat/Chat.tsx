@@ -4,8 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 
 import { useMessageStore } from '~/entities';
-import { MessageInput, MessagesList, UserInfo } from '~/features';
-import { useImageSendModalStore } from '~/features/ImageSendModal';
+import { AudioInput, MessageInput, MessagesList, UserInfo, useImageSendModalStore } from '~/features';
 import {
   classNames,
   getRecipientFromUsers,
@@ -22,7 +21,7 @@ const Chat: FC = () => {
   const { user } = useUserStore();
   const { theme } = useThemeStore();
   const { type, lastChat } = useMobileStore();
-  const { inputValue, setInputValue } = useMessageStore();
+  const { inputValue, isAudioMessage, setInputValue } = useMessageStore();
   const { openModal, setFile, setRecipient, setDialogId, setError } = useImageSendModalStore();
 
   const [dragging, setDragging] = useState(false);
@@ -142,7 +141,11 @@ const Chat: FC = () => {
           isLoading={isLoading}
         />
       </div>
-      <MessageInput inputValue={inputValue} setInputValue={setInputValue} recipient={recipient?.id ?? ''} />
+      {isAudioMessage ? (
+        <AudioInput recipient={recipient?.id ?? ''} />
+      ) : (
+        <MessageInput inputValue={inputValue} setInputValue={setInputValue} recipient={recipient?.id ?? ''} />
+      )}
     </main>
   );
 };

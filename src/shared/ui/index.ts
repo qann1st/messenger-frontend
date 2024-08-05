@@ -4,3 +4,4 @@ export * from './Button';
 export * from './ContextMenu';
 export * from './Input';
 export * from './MessagePreview';
+export * from './Skeleton';

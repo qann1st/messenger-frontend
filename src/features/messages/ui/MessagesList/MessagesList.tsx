@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 
 import { useMessageStore } from '~/entities';
 import { ContextMenu, type Message as TMessage, classNames, useContextMenu, useUserStore } from '~/shared';
-import { Skeleton } from '~/shared/ui/Skeleton';
+import { Skeleton } from '~/shared';
 
 import styles from './MessagesList.module.css';
 

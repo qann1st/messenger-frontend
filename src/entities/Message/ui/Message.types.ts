@@ -11,4 +11,6 @@ export type TMessageProps = {
   status: Message['status'];
   isEdited?: boolean;
   readed: string[];
+  voiceMessage?: string;
+  voiceLoading?: boolean;
 };

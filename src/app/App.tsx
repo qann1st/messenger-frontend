@@ -2,8 +2,7 @@ import { type FC, useEffect } from 'react';
 import { Route, Routes, useParams } from 'react-router-dom';
 import { io } from 'socket.io-client';
 
-import { ImageModal } from '~/features/ImageModal';
-import { ImageSendModal } from '~/features/ImageSendModal';
+import { ImageModal, ImageSendModal } from '~/features';
 import { Chat, Home, SignIn, SignInApprove, SignUp, SignUpApprove } from '~/pages';
 import { useMobileStore, useThemeStore, useUserStore } from '~/shared';
 
