@@ -119,7 +119,7 @@ const Message: FC<TMessageProps> = memo(
               {status === 'pending' && <FaRegClock size={12} style={{ marginBottom: '2px' }} />}
               {(status === 'success' || !status) &&
                 isMyMessage &&
-                (readed.length ? <IoCheckmarkDone /> : <IoCheckmark />)}
+                (readed.length > 1 && readed.includes(user.id) ? <IoCheckmarkDone /> : <IoCheckmark />)}
               {status === 'error' && (
                 <BiErrorCircle
                   color={isMyMessage ? 'var(--color-message-error)' : 'var(--color-recipient-error)'}
