@@ -17,7 +17,18 @@ import styles from './UserBadge.module.css';
 import { TUserBadgeProps } from './UserBadge.types';
 
 const UserBadge: FC<TUserBadgeProps> = memo(
-  ({ firstName, isSearch, lastName, isOnline, lastMessage, isActive, href, userId, showContextMenu }) => {
+  ({
+    firstName,
+    isSearch,
+    lastName,
+    isOnline,
+    lastMessage,
+    lastMessageImage,
+    isActive,
+    href,
+    userId,
+    showContextMenu,
+  }) => {
     const linkRef = useRef<HTMLAnchorElement>(null);
     const animationRef = useRef<HTMLButtonElement>(null);
 
@@ -92,14 +103,20 @@ const UserBadge: FC<TUserBadgeProps> = memo(
             <p className={classNames(styles.name, isActive && styles.name_active)}>
               {firstName} {lastName}
             </p>
-            {lastMessage && (
-              <p
-                className={classNames(styles.subtitle, isActive && styles.subtitle_active)}
-                dangerouslySetInnerHTML={{
-                  __html: highlightMessage(lastMessage?.split('\\n').join(' ') ?? '', styles, false),
-                }}
-              />
-            )}
+            <div className={styles.info_subtitle}>
+              {lastMessageImage?.[0] && <img src={lastMessageImage?.[0]} alt='' className={styles.image} />}
+              {lastMessage && (
+                <p
+                  className={classNames(styles.subtitle, isActive && styles.subtitle_active)}
+                  dangerouslySetInnerHTML={{
+                    __html: highlightMessage(lastMessage?.split('\\n').join(' ') ?? '', styles, false),
+                  }}
+                />
+              )}
+              <p className={classNames(styles.subtitle, isActive && styles.subtitle_active)}>
+                {!lastMessage && 'Photo'}
+              </p>
+            </div>
           </div>
         </Link>
       </>

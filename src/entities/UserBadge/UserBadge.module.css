@@ -27,6 +27,19 @@
   background-color: var(--active-user-badge-background);
 }
 
+.image {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--border-radius-2);
+  object-fit: cover;
+}
+
+.info_subtitle {
+  display: flex;
+  gap: 5px;
+  align-items: center
+}
+
 .info {
   display: flex;
   justify-content: center;

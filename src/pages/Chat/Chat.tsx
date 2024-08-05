@@ -1,9 +1,11 @@
-import { type FC, useEffect, useRef } from 'react';
+import { type DragEvent, type FC, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { useQuery } from '@tanstack/react-query';
 
+import { useMessageStore } from '~/entities';
 import { MessageInput, MessagesList, UserInfo } from '~/features';
+import { useImageSendModalStore } from '~/features/ImageSendModal';
 import {
   classNames,
   getRecipientFromUsers,
@@ -20,6 +22,10 @@ const Chat: FC = () => {
   const { user } = useUserStore();
   const { theme } = useThemeStore();
   const { type, lastChat } = useMobileStore();
+  const { inputValue, setInputValue } = useMessageStore();
+  const { openModal, setFile, setRecipient, setDialogId } = useImageSendModalStore();
+
+  const [dragging, setDragging] = useState(false);
 
   const params = useParams();
   const dialogId = params.dialogId ?? (type !== 'desktop' ? lastChat : '');
@@ -67,8 +73,33 @@ const Chat: FC = () => {
 
   const isDark = theme === 'dark';
 
+  const handleDragStart = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setDragging(true);
+  };
+
+  const handleDragLeave = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setDragging(false);
+  };
+
+  const handleDrop = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0 && recipient) {
+      openModal();
+      messengerApi.uploadFile(e.dataTransfer.files[0]).then((images) => {
+        setFile(images[0]);
+        setRecipient(recipient.id);
+        setDialogId(dialogId ?? '');
+      });
+      e.dataTransfer.clearData();
+    }
+  };
+
   return (
-    <div
+    <main
       ref={chatRef}
       className={classNames(
         styles.root,
@@ -77,7 +108,12 @@ const Chat: FC = () => {
         type === 'mobile' && styles.mobile,
         !params.dialogId && styles.slide,
       )}
+      onDragStart={handleDragStart}
+      onDragLeave={handleDragLeave}
+      onDragOver={handleDragStart}
+      onDrop={handleDrop}
     >
+      {dragging && <div className={styles.drag_area}>Drop here!</div>}
       <UserInfo recipient={recipient} />
       <div className={classNames(styles.background, isDark && styles.background_dark)}>
         <MessagesList
@@ -88,8 +124,8 @@ const Chat: FC = () => {
           isLoading={isLoading}
         />
       </div>
-      <MessageInput scrollRef={scrollRef} recipient={recipient?.id ?? ''} />
-    </div>
+      <MessageInput inputValue={inputValue} setInputValue={setInputValue} recipient={recipient?.id ?? ''} />
+    </main>
   );
 };
 

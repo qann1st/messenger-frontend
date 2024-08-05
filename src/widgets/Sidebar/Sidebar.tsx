@@ -14,14 +14,14 @@ const Sidebar = () => {
   const { dialogId } = useParams();
 
   return (
-    <div
+    <aside
       className={classNames(
         styles.relative,
         type !== 'desktop' && styles.relative_mobile,
         type !== 'desktop' && dialogId && styles.slide,
       )}
     >
-      <div
+      <nav
         className={classNames(
           styles.root,
           type === 'mobile' && styles.mobile,
@@ -29,19 +29,19 @@ const Sidebar = () => {
         )}
         ref={sidebarRef}
       >
-        <div className={styles.header}>
+        <header className={styles.header}>
           <h1>
             <Link className={styles.link} to='/'>
               Chats
             </Link>
           </h1>
           <ThemeButton />
-        </div>
+        </header>
         <SearchInput className={styles.input} />
         {isSearch ? <SearchDialogsList /> : <DialogsList />}
-      </div>
+      </nav>
       <Resizer elementRef={sidebarRef} />
-    </div>
+    </aside>
   );
 };
 

@@ -7,3 +7,8 @@
 a[role='button'] {
   touch-action: manipulation;
 }
+
+button {
+  background: transparent;
+  border: none;
+}

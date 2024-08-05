@@ -1,5 +1,6 @@
 export type TSkeletonProps = {
   className?: string;
+  borderRadius?: string;
 };
 
 export type TSkeletonCircleProps = TSkeletonProps & {

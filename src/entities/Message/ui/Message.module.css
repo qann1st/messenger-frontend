@@ -42,11 +42,38 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-1);
+  position: relative;
 }
 
 .content_info {
   display: flex;
   justify-content: space-between;
+}
+
+.content_info_image {
+  padding: var(--spacing-2) var(--spacing-3) var(--spacing-3);
+}
+
+.empty_content_info {
+  padding: 0;
+}
+
+.only_image {
+  border-radius: var(--border-radius-8);
+}
+
+.content_image {
+  padding: 0;
+  gap: 0;
+}
+
+.content_image_reply {
+  padding: var(--spacing-2) var(--spacing-3) var(--spacing-3);
+}
+
+.image {
+  border-top-left-radius: var(--border-radius-8);
+  border-top-right-radius: var(--border-radius-8);
 }
 
 .message_preview {
@@ -68,12 +95,12 @@
 }
 
 .time {
-  color: var(--active-user-subtitle-color);
+  color: var(--time-color);
   font-size: 12px;
 }
 
-.content_reverse .time {
-  color: var(--input-placeholder);
+.time_not_my {
+  color: var(--time-not-color);
 }
 
 .message_info {
@@ -83,6 +110,16 @@
   gap: var(--spacing-1);
   user-select: none;
   color: var(--white);
+}
+
+.empty {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  color: var(--white);
+  background: rgba(0, 0, 0, 0.5);
+  padding: 1px var(--spacing-2);
+  border-radius: var(--border-radius-4);
 }
 
 .message_info_reverse {
@@ -117,4 +154,8 @@
 .boldItalic {
   font-style: italic;
   font-weight: 600;
+}
+
+.time_empty {
+  color: var(--white);
 }

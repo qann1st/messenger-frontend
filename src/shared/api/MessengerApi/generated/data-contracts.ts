@@ -41,6 +41,7 @@ export interface Message {
   replyMessage: string;
   forwardedMessage: string;
   chatId: string;
+  images?: string[];
   /** @format date-time */
   createdAt: string;
   /** @format date-time */

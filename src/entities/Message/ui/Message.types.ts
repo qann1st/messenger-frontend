@@ -7,6 +7,7 @@ export type TMessageProps = {
   hasAvatar: boolean;
   createdAt: string;
   updatedAt: string;
+  images: string[];
   status: Message['status'];
   isEdited?: boolean;
 };

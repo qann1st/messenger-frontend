@@ -128,6 +128,15 @@ class MessengerApi {
   deleteChat(recipeintId: string, roomId: string) {
     return this.api.delete<Chat>(`chat/deleteChat/${roomId}/${recipeintId}`).then((response) => response.data);
   }
+
+  uploadFile(file: File) {
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+
+    return this.api
+      .post<string[]>('files/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+      .then((response) => response.data);
+  }
 }
 
 export const messengerApi = new MessengerApi();

@@ -71,6 +71,7 @@ const DialogsList = () => {
               firstName={recipient?.firstname}
               lastName={recipient?.lastname}
               lastMessage={messages?.content ?? ''}
+              lastMessageImage={messages.images}
               showContextMenu={(e) => handleContextMenu(e, dialog)}
             />
           );

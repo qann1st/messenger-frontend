@@ -2,6 +2,8 @@ import { type FC, useEffect } from 'react';
 import { Route, Routes, useParams } from 'react-router-dom';
 import { io } from 'socket.io-client';
 
+import { ImageModal } from '~/features/ImageModal';
+import { ImageSendModal } from '~/features/ImageSendModal';
 import { Chat, Home, SignIn, SignInApprove, SignUp, SignUpApprove } from '~/pages';
 import { useMobileStore, useThemeStore, useUserStore } from '~/shared';
 
@@ -59,27 +61,31 @@ const App: FC = () => {
   }
 
   return (
-    <Providers>
-      <Routes>
-        <Route element={<AuthOutlet />}>
-          <Route element={<MainLayout />}>
-            <Route index element={dialogId ? <Chat /> : <Home />} />
-            <Route path=':dialogId' element={<Chat />} />
+    <>
+      <Providers>
+        <Routes>
+          <Route element={<AuthOutlet />}>
+            <Route element={<MainLayout />}>
+              <Route index element={dialogId ? <Chat /> : <Home />} />
+              <Route path=':dialogId' element={<Chat />} />
+            </Route>
           </Route>
-        </Route>
-        <Route element={<NonAuthOutlet />}>
-          <Route path='sign-in'>
-            <Route index element={<SignIn />} />
-            <Route path='approve' element={<SignInApprove />} />
+          <Route element={<NonAuthOutlet />}>
+            <Route path='sign-in'>
+              <Route index element={<SignIn />} />
+              <Route path='approve' element={<SignInApprove />} />
+            </Route>
+            <Route path='sign-up'>
+              <Route index element={<SignUp />} />
+              <Route path='approve' element={<SignUpApprove />} />
+            </Route>
           </Route>
-          <Route path='sign-up'>
-            <Route index element={<SignUp />} />
-            <Route path='approve' element={<SignUpApprove />} />
-          </Route>
-        </Route>
-        <Route path='*' element={<h1>404</h1>} />
-      </Routes>
-    </Providers>
+          <Route path='*' element={<h1>404</h1>} />
+        </Routes>
+      </Providers>
+      <ImageSendModal />
+      <ImageModal />
+    </>
   );
 };
 

@@ -1,6 +1,8 @@
-import type { RefObject } from 'react';
-
 export type TMessageInputProps = {
   recipient: string;
-  scrollRef: RefObject<HTMLDivElement>;
+  inputValue: string;
+  dialogId?: string;
+  file?: string;
+  type?: 'absolute' | 'not-absolute';
+  setInputValue: (value: string) => void;
 };

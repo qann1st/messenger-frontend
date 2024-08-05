@@ -1,11 +1,6 @@
 .root {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
   width: 100%;
   background-color: transparent;
-  padding: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,11 +9,28 @@
   z-index: 1;
 }
 
+.drag_area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+.absolute {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 10px;
+}
+
 .input {
   background: transparent;
   border: none;
   outline: none;
-  padding: 14px 20px;
+  padding: 14px 20px 14px 5px;
   font-size: 16px;
   overflow-y: auto;
   scrollbar-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
@@ -29,6 +41,10 @@
   max-height: 94px;
   width: 100%;
   white-space: pre-wrap;
+}
+
+.files_input {
+  display: none;
 }
 
 .input_wrapper {
@@ -58,7 +74,7 @@
 }
 
 .icon {
-  color: var(--message-background);
+  color: var(--outline-icon-button-color);
   margin: 0 10px;
   font-size: 24px;
   cursor: pointer;
@@ -66,7 +82,25 @@
 }
 
 .icon:hover {
-  opacity: 0.7;
+  color: var(--message-background);
+}
+
+.icon_button {
+  color: var(--outline-icon-button-color);
+  margin: 0 10px;
+  font-size: 24px;
+  cursor: pointer;
+  transition: var(--transition);
+  background: transparent;
+  border: none;
+  transition: var(--transition);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon_button:hover {
+  color: var(--message-background);
 }
 
 .button {

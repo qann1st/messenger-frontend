@@ -9,5 +9,6 @@ export type TUserBadgeProps = {
   isOnline?: boolean;
   isSearch?: boolean;
   userId?: string;
+  lastMessageImage?: string[];
   showContextMenu?: (e: MouseEvent<HTMLAnchorElement>) => void;
 };
