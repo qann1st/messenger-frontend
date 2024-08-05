@@ -23,7 +23,7 @@ const Chat: FC = () => {
   const { theme } = useThemeStore();
   const { type, lastChat } = useMobileStore();
   const { inputValue, setInputValue } = useMessageStore();
-  const { openModal, setFile, setRecipient, setDialogId } = useImageSendModalStore();
+  const { openModal, setFile, setRecipient, setDialogId, setError } = useImageSendModalStore();
 
   const [dragging, setDragging] = useState(false);
 
@@ -102,11 +102,16 @@ const Chat: FC = () => {
     }
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0 && recipient) {
       openModal();
-      messengerApi.uploadFile(e.dataTransfer.files[0]).then((images) => {
-        setFile(images[0]);
-        setRecipient(recipient.id);
-        setDialogId(dialogId ?? '');
-      });
+      messengerApi
+        .uploadFile(e.dataTransfer.files[0])
+        .then((images) => {
+          setFile(images[0]);
+          setRecipient(recipient.id);
+          setDialogId(dialogId ?? '');
+        })
+        .catch(() => {
+          setError('File too large');
+        });
       e.dataTransfer.clearData();
     }
   };

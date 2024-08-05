@@ -10,4 +10,5 @@ export type TMessageProps = {
   images: string[];
   status: Message['status'];
   isEdited?: boolean;
+  readed: string[];
 };

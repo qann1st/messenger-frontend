@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -10,7 +11,18 @@ import { getRecipientFromUsers } from '../helpers';
 export const useHandleOnlineSocket = () => {
   const { user, setUser, socket } = useUserStore();
 
+  const { dialogId } = useParams();
+
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (dialogId && socket && user) {
+      socket?.emit('read-messages', {
+        roomId: dialogId,
+        recipient: getRecipientFromUsers(user.dialogs.find((el) => el.id === dialogId)?.users ?? [], user.id)?.id,
+      });
+    }
+  }, [dialogId, socket]);
 
   useEffect(() => {
     if (!socket || !user) {

@@ -46,7 +46,8 @@ export interface Message {
   createdAt: string;
   /** @format date-time */
   updatedAt: string;
-  isEdited: boolean;
+  isEdited?: boolean;
+  readed?: string[];
   status?: 'pending' | 'success' | 'error';
 }
 

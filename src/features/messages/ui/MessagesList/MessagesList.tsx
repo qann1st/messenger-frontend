@@ -83,7 +83,7 @@ const MessagesList: FC<TMessagesListProps> = memo(({ groupedMessages, isLoading,
   }, []);
 
   useEffect(() => {
-    if (messages && messages[messages.length - 1].sender.id === user?.id) {
+    if (messages && messages[messages.length - 1]?.sender.id === user?.id) {
       if (scrollRef.current) {
         scrollRef.current.scrollTo({ behavior: 'smooth', top: scrollRef.current.clientHeight });
       }

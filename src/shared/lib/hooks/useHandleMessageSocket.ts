@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useMessageStore } from '~/entities';
-import { type Chat, type ChatWithPagination, Message, User, useUserStore } from '~/shared';
+import { type Chat, type ChatWithPagination, Message, User, getRecipientFromUsers, useUserStore } from '~/shared';
 
 export const useHandleMessageSocket = () => {
   const queryClient = useQueryClient();
@@ -23,6 +23,15 @@ export const useHandleMessageSocket = () => {
       }
 
       const dialog = user.dialogs.find((d) => d.id === message.chatId);
+
+      const dialogId = window.location.pathname.split('/')[1];
+      console.log(dialogId);
+      if (dialogId === message.chatId) {
+        socket?.emit('read-messages', {
+          roomId: dialogId,
+          recipient: getRecipientFromUsers(dialog?.users ?? [], user.id)?.id,
+        });
+      }
 
       if (dialog) {
         dialog.messages = [message];
@@ -136,6 +145,42 @@ export const useHandleMessageSocket = () => {
     });
   };
 
+  const handleReadMessages = () => {
+    const dialogId = window.location.pathname.split('/')[1];
+
+    queryClient.setQueryData(['chat', dialogId], (oldData: ChatWithPagination) => {
+      const user = getUser();
+
+      if (!user) {
+        return oldData;
+      }
+
+      const dialog = user.dialogs.find((d) => d.id === dialogId)?.users;
+
+      if (!dialog) {
+        return oldData;
+      }
+
+      const readedIds = [dialog[0].id, dialog[1].id];
+
+      const updatedData = oldData.data.map((msg) => ({ ...msg, readed: readedIds }));
+
+      const updatedGroupedMessages = Object.keys(oldData.groupedMessages).reduce(
+        (acc, key) => {
+          acc[key] = oldData.groupedMessages[key].map((msg) => ({ ...msg, readed: readedIds }));
+          return acc;
+        },
+        {} as { [key: string]: Message[] },
+      );
+
+      return {
+        ...oldData,
+        data: updatedData,
+        groupedMessages: updatedGroupedMessages,
+      };
+    });
+  };
+
   useEffect(() => {
     if (!socket) {
       return;
@@ -145,12 +190,14 @@ export const useHandleMessageSocket = () => {
     socket.on('edit-message', handleEditMessage);
     socket.on('delete-message', handleDeleteMessage);
     socket.on('delete-chat', handleDeleteChat);
+    socket.on('read-messages', handleReadMessages);
 
     return () => {
       socket.off('message', handleMessage);
-      socket.on('edit-message', handleEditMessage);
-      socket.on('delete-message', handleDeleteMessage);
-      socket.on('delete-chat', handleDeleteChat);
+      socket.off('edit-message', handleEditMessage);
+      socket.off('delete-message', handleDeleteMessage);
+      socket.off('delete-chat', handleDeleteChat);
+      socket.off('read-messages', handleReadMessages);
     };
   }, [socket]);
 };

@@ -1,4 +1,3 @@
-import { AxiosError } from 'axios';
 import { ChangeEvent, type FC, FormEvent, KeyboardEvent, memo, useEffect, useRef } from 'react';
 import { BsReply } from 'react-icons/bs';
 import { GoPaperclip } from 'react-icons/go';
@@ -93,6 +92,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
           }
 
           const newDate = new Date();
+          const dateId = Date.now().toString();
 
           const newMessage: Message = {
             chatId: dialogId ?? '',
@@ -101,7 +101,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
             updatedAt: String(newDate),
             replyMessage: replyMessage?.id ?? '',
             forwardedMessage: '',
-            id: Date.now().toString(),
+            id: dateId,
             isEdited: false,
             sender: user,
             images: [file ?? ''],
@@ -126,7 +126,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
                 groupedMsgs: { ...oldData.groupedMessages, groupedMsg },
               };
             });
-          }, 10000);
+          }, 5000);
 
           socket
             ?.emit('message', {
@@ -136,7 +136,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
               replyMessage: replyMessage?.id,
               images: [file],
             })
-            .on('message', () => {
+            .on('message', (message) => {
               clearTimeout(timeout);
               queryClient.setQueryData(['chat', dialogId], (oldData: ChatWithPagination) => {
                 const msg = oldData.data.find((m) => m.id === newMessage.id);
@@ -148,6 +148,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
 
                 msg.status = 'success';
                 groupedMsg.status = 'success';
+                groupedMsg.id = message.id;
 
                 return {
                   ...oldData,
@@ -247,12 +248,8 @@ const MessageInput: FC<TMessageInputProps> = memo(
               textAreaRef.current.blur();
             }
           })
-          .catch((err) => {
-            if (err instanceof AxiosError) {
-              if (err.code === '413') {
-                setError('File too large');
-              }
-            }
+          .catch(() => {
+            setError('File too large');
           });
       }
     };

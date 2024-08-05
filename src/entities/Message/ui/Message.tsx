@@ -1,7 +1,7 @@
 import { type FC, memo, useEffect, useRef, useState } from 'react';
 import { BiErrorCircle } from 'react-icons/bi';
 import { FaRegClock } from 'react-icons/fa';
-import { IoCheckmark } from 'react-icons/io5';
+import { IoCheckmark, IoCheckmarkDone } from 'react-icons/io5';
 
 import { useImageModalStore } from '~/features/ImageModal';
 import { Avatar, MessagePreview, classNames, formatCreatedTime, highlightMessage, useUserStore } from '~/shared';
@@ -11,7 +11,7 @@ import styles from './Message.module.css';
 import { TMessageProps } from './Message.types';
 
 const Message: FC<TMessageProps> = memo(
-  ({ sender, content, isEdited, updatedAt, replyMessage, hasAvatar, createdAt, images, status }) => {
+  ({ sender, content, isEdited, updatedAt, replyMessage, hasAvatar, readed, createdAt, images, status }) => {
     const { user } = useUserStore();
     const { openModal, setImageLink } = useImageModalStore();
 
@@ -28,7 +28,7 @@ const Message: FC<TMessageProps> = memo(
 
     useEffect(() => {
       if (imageRef.current) {
-        if (imageRef.current.width && imageRef.current.width < 321) {
+        if (imageRef.current.width && imageRef.current.width < 150) {
           setSmallMessage(true);
         }
       }
@@ -41,8 +41,8 @@ const Message: FC<TMessageProps> = memo(
           className={classNames(
             styles.content,
             !isMyMessage && styles.content_reverse,
-            images.length && replyMessage.content && styles.content_image_reply,
-            images.length && styles.content_image,
+            images[0] && replyMessage.content && styles.content_image_reply,
+            images[0] && styles.content_image,
             smallMessage && styles.small_message,
           )}
         >
@@ -50,7 +50,7 @@ const Message: FC<TMessageProps> = memo(
             <MessagePreview
               type='message'
               isColor={!isMyMessage}
-              className={classNames(styles.message_preview, styles.message_preview_reply)}
+              className={classNames(styles.message_preview, images[0] && styles.message_preview_reply)}
               message={replyMessage}
               image={replyMessage.images[0]}
             />
@@ -77,7 +77,7 @@ const Message: FC<TMessageProps> = memo(
           <div
             className={classNames(
               styles.content_info,
-              images.length && styles.content_info_image,
+              images[0] && styles.content_info_image,
               !content && styles.empty_content_info,
             )}
           >
@@ -107,7 +107,7 @@ const Message: FC<TMessageProps> = memo(
                 {isEdited && 'edited'} {formattedTime}
               </p>
               {status === 'pending' && <FaRegClock size={12} style={{ marginBottom: '2px' }} />}
-              {(status === 'success' || !status) && isMyMessage && <IoCheckmark />}
+              {isMyMessage && (readed.length ? <IoCheckmarkDone /> : <IoCheckmark />)}
               {status === 'error' && (
                 <BiErrorCircle
                   color={isMyMessage ? 'var(--color-message-error)' : 'var(--color-recipient-error)'}
