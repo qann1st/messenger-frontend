@@ -4,7 +4,15 @@ import { FaRegClock } from 'react-icons/fa';
 import { IoCheckmark, IoCheckmarkDone } from 'react-icons/io5';
 
 import { useImageModalStore } from '~/features/ImageModal';
-import { Avatar, MessagePreview, classNames, formatCreatedTime, highlightMessage, useUserStore } from '~/shared';
+import {
+  Avatar,
+  MessagePreview,
+  classNames,
+  formatCreatedTime,
+  highlightMessage,
+  useMobileStore,
+  useUserStore,
+} from '~/shared';
 
 import styles from './Message.module.css';
 
@@ -14,6 +22,7 @@ const Message: FC<TMessageProps> = memo(
   ({ sender, content, isEdited, updatedAt, replyMessage, hasAvatar, readed, createdAt, images, status }) => {
     const { user } = useUserStore();
     const { openModal, setImageLink } = useImageModalStore();
+    const { type } = useMobileStore();
 
     const messageRef = useRef<HTMLDivElement>(null);
     const imageRef = useRef<HTMLImageElement>(null);
@@ -69,6 +78,7 @@ const Message: FC<TMessageProps> = memo(
                 replyMessage.id && !content && styles.image_radius,
                 !replyMessage.id && !content && styles.image_circle,
                 !content && styles.only_image,
+                type === 'mobile' && styles.image_mobile,
               )}
               src={images[0]}
               alt=''
@@ -107,7 +117,9 @@ const Message: FC<TMessageProps> = memo(
                 {isEdited && 'edited'} {formattedTime}
               </p>
               {status === 'pending' && <FaRegClock size={12} style={{ marginBottom: '2px' }} />}
-              {isMyMessage && (readed.length ? <IoCheckmarkDone /> : <IoCheckmark />)}
+              {(status === 'success' || !status) &&
+                isMyMessage &&
+                (readed.length ? <IoCheckmarkDone /> : <IoCheckmark />)}
               {status === 'error' && (
                 <BiErrorCircle
                   color={isMyMessage ? 'var(--color-message-error)' : 'var(--color-recipient-error)'}

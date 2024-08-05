@@ -94,6 +94,10 @@
   width: 100%;
 }
 
+.image_mobile {
+  max-width: 95vw;
+}
+
 .content_reverse {
   background: var(--recipient-message-background);
 }
