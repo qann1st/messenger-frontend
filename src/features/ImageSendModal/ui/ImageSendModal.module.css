@@ -38,6 +38,11 @@
   }
 }
 
+.error {
+  color: var(--color-recipient-error);
+  margin: 0 auto
+}
+
 .modal_header {
   display: flex;
   align-items: center;

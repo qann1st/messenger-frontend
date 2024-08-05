@@ -12,7 +12,8 @@ import styles from './ImageSendModal.module.css';
 import { useImageSendModalStore } from '../model';
 
 const ImageSendModal = () => {
-  const { isModalOpen, file, closeModal, recipient, dialogId, inputValue, setInputValue } = useImageSendModalStore();
+  const { isModalOpen, file, closeModal, recipient, dialogId, inputValue, setInputValue, error } =
+    useImageSendModalStore();
   const [isLoading, setIsLoading] = useState(true);
 
   if (!isModalOpen) {
@@ -28,9 +29,19 @@ const ImageSendModal = () => {
           </button>
           <p className={styles.modal_title}>Send 1 photo</p>
         </div>
-        <div className={styles.image_center}>
-          <img onLoad={() => setIsLoading(false)} className={styles.image_preview} src={file} alt='' draggable='true' />
-        </div>
+        {error ? (
+          <p className={styles.error}>{error}</p>
+        ) : (
+          <div className={styles.image_center}>
+            <img
+              onLoad={() => setIsLoading(false)}
+              className={styles.image_preview}
+              src={file}
+              alt=''
+              draggable='true'
+            />
+          </div>
+        )}
         <QueryClientProvider client={queryClient}>
           <MessageInput
             file={file}
@@ -40,7 +51,7 @@ const ImageSendModal = () => {
             setInputValue={setInputValue}
             recipient={recipient}
             haveButtons={false}
-            isDisabled={isLoading}
+            isDisabled={isLoading || error !== ''}
           />
         </QueryClientProvider>
       </div>
