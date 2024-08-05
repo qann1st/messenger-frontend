@@ -74,7 +74,7 @@
 }
 
 .content_image_reply {
-  padding: var(--spacing-2) var(--spacing-3) var(--spacing-3);
+  padding: 0;
 }
 
 .image {
@@ -83,6 +83,11 @@
   max-width: fit-content;
   width: auto;
   height: auto;
+  user-select: none;
+}
+
+.image_reply {
+  border-radius: 0;
 }
 
 .message_preview {
@@ -121,6 +126,15 @@
   color: var(--white);
 }
 
+.image_radius {
+  border-bottom-left-radius: var(--border-radius-8);
+  border-bottom-right-radius: var(--border-radius-8);
+}
+
+.message_preview_reply {
+  padding: var(--spacing-2);
+}
+
 .empty {
   position: absolute;
   bottom: 10px;
@@ -137,6 +151,10 @@
 
 .preview_reverse {
   color: #000;
+}
+
+.image_circle {
+  border-radius: var(--border-radius-8);
 }
 
 .link {

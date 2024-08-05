@@ -27,7 +27,6 @@ const Message: FC<TMessageProps> = memo(
     const isMyMessage = sender.id === user?.id;
 
     useEffect(() => {
-      console.log(imageRef.current?.width);
       if (imageRef.current) {
         if (imageRef.current.width && imageRef.current.width < 321) {
           setSmallMessage(true);
@@ -47,12 +46,13 @@ const Message: FC<TMessageProps> = memo(
             smallMessage && styles.small_message,
           )}
         >
-          {replyMessage.chatId && (
+          {replyMessage.images && (
             <MessagePreview
               type='message'
               isColor={!isMyMessage}
-              className={styles.message_preview}
+              className={classNames(styles.message_preview, styles.message_preview_reply)}
               message={replyMessage}
+              image={replyMessage.images[0]}
             />
           )}
           {images[0] && (
@@ -62,7 +62,14 @@ const Message: FC<TMessageProps> = memo(
                 openModal();
               }}
               ref={imageRef}
-              className={classNames(styles.image, replyMessage && styles.image_reply, !content && styles.only_image)}
+              draggable={false}
+              className={classNames(
+                styles.image,
+                replyMessage.id && styles.image_reply,
+                replyMessage.id && !content && styles.image_radius,
+                !replyMessage.id && !content && styles.image_circle,
+                !content && styles.only_image,
+              )}
               src={images[0]}
               alt=''
             />
@@ -70,7 +77,7 @@ const Message: FC<TMessageProps> = memo(
           <div
             className={classNames(
               styles.content_info,
-              images.length && !replyMessage.content && styles.content_info_image,
+              images.length && styles.content_info_image,
               !content && styles.empty_content_info,
             )}
           >

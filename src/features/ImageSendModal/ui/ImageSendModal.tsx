@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { IoClose } from 'react-icons/io5';
 
@@ -12,6 +13,7 @@ import { useImageSendModalStore } from '../model';
 
 const ImageSendModal = () => {
   const { isModalOpen, file, closeModal, recipient, dialogId, inputValue, setInputValue } = useImageSendModalStore();
+  const [isLoading, setIsLoading] = useState(true);
 
   if (!isModalOpen) {
     return null;
@@ -27,7 +29,7 @@ const ImageSendModal = () => {
           <p className={styles.modal_title}>Send 1 photo</p>
         </div>
         <div className={styles.image_center}>
-          <img className={styles.image_preview} src={file} alt='' draggable='true' />
+          <img onLoad={() => setIsLoading(false)} className={styles.image_preview} src={file} alt='' draggable='true' />
         </div>
         <QueryClientProvider client={queryClient}>
           <MessageInput
@@ -37,6 +39,8 @@ const ImageSendModal = () => {
             inputValue={inputValue}
             setInputValue={setInputValue}
             recipient={recipient}
+            haveButtons={false}
+            isDisabled={isLoading}
           />
         </QueryClientProvider>
       </div>

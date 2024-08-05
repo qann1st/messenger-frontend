@@ -22,13 +22,14 @@
 
 .reply_content {
   display: flex;
-  flex-direction: column;
   border-radius: 0.375rem;
   background-color: var(--message-background-transparent);
   padding: 5px 10px 5px;
   width: 100%;
   position: relative;
   overflow: hidden;
+  align-items: center;
+  gap: 10px;
 
   &::after {
     content: '';
@@ -90,4 +91,10 @@
 
 .reply_text_color {
   color: var(--message-background);
+}
+
+.image {
+  width: 36px;
+  height: 36px;
+  object-fit: cover;
 }

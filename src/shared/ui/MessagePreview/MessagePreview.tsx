@@ -6,7 +6,7 @@ import { TMessagePreviewProps, classNames } from '~/shared';
 import styles from './MessagePreview.module.css';
 
 const MessagePreview: FC<TMessagePreviewProps> = memo(
-  ({ message, isVisible, setIsVisible, className, onClose, type, icon: Icon, isColor = false }) => (
+  ({ message, isVisible, setIsVisible, className, onClose, image, type, icon: Icon, isColor = false }) => (
     <div
       className={classNames(
         className,
@@ -25,18 +25,21 @@ const MessagePreview: FC<TMessagePreviewProps> = memo(
             type === 'message' && styles.reply_content_message,
           )}
         >
-          <p
-            className={classNames(
-              styles.reply_name,
-              isColor && styles.reply_text_color,
-              type === 'message' && styles.reply_text,
-            )}
-          >
-            {message?.sender.firstname}
-          </p>
-          <p className={classNames(styles.reply_text, isColor && styles.reply_text_black)}>
-            {message?.content.split('\\n').join(' ')}
-          </p>
+          {image && <img draggable={false} src={image} alt='' className={styles.image} />}
+          <div>
+            <p
+              className={classNames(
+                styles.reply_name,
+                isColor && styles.reply_text_color,
+                type === 'message' && styles.reply_text,
+              )}
+            >
+              {message?.sender.firstname}
+            </p>
+            <p className={classNames(styles.reply_text, isColor && styles.reply_text_black)}>
+              {message?.content ? message.content.split('\\n').join(' ') : 'Photo'}
+            </p>
+          </div>
         </div>
       ) : (
         <div
@@ -46,12 +49,15 @@ const MessagePreview: FC<TMessagePreviewProps> = memo(
             isColor && styles.reply_content_message_color,
           )}
         >
-          <p className={classNames(styles.reply_name, isColor && styles.reply_text_color)}>
-            {message?.sender.firstname}
-          </p>
-          <p className={classNames(styles.reply_text, styles.reply_text_black)}>
-            {message?.content.split('\\n').join(' ')}
-          </p>
+          {image && <img draggable={false} src={image} alt='' className={styles.image} />}
+          <div>
+            <p className={classNames(styles.reply_name, isColor && styles.reply_text_color)}>
+              {message?.sender.firstname}
+            </p>
+            <p className={classNames(styles.reply_text, isColor && styles.reply_text_black)}>
+              {message?.content ? message.content.split('\\n').join(' ') : 'Photo'}
+            </p>
+          </div>
         </div>
       )}
       {type === 'input' && (

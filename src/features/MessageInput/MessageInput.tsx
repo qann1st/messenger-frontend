@@ -25,7 +25,16 @@ import { useImageSendModalStore } from '../ImageSendModal';
 import type { TMessageInputProps } from './MessageInput.types';
 
 const MessageInput: FC<TMessageInputProps> = memo(
-  ({ recipient, dialogId: id, inputValue, setInputValue, file, type = 'absolute' }) => {
+  ({
+    recipient,
+    dialogId: id,
+    inputValue,
+    setInputValue,
+    file,
+    isDisabled = false,
+    haveButtons = true,
+    type = 'absolute',
+  }) => {
     const dialogId = useParams().dialogId ?? id;
 
     const { socket, getUser, setUser } = useUserStore();
@@ -52,7 +61,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
       if (e) {
         e.preventDefault();
       }
-      if (!inputValue.length && !isModalOpen) {
+      if ((!inputValue.length && !isModalOpen) || isDisabled) {
         return;
       }
 
@@ -246,7 +255,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
           />
           <div className={styles.content}>
             <div className={classNames(styles.wrapper, isVisibleReplyMessage && styles.wrapper_reply)}>
-              {isVisibleEditMessage && (
+              {isVisibleEditMessage && editMessage && (
                 <MessagePreview
                   isColor
                   message={editMessage ?? ({} as Message)}
@@ -259,9 +268,10 @@ const MessageInput: FC<TMessageInputProps> = memo(
                   type='input'
                   icon={HiOutlinePencil}
                   className={classNames(styles.preview)}
+                  image={editMessage.images?.[0]}
                 />
               )}
-              {isVisibleReplyMessage && (
+              {isVisibleReplyMessage && replyMessage && (
                 <MessagePreview
                   isColor
                   message={replyMessage ?? ({} as Message)}
@@ -269,13 +279,16 @@ const MessageInput: FC<TMessageInputProps> = memo(
                   setIsVisible={setIsVisibleReplyMessage}
                   type='input'
                   icon={BsReply}
+                  image={replyMessage.images?.[0]}
                   className={classNames(styles.preview)}
                 />
               )}
               <div className={styles.input_wrapper}>
-                <button onClick={() => filesInputRef.current?.click()} className={styles.icon_button}>
-                  <GoPaperclip />
-                </button>
+                {haveButtons && (
+                  <button onClick={() => filesInputRef.current?.click()} className={styles.icon_button}>
+                    <GoPaperclip />
+                  </button>
+                )}
                 <textarea
                   style={{ height: '50px' }}
                   placeholder='Message'

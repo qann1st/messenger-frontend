@@ -4,5 +4,7 @@ export type TMessageInputProps = {
   dialogId?: string;
   file?: string;
   type?: 'absolute' | 'not-absolute';
+  haveButtons?: boolean;
+  isDisabled?: boolean;
   setInputValue: (value: string) => void;
 };
