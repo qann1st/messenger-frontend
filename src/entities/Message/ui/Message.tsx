@@ -29,7 +29,8 @@ const Message: FC<TMessageProps> = memo(
 
     const [smallMessage, setSmallMessage] = useState(false);
 
-    const date = new Date(updatedAt !== createdAt ? updatedAt : createdAt);
+    const date = new Date(isEdited ? updatedAt : createdAt);
+
     const timeFormatter = new Intl.DateTimeFormat('default', { hour: '2-digit', minute: '2-digit', hour12: false });
     const formattedTime = timeFormatter.format(date);
 

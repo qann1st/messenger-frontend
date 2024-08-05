@@ -25,7 +25,7 @@ export const useHandleMessageSocket = () => {
       const dialog = user.dialogs.find((d) => d.id === message.chatId);
 
       const dialogId = window.location.pathname.split('/')[1];
-      console.log(dialogId);
+
       if (dialogId === message.chatId) {
         socket?.emit('read-messages', {
           roomId: dialogId,
