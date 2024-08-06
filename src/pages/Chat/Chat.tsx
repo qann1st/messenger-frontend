@@ -87,13 +87,7 @@ const Chat: FC = () => {
         });
       e.dataTransfer.clearData();
     } else {
-      const imageUrl = e.dataTransfer.getData('text/plain');
-      if (imageUrl && recipient) {
-        openModal();
-        setFile(imageUrl);
-        setRecipient(recipient.id);
-        setDialogId(dialogId ?? '');
-      }
+      setDragging(false);
     }
   };
 

@@ -103,7 +103,7 @@ const UserBadge: FC<TUserBadgeProps> = memo(
               {firstName} {lastName}
             </p>
             <div className={styles.info_subtitle}>
-              {lastMessageImage?.length !== 0 && (
+              {lastMessageImage?.length !== 0 && lastMessageImage?.[0] !== 'null' && (
                 <img draggable={false} src={lastMessageImage?.[0]} alt='' className={styles.image} />
               )}
               {lastMessage && (

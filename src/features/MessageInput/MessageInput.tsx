@@ -217,7 +217,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
               )}
               <div className={styles.input_wrapper}>
                 {haveButtons && !isVoice && (
-                  <button onClick={() => filesInputRef.current?.click()} className={styles.icon_button}>
+                  <button type='button' className={styles.icon_button}>
                     <GoPaperclip className={styles.paper_clip} />
                   </button>
                 )}
@@ -256,6 +256,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
                 )}
                 {isVoice && type === 'absolute' && (
                   <button
+                    type='button'
                     className={styles.icon_button}
                     onClick={async () => {
                       if (onStopRecording) {
@@ -267,7 +268,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
                   </button>
                 )}
                 {inputValue.length === 0 && !isVoice && type === 'absolute' && (
-                  <button className={styles.icon_button} onClick={() => setIsAudioMessage(true)} type='submit'>
+                  <button className={styles.icon_button} onClick={() => setIsAudioMessage(true)} type='button'>
                     <MdOutlineKeyboardVoice size={24} className={styles.icon} />
                   </button>
                 )}
