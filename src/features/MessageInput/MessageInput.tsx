@@ -217,7 +217,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
               )}
               <div className={styles.input_wrapper}>
                 {haveButtons && !isVoice && (
-                  <button type='button' className={styles.icon_button}>
+                  <button type='button' onClick={() => filesInputRef.current?.click()} className={styles.icon_button}>
                     <GoPaperclip className={styles.paper_clip} />
                   </button>
                 )}

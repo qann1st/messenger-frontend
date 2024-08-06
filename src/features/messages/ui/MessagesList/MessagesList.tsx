@@ -34,7 +34,7 @@ const MessagesList: FC<TMessagesListProps> = memo(({ groupedMessages, isLoading,
   const { contextMenu, contextMenuRef, showContextMenu, hideContextMenu } = useContextMenu(scrollRef);
   const [isArrowVisible, setIsArrowVisible] = useState(false);
 
-  const {} = useMessagePagination(dialogId, scrollRef);
+  useMessagePagination(dialogId, scrollRef);
 
   useEffect(() => {
     setEditMessage(null);

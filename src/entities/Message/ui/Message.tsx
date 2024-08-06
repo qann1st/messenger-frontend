@@ -57,7 +57,7 @@ const Message: FC<TMessageProps> = memo(
         }
       }
     }, [imageRef.current]);
-    console.log(readed);
+
     return (
       <div ref={messageRef} className={classNames(styles.root, isMyMessage && styles.reverse)}>
         {hasAvatar && <Avatar firstName={sender.firstname} lastName={sender.lastname} size='medium' />}
