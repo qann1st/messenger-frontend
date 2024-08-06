@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { IoClose } from 'react-icons/io5';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 
 import { MessageInput } from '~/features';
-import { queryClient } from '~/shared';
+import { Skeleton, queryClient, useMobileStore } from '~/shared';
 
 import styles from './ImageSendModal.module.css';
 
@@ -14,14 +14,29 @@ import { useImageSendModalStore } from '../model';
 const ImageSendModal = () => {
   const { isModalOpen, file, closeModal, recipient, dialogId, inputValue, setInputValue, error } =
     useImageSendModalStore();
+  const { type } = useMobileStore();
+
   const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (isModalOpen) {
+      setIsLoading(true);
+    }
+  }, [isModalOpen]);
 
   if (!isModalOpen) {
     return null;
   }
 
   return createPortal(
-    <div className={styles.modal_overlay} onClick={closeModal}>
+    <div
+      className={styles.modal_overlay}
+      onClick={() => {
+        if (type !== 'mobile') {
+          closeModal();
+        }
+      }}
+    >
       <div className={styles.modal_content} onClick={(e) => e.stopPropagation()}>
         <div className={styles.modal_header}>
           <button onClick={closeModal} className={styles.modal_close}>
@@ -29,17 +44,12 @@ const ImageSendModal = () => {
           </button>
           <p className={styles.modal_title}>Send 1 photo</p>
         </div>
+        {isLoading && <Skeleton.Rectangle width='100%' height={300} />}
         {error ? (
           <p className={styles.error}>{error}</p>
         ) : (
           <div className={styles.image_center}>
-            <img
-              onLoad={() => setIsLoading(false)}
-              className={styles.image_preview}
-              src={file}
-              alt=''
-              draggable='true'
-            />
+            <img onLoad={() => setIsLoading(false)} className={styles.image_preview} src={file} alt='' />
           </div>
         )}
         <QueryClientProvider client={queryClient}>

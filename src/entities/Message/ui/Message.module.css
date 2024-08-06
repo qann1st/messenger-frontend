@@ -1,37 +1,13 @@
-@keyframes fadeInUpMy {
-  0% {
-    opacity: 0;
-    transform: translate(15px, 30px);
-  }
-  100% {
-    opacity: 1;
-    transform: translate(0, 0);
-  }
-}
-
-@keyframes fadeInUpRecipient {
-  0% {
-    opacity: 0;
-    transform: translate(-15px, 30px);
-  }
-  100% {
-    opacity: 1;
-    transform: translate(0, 0);
-  }
-}
-
 .root {
   display: flex;
   gap: var(--spacing-2);
   align-items: center;
   width: 100%;
-  animation: fadeInUpMy 0.2s ease-in-out;
 }
 
 .reverse {
   flex-direction: row-reverse;
   align-self: flex-end;
-  animation: fadeInUpRecipient 0.2s ease-in-out;
 }
 
 .content {
@@ -84,6 +60,7 @@
   width: auto;
   height: auto;
   user-select: none;
+  max-height: 60vh;
 }
 
 .image_reply {
@@ -95,7 +72,7 @@
 }
 
 .image_mobile {
-  max-width: 95vw;
+  width: 100%;
 }
 
 .message_preview_voice {

@@ -32,7 +32,6 @@
   @media screen and (max-width: 600px) {
     max-width: 100%;
     width: 100%;
-    padding: 0;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
   }
@@ -90,4 +89,8 @@
   font-weight: 600;
   font-size: 20px;
   user-select: none;
+}
+
+.skeleton {
+  width: 100%;
 }

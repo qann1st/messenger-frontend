@@ -98,8 +98,7 @@ class MessengerApi {
   getChatMessages(roomId: string, page = 1, limit = 30) {
     const params = new URLSearchParams({
       page: page.toString(),
-      // limit: limit.toString(),
-      limit: '1000000',
+      limit: limit.toString(),
     });
 
     return this.api

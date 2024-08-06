@@ -5,8 +5,8 @@ import { HiOutlinePencil } from 'react-icons/hi';
 import { useParams } from 'react-router-dom';
 
 import { useMessageStore } from '~/entities';
-import { ContextMenu, type Message as TMessage, classNames, useContextMenu, useUserStore } from '~/shared';
-import { Skeleton } from '~/shared';
+import { ContextMenu, Skeleton, type Message as TMessage, classNames, useContextMenu, useUserStore } from '~/shared';
+import { useMessagePagination } from '~/shared/lib/hooks/useMessagesPagination';
 
 import styles from './MessagesList.module.css';
 
@@ -33,6 +33,8 @@ const MessagesList: FC<TMessagesListProps> = memo(({ groupedMessages, isLoading,
 
   const { contextMenu, contextMenuRef, showContextMenu, hideContextMenu } = useContextMenu(scrollRef);
   const [isArrowVisible, setIsArrowVisible] = useState(false);
+
+  const {} = useMessagePagination(dialogId, scrollRef);
 
   useEffect(() => {
     setEditMessage(null);
@@ -82,14 +84,6 @@ const MessagesList: FC<TMessagesListProps> = memo(({ groupedMessages, isLoading,
     };
   }, []);
 
-  useEffect(() => {
-    if (messages && messages[messages.length - 1]?.sender.id === user?.id) {
-      if (scrollRef.current) {
-        scrollRef.current.scrollTo({ behavior: 'smooth', top: scrollRef.current.clientHeight });
-      }
-    }
-  }, [messages]);
-
   const handleReplyMessage = () => {
     hideContextMenu();
     if (editMessage) {
@@ -136,7 +130,12 @@ const MessagesList: FC<TMessagesListProps> = memo(({ groupedMessages, isLoading,
       text: 'Reply',
       onClick: handleReplyMessage,
     },
-    { icon: HiOutlinePencil, text: 'Edit', onClick: handleEditMessage, show: isMySelectedMessage },
+    {
+      icon: HiOutlinePencil,
+      text: 'Edit',
+      onClick: handleEditMessage,
+      show: isMySelectedMessage && !selectedMessage?.voiceMessage,
+    },
     {
       icon: BsTrash,
       text: 'Delete',

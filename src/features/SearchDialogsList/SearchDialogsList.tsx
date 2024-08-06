@@ -34,7 +34,7 @@ const SearchDialogsList = () => {
           isSearch
         />
       ))}
-      {!searchDialogs.length && <p className={styles.not_found}>Ничего не найдено</p>}
+      {!searchDialogs.length && <p className={styles.not_found}>Not found</p>}
     </div>
   );
 };

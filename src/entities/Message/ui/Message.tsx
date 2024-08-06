@@ -100,7 +100,6 @@ const Message: FC<TMessageProps> = memo(
                 openModal();
               }}
               ref={imageRef}
-              draggable={false}
               className={classNames(
                 styles.image,
                 replyMessage.id && styles.image_reply,
@@ -146,12 +145,9 @@ const Message: FC<TMessageProps> = memo(
                 {isEdited && 'edited'} {formattedTime}
               </p>
               {status === 'pending' && <FaRegClock size={12} style={{ marginBottom: '2px' }} />}
-              {isMyMessage &&
-                ((status === 'success' || !status) && readed.length >= 2 && readed.includes(user.id) ? (
-                  <IoCheckmarkDone />
-                ) : (
-                  <IoCheckmark />
-                ))}
+              {(status === 'success' || !status) &&
+                isMyMessage &&
+                (readed.length >= 2 && readed.includes(user.id) ? <IoCheckmarkDone /> : <IoCheckmark />)}
               {status === 'error' && (
                 <BiErrorCircle
                   color={isMyMessage ? 'var(--color-message-error)' : 'var(--color-recipient-error)'}

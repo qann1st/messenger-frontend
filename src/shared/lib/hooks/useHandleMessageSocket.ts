@@ -18,10 +18,9 @@ export const useHandleMessageSocket = () => {
     queryClient.setQueryData(['chat', message.chatId], (oldData: ChatWithPagination) => {
       const user = getUser();
 
-      if (!user || (message.sender.id === user.id && !message.voiceMessage)) {
+      if (!user || (!message.voiceMessage && !message.content && !message.images.length)) {
         return;
       }
-      console.log(message);
 
       const dialog = user.dialogs.find((d) => d.id === message.chatId);
 
@@ -78,8 +77,8 @@ export const useHandleMessageSocket = () => {
       const messageDate = new Date(message.createdAt).toDateString();
 
       const groupedMessages = {
-        ...oldData.groupedMessages,
-        [messageDate]: oldData.groupedMessages[messageDate].filter((msg) => msg.id !== message.id),
+        ...oldData?.groupedMessages,
+        [messageDate]: oldData?.groupedMessages[messageDate].filter((msg) => msg.id !== message.id),
       };
 
       const dialog = user.dialogs.find((d) => d.id === message.chatId);
@@ -96,7 +95,7 @@ export const useHandleMessageSocket = () => {
 
       return {
         ...oldData,
-        data: [...oldData.data.filter((msg) => msg.id !== message.id)],
+        data: [...[oldData?.data.filter((msg) => msg.id !== message.id)]],
         total: oldData.total - 1,
         groupedMessages,
       };

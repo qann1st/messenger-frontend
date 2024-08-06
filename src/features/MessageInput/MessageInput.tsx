@@ -6,19 +6,8 @@ import { MdOutlineKeyboardVoice } from 'react-icons/md';
 import { VscSend } from 'react-icons/vsc';
 import { useParams } from 'react-router-dom';
 
-import { useQueryClient } from '@tanstack/react-query';
-
 import { useMessageStore } from '~/entities';
-import {
-  Chat,
-  ChatWithPagination,
-  type Message,
-  MessagePreview,
-  classNames,
-  formatMilliseconds,
-  messengerApi,
-  useUserStore,
-} from '~/shared';
+import { type Message, MessagePreview, classNames, formatMilliseconds, messengerApi, useUserStore } from '~/shared';
 
 import styles from './MessageInput.module.css';
 
@@ -41,7 +30,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
   }) => {
     const dialogId = useParams().dialogId ?? id;
 
-    const { socket, getUser, setUser } = useUserStore();
+    const { socket, getUser } = useUserStore();
     const {
       editMessage,
       isVisibleEditMessage,
@@ -60,8 +49,6 @@ const MessageInput: FC<TMessageInputProps> = memo(
 
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
     const filesInputRef = useRef<HTMLInputElement>(null);
-
-    const queryClient = useQueryClient();
 
     const handleSubmit = (e?: FormEvent<HTMLFormElement>) => {
       if (e) {
@@ -102,107 +89,14 @@ const MessageInput: FC<TMessageInputProps> = memo(
             return;
           }
 
-          const newDate = new Date();
-          const dateId = Date.now().toString();
-
-          const newMessage: Message = {
-            chatId: dialogId ?? '',
+          socket?.emit('message', {
             content: formattedMessage,
-            createdAt: String(newDate),
-            updatedAt: String(newDate),
-            replyMessage: replyMessage?.id ?? '',
-            forwardedMessage: '',
-            id: dateId,
-            isEdited: false,
-            sender: user,
-            images: [file ?? ''],
-            status: 'pending',
-          };
-
-          const timeout = setTimeout(() => {
-            queryClient.setQueryData(['chat', dialogId], (oldData: ChatWithPagination) => {
-              const msg = oldData.data.find((m) => m.id === newMessage.id);
-              const groupedMsg = oldData.groupedMessages[newDate.toDateString()].find((m) => m.id === newMessage.id);
-
-              if (!msg || !groupedMsg) {
-                return;
-              }
-
-              msg.status = 'error';
-              groupedMsg.status = 'error';
-
-              return {
-                ...oldData,
-                data: [...oldData.data, msg],
-                groupedMsgs: { ...oldData.groupedMessages, groupedMsg },
-              };
-            });
-          }, 5000);
-
-          socket
-            ?.emit('message', {
-              content: formattedMessage,
-              recipient,
-              chatId: dialogId,
-              replyMessage: replyMessage?.id,
-              images: [file],
-            })
-            .on('message', (message) => {
-              clearTimeout(timeout);
-              queryClient.setQueryData(['chat', dialogId], (oldData: ChatWithPagination) => {
-                const msg = oldData.data.find((m) => m.id === newMessage.id);
-                const groupedMsg = oldData.groupedMessages[newDate.toDateString()].find((m) => m.id === newMessage.id);
-
-                if (!msg || !groupedMsg) {
-                  return;
-                }
-
-                msg.status = 'success';
-                groupedMsg.status = 'success';
-                groupedMsg.id = message.id;
-
-                return {
-                  ...oldData,
-                  data: [...oldData.data, msg],
-                  groupedMsgs: { ...oldData.groupedMessages, groupedMsg },
-                };
-              });
-            });
-
-          queryClient.setQueryData(['chat', dialogId], (oldData: ChatWithPagination) => {
-            const dialog = user.dialogs.find((d) => d.id === dialogId);
-
-            if (dialog) {
-              dialog.messages = [newMessage];
-            } else {
-              if (newMessage.sender.id !== user?.id) {
-                user.dialogs.unshift({
-                  id: newMessage.chatId,
-                  messages: [newMessage],
-                  users: [newMessage.sender, user],
-                } as Chat);
-              }
-            }
-
-            setUser(user);
-
-            let groupedMessages = oldData?.groupedMessages ?? {};
-            const date = new Date(newMessage.createdAt).toDateString();
-            const arr = groupedMessages[date];
-
-            if (!arr) {
-              groupedMessages = { [date]: [newMessage], ...groupedMessages };
-            } else {
-              arr.unshift(newMessage);
-            }
-
-            return {
-              ...oldData,
-              data: [newMessage, ...(oldData?.data ?? [])],
-              total: (oldData?.total ?? 0) + 1,
-              groupedMessages,
-            };
+            recipient,
+            chatId: dialogId,
+            replyMessage: replyMessage?.id,
+            images: file ? [file] : [],
           });
+
           setReplyMessage(null);
           setIsVisibleReplyMessage(false);
         }
@@ -337,6 +231,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
                     styles.input,
                     isVisibleReplyMessage && styles.input_reply,
                     isVoice && styles.input_voice,
+                    type === 'not-absolute' && styles.input_not_absolute,
                   )}
                   ref={textAreaRef}
                   rows={inputValue.includes('\n') ? 2 : 1}

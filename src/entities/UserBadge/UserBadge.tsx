@@ -103,7 +103,7 @@ const UserBadge: FC<TUserBadgeProps> = memo(
               {firstName} {lastName}
             </p>
             <div className={styles.info_subtitle}>
-              {lastMessageImage?.[0] && (
+              {lastMessageImage?.length !== 0 && (
                 <img draggable={false} src={lastMessageImage?.[0]} alt='' className={styles.image} />
               )}
               {lastMessage && (
@@ -115,7 +115,7 @@ const UserBadge: FC<TUserBadgeProps> = memo(
                 />
               )}
               <p className={classNames(styles.subtitle, isActive && styles.subtitle_active)}>
-                {lastMessageImage?.[0] && 'Photo'}
+                {lastMessageImage && !lastMessage && 'Photo'}
                 {lastMessageVoice && '🎤 Voice message'}
               </p>
             </div>

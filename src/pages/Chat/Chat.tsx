@@ -43,12 +43,6 @@ const Chat: FC = () => {
   const chatRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (scrollRef.current && user && data && data.data[0] && data.data[0].sender.id === user.id) {
-      scrollRef.current.scrollTo({ behavior: 'smooth', top: scrollRef.current.scrollHeight });
-    }
-  }, [data?.groupedMessages]);
-
-  useEffect(() => {
     if (error) {
       navigate('/');
     }
@@ -72,33 +66,13 @@ const Chat: FC = () => {
 
   const isDark = theme === 'dark';
 
-  const handleDragStart = (e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    if (!dragging) {
-      setDragging(true);
-    }
-  };
-
-  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    if (!dragging) {
-      setDragging(true);
-    }
-  };
-
-  const handleDragLeave = (e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    if (dragging) {
-      setDragging(false);
-    }
-  };
-
   const handleDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
     if (dragging) {
       setDragging(false);
     }
+
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0 && recipient) {
       openModal();
       messengerApi
@@ -112,7 +86,24 @@ const Chat: FC = () => {
           setError('File too large');
         });
       e.dataTransfer.clearData();
+    } else {
+      const imageUrl = e.dataTransfer.getData('text/plain');
+      if (imageUrl && recipient) {
+        openModal();
+        setFile(imageUrl);
+        setRecipient(recipient.id);
+        setDialogId(dialogId ?? '');
+      }
     }
+  };
+
+  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    setDragging(false);
   };
 
   return (
@@ -125,10 +116,9 @@ const Chat: FC = () => {
         type === 'mobile' && styles.mobile,
         !params.dialogId && styles.slide,
       )}
-      onDragStart={handleDragStart}
+      onDrop={handleDrop}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
     >
       <div className={classNames(dragging && styles.dragging)} />
       <UserInfo recipient={recipient} />

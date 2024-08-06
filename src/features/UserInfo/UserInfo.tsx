@@ -49,7 +49,7 @@ const UserInfo: FC<TUserInfoProps> = memo(({ recipient, hasAvatar = true }) => {
           <Skeleton.Rectangle height={12} width={60} />
         ) : (
           <p className={classNames(styles.text, recipient.isOnline && styles.online)}>
-            {recipient.isOnline ? 'online' : `was ${formatOnlineDate(recipient.lastOnline ?? 0)}`}
+            {recipient.isOnline ? 'online' : `was ${formatOnlineDate(Number(recipient.lastOnline))}`}
           </p>
         )}
       </div>

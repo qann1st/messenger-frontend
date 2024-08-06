@@ -17,7 +17,7 @@ const ImageModal = () => {
       <button onClick={closeModal} className={styles.modal_close}>
         <IoClose size={32} />
       </button>
-      <img className={styles.image_preview} src={imageLink} alt='' draggable='true' />
+      <img className={styles.image_preview} src={imageLink} alt='' />
     </div>,
     document.getElementById('root-modal') as HTMLElement,
   );

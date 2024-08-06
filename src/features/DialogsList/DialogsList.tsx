@@ -60,7 +60,7 @@ const DialogsList = () => {
       {user?.dialogs.length ? (
         user.dialogs.map((dialog) => {
           const recipient = getRecipientFromUsers(dialog.users ?? [], user.id ?? '');
-          const messages = dialog?.messages[0] ?? [];
+          const messages = dialog?.messages?.[0] ?? [];
 
           return (
             <UserBadge

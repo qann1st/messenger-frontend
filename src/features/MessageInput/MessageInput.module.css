@@ -98,6 +98,10 @@
   padding-left: 20px;
 }
 
+.input_not_absolute {
+  padding-left: 15px;
+}
+
 .paper_clip {
   margin: 0 10px;
 }

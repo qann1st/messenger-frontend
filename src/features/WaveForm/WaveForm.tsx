@@ -2,7 +2,7 @@ import { type FC, useEffect, useRef, useState } from 'react';
 import { BiPause, BiPlay } from 'react-icons/bi';
 import WaveSurfer from 'wavesurfer.js';
 
-import { classNames, useMobileStore, useThemeStore } from '~/shared';
+import { classNames, useThemeStore } from '~/shared';
 
 import styles from './WaveForm.module.css';
 
@@ -10,7 +10,6 @@ import { TWaveformProps } from './WaveForm.types';
 
 const Waveform: FC<TWaveformProps> = ({ src, isMyMessage }) => {
   const { theme } = useThemeStore();
-  const { type } = useMobileStore();
 
   const waveformRef = useRef<HTMLDivElement>(null);
   const wavesurferRef = useRef<WaveSurfer | null>(null);
@@ -42,7 +41,7 @@ const Waveform: FC<TWaveformProps> = ({ src, isMyMessage }) => {
       responsive: true,
       cursorColor: 'transparent',
       hideScrollbar: true,
-      barHeight: type === 'mobile' ? 400 : 1,
+      barHeight: 400,
       waveColor: theme === 'dark' || isMyMessage ? '#fff' : '#000',
       progressColor: isMyMessage ? '#aaaaaa' : '#486cff',
     });
