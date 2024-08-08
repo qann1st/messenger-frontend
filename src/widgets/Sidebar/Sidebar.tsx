@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { FC, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import { DialogsList, Resizer, SearchDialogsList, SearchInput, ThemeButton } from '~/features';
@@ -6,7 +6,7 @@ import { classNames, useMobileStore, useSearchStore } from '~/shared';
 
 import styles from './Sidebar.module.css';
 
-const Sidebar = () => {
+const Sidebar: FC = () => {
   const sidebarRef = useRef<HTMLDivElement>(null);
   const { isSearch } = useSearchStore();
   const { type } = useMobileStore();

@@ -1,4 +1,3 @@
-export * from './AudioInput';
 export * from './DialogsList';
 export * from './ImageModal';
 export * from './ImageSendModal';

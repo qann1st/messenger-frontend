@@ -1,4 +1,4 @@
-import { type FC, type MouseEvent, memo, useEffect, useState } from 'react';
+import { type FC, type MouseEvent, memo, useCallback, useEffect, useState } from 'react';
 import { BsReply, BsTrash } from 'react-icons/bs';
 import { GoChevronDown } from 'react-icons/go';
 import { HiOutlinePencil } from 'react-icons/hi';
@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 
 import { useMessageStore } from '~/entities';
 import { ContextMenu, Skeleton, type Message as TMessage, classNames, useContextMenu, useUserStore } from '~/shared';
-import { useMessagePagination } from '~/shared/lib/hooks/useMessagesPagination';
+import { useMessagePagination } from '~/shared';
 
 import styles from './MessagesList.module.css';
 
@@ -45,10 +45,10 @@ const MessagesList: FC<TMessagesListProps> = memo(({ groupedMessages, isLoading,
     setSelectedMessage(null);
   }, [dialogId]);
 
-  const handleContextMenu = (e: MouseEvent<HTMLDivElement>, message: TMessage) => {
+  const handleContextMenu = useCallback((e: MouseEvent<HTMLDivElement>, message: TMessage) => {
     setSelectedMessage(message);
     showContextMenu(e);
-  };
+  }, []);
 
   const handleScroll = () => {
     if (scrollRef.current) {
@@ -173,7 +173,7 @@ const MessagesList: FC<TMessagesListProps> = memo(({ groupedMessages, isLoading,
         </div>
       ) : (
         <>
-          <MessagesByDateList groupedMessages={groupedMessages} messages={messages} onContextMenu={handleContextMenu} />
+          <MessagesByDateList onContextMenu={handleContextMenu} />
           <ContextMenu
             ref={contextMenuRef}
             isToggled={contextMenu.toggled}

@@ -5,6 +5,10 @@
   padding: 10px 15px;
   color: var(--black);
   background-color: var(--sidebar-background);
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
 }
 
 .user_title {

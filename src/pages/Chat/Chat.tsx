@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 
 import { useMessageStore } from '~/entities';
-import { AudioInput, MessageInput, MessagesList, UserInfo, useImageSendModalStore } from '~/features';
+import { MessageInput, MessagesList, UserInfo, useImageSendModalStore } from '~/features';
 import {
   classNames,
   getRecipientFromUsers,
@@ -20,9 +20,16 @@ import styles from './Chat.module.css';
 const Chat: FC = () => {
   const { user } = useUserStore();
   const { theme } = useThemeStore();
-  const { type, lastChat } = useMobileStore();
-  const { inputValue, isAudioMessage, setInputValue } = useMessageStore();
-  const { openModal, setFile, setRecipient, setDialogId, setError } = useImageSendModalStore();
+  const { type, lastChat, setLastChat } = useMobileStore();
+  const { inputValue, setInputValue } = useMessageStore();
+  const {
+    openModal,
+    setFile,
+    setRecipient,
+    setDialogId,
+    setError,
+    setInputValue: setImageInputValue,
+  } = useImageSendModalStore();
 
   const [dragging, setDragging] = useState(false);
 
@@ -41,6 +48,10 @@ const Chat: FC = () => {
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const chatRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setLastChat(params.dialogId ?? '');
+  }, []);
 
   useEffect(() => {
     if (error) {
@@ -69,12 +80,15 @@ const Chat: FC = () => {
   const handleDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
+
     if (dragging) {
       setDragging(false);
     }
 
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0 && recipient) {
       openModal();
+      setImageInputValue(inputValue);
+      setInputValue('');
       messengerApi
         .uploadFile(e.dataTransfer.files[0])
         .then((images) => {
@@ -125,11 +139,7 @@ const Chat: FC = () => {
           isLoading={isLoading}
         />
       </div>
-      {isAudioMessage ? (
-        <AudioInput recipient={recipient?.id ?? ''} />
-      ) : (
-        <MessageInput inputValue={inputValue} setInputValue={setInputValue} recipient={recipient?.id ?? ''} />
-      )}
+      <MessageInput inputValue={inputValue} setInputValue={setInputValue} recipient={recipient?.id ?? ''} />
     </main>
   );
 };

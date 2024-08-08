@@ -9,7 +9,7 @@ import styles from './UserInfo.module.css';
 import { TUserInfoProps } from './UserInfo.types';
 
 const UserInfo: FC<TUserInfoProps> = memo(({ recipient, hasAvatar = true }) => {
-  const { type, lastChat, setLastChat } = useMobileStore();
+  const { type, lastChat } = useMobileStore();
   const params = useParams();
   const dialogId = params.dialogId ?? (type !== 'desktop' ? lastChat : '');
 
@@ -25,7 +25,6 @@ const UserInfo: FC<TUserInfoProps> = memo(({ recipient, hasAvatar = true }) => {
             } else {
               navigate(dialogId);
             }
-            setLastChat(dialogId ?? '');
           }}
           className={styles.back}
         >

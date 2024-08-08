@@ -55,6 +55,11 @@ export const useHandleMessageSocket = () => {
         groupedMessages = { [date]: [message], ...groupedMessages };
       } else {
         arr.unshift(message);
+        arr.pop();
+      }
+
+      if (oldData.total > oldData.data.length) {
+        oldData.data.pop();
       }
 
       return {
@@ -78,7 +83,7 @@ export const useHandleMessageSocket = () => {
 
       const groupedMessages = {
         ...oldData?.groupedMessages,
-        [messageDate]: oldData?.groupedMessages[messageDate].filter((msg) => msg.id !== message.id),
+        [messageDate]: oldData?.groupedMessages[messageDate]?.filter((msg) => msg.id !== message.id),
       };
 
       const dialog = user.dialogs.find((d) => d.id === message.chatId);

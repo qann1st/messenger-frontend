@@ -4,6 +4,7 @@ import { IoClose } from 'react-icons/io5';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 
+import { useMessageStore } from '~/entities';
 import { MessageInput } from '~/features';
 import { Skeleton, queryClient, useMobileStore } from '~/shared';
 
@@ -12,6 +13,7 @@ import styles from './ImageSendModal.module.css';
 import { useImageSendModalStore } from '../model';
 
 const ImageSendModal = () => {
+  const { setInputValue: setMessageInputValue } = useMessageStore();
   const { isModalOpen, file, closeModal, recipient, dialogId, inputValue, setInputValue, error } =
     useImageSendModalStore();
   const { type } = useMobileStore();
@@ -28,18 +30,24 @@ const ImageSendModal = () => {
     return null;
   }
 
+  const onClose = () => {
+    setMessageInputValue(inputValue);
+    setInputValue('');
+    closeModal();
+  };
+
   return createPortal(
     <div
       className={styles.modal_overlay}
       onClick={() => {
         if (type !== 'mobile') {
-          closeModal();
+          onClose();
         }
       }}
     >
       <div className={styles.modal_content} onClick={(e) => e.stopPropagation()}>
         <div className={styles.modal_header}>
-          <button onClick={closeModal} className={styles.modal_close}>
+          <button onClick={onClose} className={styles.modal_close}>
             <IoClose size={26} />
           </button>
           <p className={styles.modal_title}>Send 1 photo</p>

@@ -13,30 +13,40 @@ export const useMessagePagination = (
   const [isFetching, setIsFetching] = useState(false);
 
   const queryClient = useQueryClient();
+  const queryData = queryClient.getQueryData(['chat', dialogId]);
 
   useEffect(() => {
     if (isFetching) {
-      messengerApi.getChatMessages(dialogId ?? '', page, pageSize).then((newMessages) => {
-        queryClient.setQueryData(['chat', dialogId], (oldData: ChatWithPagination) => {
-          if (!oldData) {
-            return {};
-          }
+      messengerApi
+        .getChatMessages(dialogId ?? '', page, pageSize)
+        .then((newMessages) => {
+          queryClient.setQueryData(['chat', dialogId], (oldData: ChatWithPagination) => {
+            if (!oldData) {
+              return {};
+            }
 
-          return {
-            ...oldData,
-            data: [...oldData.data, ...newMessages.data],
-            groupedMessages: groupMessagesByDate([...oldData.data, ...newMessages.data]),
-            total: newMessages.total,
-          };
+            return {
+              ...oldData,
+              data: [...oldData.data, ...newMessages.data],
+              groupedMessages: groupMessagesByDate([...oldData.data, ...newMessages.data]),
+              total: newMessages.total,
+            };
+          });
+        })
+        .finally(() => {
+          setIsFetching(false);
+          setPage(page + 1);
         });
-      });
     }
   }, [isFetching]);
 
   const scrollHandler = () => {
+    const messages = queryClient.getQueryData(['chat', dialogId]);
+
     if (
       scrollRef.current &&
-      scrollRef.current.scrollHeight - Math.abs(scrollRef.current.scrollTop - scrollRef.current.clientHeight) < 200
+      scrollRef.current.scrollHeight - Math.abs(scrollRef.current.scrollTop - scrollRef.current.clientHeight) < 200 &&
+      messages.total > messages.data.length
     ) {
       setIsFetching(true);
     }
@@ -52,7 +62,7 @@ export const useMessagePagination = (
         scrollRef.current.removeEventListener('scroll', scrollHandler);
       }
     };
-  }, []);
+  }, [queryData]);
 
   return { isFetching, setPage };
 };

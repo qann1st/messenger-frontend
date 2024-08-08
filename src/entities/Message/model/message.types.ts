@@ -6,7 +6,6 @@ export type TMessageState = {
   isVisibleEditMessage: boolean;
   replyMessage: Message | null;
   editMessage: Message | null;
-  isAudioMessage: boolean;
   inputValue: string;
   otherInputFocus: boolean;
   setSelectedMessage: (messageId: Message | null) => void;
@@ -17,5 +16,4 @@ export type TMessageState = {
   setEditMessage: (message: Message | null) => void;
   getReplyMessage: () => TMessageState['replyMessage'];
   setOtherInputFocus: (value: boolean) => void;
-  setIsAudioMessage: (value: boolean) => void;
 };
