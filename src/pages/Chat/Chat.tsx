@@ -35,7 +35,6 @@ const Chat: FC = () => {
       return { ...messages, groupedMessages: groupMessagesByDate(messages.data) };
     },
   });
-  console.log(error);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const chatRef = useRef<HTMLDivElement>(null);

@@ -55,7 +55,6 @@ export const useHandleMessageSocket = () => {
         groupedMessages = { [date]: [message], ...groupedMessages };
       } else {
         arr.unshift(message);
-        arr.pop();
       }
 
       if (oldData.total > oldData.data.length) {
