@@ -105,6 +105,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
       if (isRecording || !files.type.includes('image')) {
         return;
       }
+      console.log(files.type);
 
       setFile({ type: files.type, url: '' });
       setRecipient('');

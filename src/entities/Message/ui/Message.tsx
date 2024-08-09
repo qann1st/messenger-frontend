@@ -134,7 +134,7 @@ const Message: FC<TMessageProps> = memo(
                     className={styles.text}
                     dangerouslySetInnerHTML={{ __html: highlightMessage(line, styles, isMyMessage) }}
                   />
-                  {i < content.split('\\n').length - 1 && <br />}
+                  {line === '' && <br />}
                 </span>
               ))}
             </div>

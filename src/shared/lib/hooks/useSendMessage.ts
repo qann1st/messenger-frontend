@@ -50,7 +50,7 @@ export const useSendMessage = (
       return;
     }
 
-    const formattedMessage = inputValue?.trim().replace(/\n/g, '\\n');
+    const formattedMessage = inputValue?.trim().replaceAll(/\n/g, '\\n');
 
     if (!isModalOpen && ((formattedMessage?.length ?? 0) < 1 || (formattedMessage?.length ?? 0) > 1000)) {
       return;

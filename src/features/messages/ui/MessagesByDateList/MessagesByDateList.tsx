@@ -1,7 +1,7 @@
 import { FC, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { useQuery } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { Message } from '~/entities';
 import { ChatWithPagination, type Message as TMessage, formatMessageDate, useMobileStore } from '~/shared';
@@ -14,8 +14,9 @@ const MessagesByDateList: FC<TMessagesByDateListProps> = ({ onContextMenu, messa
   const { type, lastChat } = useMobileStore();
 
   const dialogId = useParams().dialogId ?? (type !== 'desktop' ? lastChat : '');
+  const queryClient = useQueryClient();
 
-  const { data } = useQuery<ChatWithPagination>({ queryKey: ['chat', dialogId] });
+  const data = queryClient.getQueryData(['chat', dialogId]) as ChatWithPagination;
 
   const scrollToMessage = useCallback(async (id: string) => {
     if (messagesRef.current[id]) {
@@ -33,7 +34,7 @@ const MessagesByDateList: FC<TMessagesByDateListProps> = ({ onContextMenu, messa
     // }
   }, []);
 
-  return Object.entries<TMessage[]>(data?.groupedMessages ?? {})?.map(([date, messagesByDate]) => {
+  return Object.entries<TMessage[]>((data ?? {}).groupedMessages ?? {})?.map(([date, messagesByDate]) => {
     const formattedDate = formatMessageDate(messagesByDate[0] ? messagesByDate[0].createdAt : 0);
 
     return (

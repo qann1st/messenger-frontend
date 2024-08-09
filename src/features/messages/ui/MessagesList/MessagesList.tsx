@@ -126,7 +126,7 @@ const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoa
 
     if (selectedMessage) {
       setEditMessage(selectedMessage);
-      setInputValue(selectedMessage.content);
+      setInputValue(selectedMessage.content.replaceAll(/\\n/g, '\n'));
       setIsVisibleEditMessage(true);
     }
   };
