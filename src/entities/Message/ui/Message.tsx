@@ -43,6 +43,9 @@ const Message: FC<TMessageProps> = memo(
     const imageRef = useRef<HTMLImageElement>(null);
 
     const [smallMessage, setSmallMessage] = useState(false);
+    console.log(!!images[0]);
+
+    const [isImageLoading, setIsImageLoading] = useState(!!images[0]);
 
     const date = new Date(isEdited ? updatedAt : createdAt);
 
@@ -95,12 +98,14 @@ const Message: FC<TMessageProps> = memo(
               </div>
             </div>
           )}
+          {isImageLoading && <Skeleton.Rectangle borderRadius='var(--border-radius-8)' width={400} height={300} />}
           {images[0] && (
             <img
               onClick={() => {
                 setImageLink(images[0]);
                 openModal();
               }}
+              onLoad={() => setIsImageLoading(false)}
               ref={imageRef}
               className={classNames(
                 styles.image,
@@ -109,6 +114,7 @@ const Message: FC<TMessageProps> = memo(
                 !replyMessage.id && !content && styles.image_circle,
                 !content && styles.only_image,
                 type === 'mobile' && styles.image_mobile,
+                !isImageLoading && styles.image_loaded,
               )}
               src={images[0]}
               alt=''

@@ -58,9 +58,13 @@
   border-top-right-radius: var(--border-radius-8);
   max-width: fit-content;
   width: auto;
-  height: auto;
+  height: 0;
   user-select: none;
   max-height: 60vh;
+}
+
+.image_loaded {
+  height: auto;
 }
 
 .image_reply {

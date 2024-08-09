@@ -17,7 +17,7 @@ const Skeleton: FC<TSkeletonComponentProps> & {
 
   return (
     <div
-      className={classNames(type === 'circle' ? styles.skeleton_circle : styles.skeleton_rectangle, className)}
+      className={classNames(className, type === 'circle' ? styles.skeleton_circle : styles.skeleton_rectangle)}
       style={style}
     />
   );

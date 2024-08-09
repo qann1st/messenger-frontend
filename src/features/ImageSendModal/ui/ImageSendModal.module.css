@@ -39,7 +39,7 @@
 
 .error {
   color: var(--color-recipient-error);
-  margin: 0 auto
+  margin: 0 auto;
 }
 
 .modal_header {
@@ -60,14 +60,18 @@
 
 .image_preview {
   width: 100%;
-  max-height: 50vh;
-  height: auto;
+  height: 0;
   border-radius: var(--border-radius-10);
   object-fit: cover;
 
   @media screen and (max-width: 600px) {
     max-width: 100%;
   }
+}
+
+.image_visible {
+  max-height: 50vh;
+  height: auto;
 }
 
 .modal_close {

@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { IoClose } from 'react-icons/io5';
+import { useShallow } from 'zustand/react/shallow';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 
 import { useMessageStore } from '~/entities';
 import { MessageInput, useMessageInputStore } from '~/features';
-import { Skeleton, queryClient, useMobileStore } from '~/shared';
+import { Skeleton, classNames, queryClient, useMobileStore } from '~/shared';
 
 import styles from './ImageSendModal.module.css';
 
 import { useImageSendModalStore } from '../model';
-import { useShallow } from 'zustand/react/shallow';
 
 const ImageSendModal = () => {
   const [setMessageInputValue] = useMessageInputStore(useShallow((state) => [state.setInputValue]));
@@ -58,7 +58,12 @@ const ImageSendModal = () => {
           <p className={styles.error}>{error}</p>
         ) : (
           <div className={styles.image_center}>
-            <img onLoad={() => setIsLoading(false)} className={styles.image_preview} src={file} alt='' />
+            <img
+              onLoad={() => setIsLoading(false)}
+              className={classNames(styles.image_preview, !isLoading && styles.image_visible)}
+              src={file}
+              alt=''
+            />
           </div>
         )}
         <QueryClientProvider client={queryClient}>

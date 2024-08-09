@@ -60,7 +60,3 @@
   width: 100%;
   padding: 0 10px;
 }
-
-.skeleton {
-  border-radius: var(--border-radius-8);
-}

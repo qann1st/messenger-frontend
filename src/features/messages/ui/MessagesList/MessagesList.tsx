@@ -160,9 +160,9 @@ const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoa
           // eslint-disable-next-line react/no-array-index-key
           <span key={i} style={{ alignSelf: Math.random() > 0.5 ? 'flex-end' : 'flex-start' }}>
             <Skeleton.Rectangle
-              className={styles.skeleton}
               width={100 * (Math.random() > 0.5 ? 2 : 1)}
               height={46 * (Math.random() > 0.5 ? 2 : 1)}
+              borderRadius='var(--border-radius-8)'
             />
           </span>
         ))}
