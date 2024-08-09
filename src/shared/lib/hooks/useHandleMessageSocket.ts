@@ -22,7 +22,8 @@ export const useHandleMessageSocket = () => {
         return;
       }
 
-      const dialog = user.dialogs.find((d) => d.id === message.chatId);
+      const dialogIndex = user.dialogs.findIndex((d) => d.id === message.chatId);
+      const dialog = user.dialogs[dialogIndex];
 
       const dialogId = window.location.pathname.split('/')[1];
 
@@ -35,14 +36,16 @@ export const useHandleMessageSocket = () => {
 
       if (dialog) {
         dialog.messages = [message];
+
+        user.dialogs.splice(dialogIndex, 1);
+
+        user.dialogs.unshift(dialog);
       } else {
-        if (message.sender.id !== user?.id) {
-          user.dialogs.unshift({
-            id: message.chatId,
-            messages: [message],
-            users: [message.sender, user],
-          } as Chat);
-        }
+        user.dialogs.unshift({
+          id: message.chatId,
+          messages: [message],
+          users: [message.sender, user],
+        } as Chat);
       }
 
       setUser(user);
