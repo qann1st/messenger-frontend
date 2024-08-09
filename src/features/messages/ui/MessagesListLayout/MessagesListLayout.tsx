@@ -13,15 +13,13 @@ const MessagesListLayout: FC<TMessagesListLayoutProps> = ({ children, scrollRef,
     useShallow((state) => [state.isVisibleReplyMessage, state.isVisibleEditMessage]),
   );
 
-  const messagesListStyles = useMessagesListSize(styles);
-
   return (
     <div
       className={classNames(
+        useMessagesListSize(styles),
         styles.root,
         (isVisibleReplyMessage || isVisibleEditMessage) && styles.root_reply,
         isLoading && styles.pad,
-        messagesListStyles,
       )}
       ref={scrollRef}
     >

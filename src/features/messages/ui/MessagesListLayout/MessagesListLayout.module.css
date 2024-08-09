@@ -18,6 +18,22 @@
   height: calc(100% - 128px);
 }
 
+.root_spacing {
+  height: calc(100% - 82px);
+}
+
+.root_reply_spacing {
+  height: calc(100% - 150px);
+}
+
+.root_spacing_big {
+  height: calc(100% - 104px);
+}
+
+.root_spacing_reply_big {
+  height: calc(100% - 172px);
+}
+
 .pad {
   padding: 0 10px;
 }
