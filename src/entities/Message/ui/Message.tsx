@@ -127,9 +127,9 @@ const Message: FC<TMessageProps> = memo(
               !content && styles.empty_content_info,
             )}
           >
-            {content && (
-              <div>
-                {content?.split('\\n').map((line, i) => (
+            <div>
+              {content &&
+                content?.split('\\n').map((line, i) => (
                   // eslint-disable-next-line react/no-array-index-key
                   <span key={i}>
                     <p
@@ -139,8 +139,7 @@ const Message: FC<TMessageProps> = memo(
                     {line === '' && <br />}
                   </span>
                 ))}
-              </div>
-            )}
+            </div>
             <div
               className={classNames(
                 styles.message_info,
