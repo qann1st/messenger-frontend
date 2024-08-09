@@ -104,7 +104,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
     );
 
     const uploadFile = (files: File) => {
-      if (isRecording || !files.type.includes('image')) {
+      if (isRecording || !files || !files.type.includes('image')) {
         return;
       }
 
