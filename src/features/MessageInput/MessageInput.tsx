@@ -102,11 +102,11 @@ const MessageInput: FC<TMessageInputProps> = memo(
     );
 
     const uploadFile = (files: File) => {
-      if (isRecording) {
+      if (isRecording || !files.type.includes('image')) {
         return;
       }
 
-      setFile('');
+      setFile({ type: files.type, url: '' });
       setRecipient('');
       setDialogId('');
       openModal();
@@ -115,7 +115,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
       messengerApi
         .uploadFile(files)
         .then((data) => {
-          setFile(data[0]);
+          setFile({ url: data[0], type: files.type });
           setRecipient(recipient);
           setDialogId(dialogId ?? '');
           if (textAreaRef.current) {

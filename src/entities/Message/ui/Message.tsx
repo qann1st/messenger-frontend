@@ -43,7 +43,6 @@ const Message: FC<TMessageProps> = memo(
     const imageRef = useRef<HTMLImageElement>(null);
 
     const [smallMessage, setSmallMessage] = useState(false);
-    console.log(!!images[0]);
 
     const [isImageLoading, setIsImageLoading] = useState(!!images[0]);
 
