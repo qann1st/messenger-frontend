@@ -1,35 +1,44 @@
-import { type FC, type MouseEvent, memo, useCallback, useEffect, useState } from 'react';
+import { type FC, type MouseEvent, memo, useCallback, useEffect, useRef, useState } from 'react';
 import { BsReply, BsTrash } from 'react-icons/bs';
 import { GoChevronDown } from 'react-icons/go';
 import { HiOutlinePencil } from 'react-icons/hi';
 import { useParams } from 'react-router-dom';
 
 import { useMessageStore } from '~/entities';
-import { ContextMenu, Skeleton, type Message as TMessage, classNames, useContextMenu, useUserStore } from '~/shared';
-import { useMessagePagination } from '~/shared';
+import { useMessageInputStore } from '~/features/MessageInput';
+import {
+  ContextMenu,
+  Skeleton,
+  type Message as TMessage,
+  classNames,
+  useContextMenu,
+  useMessagePagination,
+  useUserStore,
+} from '~/shared';
 
 import styles from './MessagesList.module.css';
 
 import { MessagesByDateList } from '../MessagesByDateList';
+import { MessagesListLayout } from '../MessagesListLayout';
 import type { TMessagesListProps } from './MessagesList.types';
 
-const MessagesList: FC<TMessagesListProps> = memo(({ groupedMessages, isLoading, messages, recipient, scrollRef }) => {
+const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoading }) => {
   const {
     selectedMessage,
     setReplyMessage,
     setIsVisibleReplyMessage,
-    isVisibleReplyMessage,
     setSelectedMessage,
-    inputValue,
     editMessage,
     replyMessage,
     setEditMessage,
     setIsVisibleEditMessage,
-    isVisibleEditMessage,
-    setInputValue,
   } = useMessageStore();
+  const setInputValue = useMessageInputStore((state) => state.setInputValue);
+
   const { user, socket } = useUserStore();
   const { dialogId } = useParams();
+
+  const messagesRef = useRef<{ [key: string]: HTMLDivElement }>({});
 
   const { contextMenu, contextMenuRef, showContextMenu, hideContextMenu } = useContextMenu(scrollRef);
   const [isArrowVisible, setIsArrowVisible] = useState(false);
@@ -144,52 +153,37 @@ const MessagesList: FC<TMessagesListProps> = memo(({ groupedMessages, isLoading,
     },
   ];
 
+  if (isLoading) {
+    return (
+      <div className={styles.skeletons}>
+        {new Array(30).fill(null).map((_, i) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <span key={i} style={{ alignSelf: Math.random() > 0.5 ? 'flex-end' : 'flex-start' }}>
+            <Skeleton.Rectangle
+              className={styles.skeleton}
+              width={100 * (Math.random() > 0.5 ? 2 : 1)}
+              height={46 * (Math.random() > 0.5 ? 2 : 1)}
+            />
+          </span>
+        ))}
+      </div>
+    );
+  }
+
   return (
-    <div
-      className={classNames(
-        styles.root,
-        (isVisibleReplyMessage || isVisibleEditMessage) && styles.root_reply,
-        inputValue.includes('\n') && styles.root_spacing,
-        inputValue.includes('\n') && (isVisibleReplyMessage || isVisibleEditMessage) && styles.root_reply_spacing,
-        inputValue.split(/\r?\n/).length - 1 >= 2 && styles.root_spacing_big,
-        inputValue.split(/\r?\n/).length - 1 >= 2 &&
-          (isVisibleReplyMessage || isVisibleEditMessage) &&
-          styles.root_spacing_reply_big,
-      )}
-      ref={scrollRef}
-    >
-      {isLoading || !groupedMessages || !messages ? (
-        <div className={styles.skeletons}>
-          {new Array(30).fill(null).map((_, i) => (
-            // eslint-disable-next-line react/no-array-index-key
-            <span key={i} style={{ alignSelf: Math.random() > 0.5 ? 'flex-end' : 'flex-start' }}>
-              <Skeleton.Rectangle
-                className={styles.skeleton}
-                width={100 * (Math.random() > 0.5 ? 2 : 1)}
-                height={46 * (Math.random() > 0.5 ? 2 : 1)}
-              />
-            </span>
-          ))}
-        </div>
-      ) : (
-        <>
-          <MessagesByDateList onContextMenu={handleContextMenu} />
-          <ContextMenu
-            ref={contextMenuRef}
-            isToggled={contextMenu.toggled}
-            posX={contextMenu.position.x}
-            posY={contextMenu.position.y}
-            buttons={buttons}
-          />
-          <button
-            onClick={handleArrowClick}
-            className={classNames(styles.arrow, isArrowVisible && styles.arrow_visible)}
-          >
-            <GoChevronDown size={32} />
-          </button>
-        </>
-      )}
-    </div>
+    <MessagesListLayout isLoading={isLoading} scrollRef={scrollRef}>
+      <MessagesByDateList messagesRef={messagesRef} onContextMenu={handleContextMenu} />
+      <ContextMenu
+        ref={contextMenuRef}
+        isToggled={contextMenu.toggled}
+        posX={contextMenu.position.x}
+        posY={contextMenu.position.y}
+        buttons={buttons}
+      />
+      <button onClick={handleArrowClick} className={classNames(styles.arrow, isArrowVisible && styles.arrow_visible)}>
+        <GoChevronDown size={32} />
+      </button>
+    </MessagesListLayout>
   );
 });
 

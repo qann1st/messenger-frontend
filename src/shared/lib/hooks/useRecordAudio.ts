@@ -13,15 +13,16 @@ export const useRecordAudio = (recipient: string) => {
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const recordedChunksRef = useRef<Blob[]>([]);
+  const streamRef = useRef<MediaStream | null>(null);
 
   const { dialogId } = useParams();
 
   const initRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      streamRef.current = stream;
 
       const options: MediaRecorderOptions = { audioBitsPerSecond: 128000 };
-
       const types = ['audio/webm; codecs=opus', 'audio/ogg; codecs=opus', 'audio/webm', 'audio/ogg'];
 
       for (const type of types) {
@@ -48,15 +49,16 @@ export const useRecordAudio = (recipient: string) => {
         if (!isCancelled && recordedChunksRef.current.length > 0) {
           const newBlob = new Blob(recordedChunksRef.current, { type: options.mimeType });
           recordedChunksRef.current = [];
-
           if (newBlob.size > 0) {
             sendAudioToServer(newBlob);
           }
         }
-
-        if (isCancelled) {
-          setIsCancelled(false);
+        if (streamRef.current) {
+          streamRef.current.getTracks().forEach((track) => track.stop());
+          streamRef.current = null;
         }
+        setIsRecording(false);
+        setIsCancelled(false);
       });
 
       mediaRecorder.start();
@@ -72,7 +74,6 @@ export const useRecordAudio = (recipient: string) => {
   const handleStopRecording = () => {
     if (mediaRecorderRef.current && isRecording) {
       mediaRecorderRef.current.stop();
-      setIsRecording(false);
     }
   };
 
@@ -83,9 +84,7 @@ export const useRecordAudio = (recipient: string) => {
   }, [isCancelled]);
 
   const handleCancelRecording = () => {
-    if (mediaRecorderRef.current && isRecording) {
-      setIsRecording(false);
-    }
+    setIsCancelled(true);
   };
 
   const sendAudioToServer = async (sendBlob: Blob) => {

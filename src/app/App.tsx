@@ -1,6 +1,5 @@
 import { type FC } from 'react';
 
-import { ImageModal, ImageSendModal } from '~/features';
 import { useAppInit } from '~/shared/lib/hooks/useAppInit';
 
 import { Providers } from './Providers';
@@ -23,8 +22,6 @@ const App: FC = () => {
       <Providers>
         <AppRoutes />
       </Providers>
-      <ImageSendModal />
-      <ImageModal />
     </>
   );
 };

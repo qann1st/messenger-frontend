@@ -1,4 +1,5 @@
 import { useParams } from 'react-router-dom';
+import { useShallow } from 'zustand/react/shallow';
 
 import { UserBadge } from '~/entities';
 import { Skeleton, useSearchStore } from '~/shared';
@@ -8,7 +9,7 @@ import styles from './SearchDialogsList.module.css';
 const SearchDialogsList = () => {
   const { dialogId } = useParams();
 
-  const { searchDialogs, fetching } = useSearchStore();
+  const [searchDialogs, fetching] = useSearchStore(useShallow((state) => [state.searchDialogs, state.fetching]));
 
   if (fetching) {
     return (

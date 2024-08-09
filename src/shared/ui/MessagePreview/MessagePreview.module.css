@@ -20,6 +20,10 @@
   position: absolute;
 }
 
+.pointer {
+  cursor: pointer;
+}
+
 .reply_content {
   display: flex;
   border-radius: 0.375rem;

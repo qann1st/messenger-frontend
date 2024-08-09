@@ -32,6 +32,7 @@ const Message: FC<TMessageProps> = memo(
     createdAt,
     images,
     status,
+    scrollToMessage,
     voiceLoading = false,
   }) => {
     const { user } = useUserStore();
@@ -73,6 +74,7 @@ const Message: FC<TMessageProps> = memo(
           {replyMessage.images && (
             <MessagePreview
               type='message'
+              onClick={() => scrollToMessage(replyMessage.id)}
               isColor={!isMyMessage}
               className={classNames(
                 styles.message_preview,

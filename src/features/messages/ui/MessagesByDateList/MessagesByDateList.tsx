@@ -1,30 +1,57 @@
-import { FC, memo } from 'react';
+import { FC, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { useQuery } from '@tanstack/react-query';
 
 import { Message } from '~/entities';
-import { formatMessageDate, type Message as TMessage } from '~/shared';
+import { ChatWithPagination, type Message as TMessage, formatMessageDate, useMobileStore } from '~/shared';
 
 import styles from './MessagesByDateList.module.css';
 
 import { TMessagesByDateListProps } from './MessagesByDateList.types';
 
-const MessagesByDateList: FC<TMessagesByDateListProps> = memo(({ onContextMenu }) => {
-  const { dialogId = '' } = useParams();
+const MessagesByDateList: FC<TMessagesByDateListProps> = ({ onContextMenu, messagesRef }) => {
+  const { type, lastChat } = useMobileStore();
 
-  const { data } = useQuery({ queryKey: ['chat', dialogId] });
+  const dialogId = useParams().dialogId ?? (type !== 'desktop' ? lastChat : '');
 
-  return Object.entries<TMessage[]>(data.groupedMessages).map(([date, messagesByDate]) => {
+  const { data } = useQuery<ChatWithPagination>({ queryKey: ['chat', dialogId] });
+
+  const scrollToMessage = useCallback(async (id: string) => {
+    if (messagesRef.current[id]) {
+      messagesRef.current[id].scrollIntoView({ behavior: 'smooth', block: 'center' });
+      messagesRef.current[id].classList.add(styles.animate);
+      setTimeout(() => messagesRef.current[id].classList.remove(styles.animate), 2050);
+    } // else {
+    //   const { page } = await messengerApi.getMessagePageById({ messageId: id, roomId: dialogId, limit: 30 });
+    //   await loadMorePages(page - 1);
+
+    //   console.log(Object.keys(messagesRef.current));
+    //   messagesRef.current[id].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    //   messagesRef.current[id].classList.add(styles.animate);
+    //   setTimeout(() => messagesRef.current[id].classList.remove(styles.animate), 2050);
+    // }
+  }, []);
+
+  return Object.entries<TMessage[]>(data?.groupedMessages ?? {})?.map(([date, messagesByDate]) => {
     const formattedDate = formatMessageDate(messagesByDate[0] ? messagesByDate[0].createdAt : 0);
 
     return (
       <div key={date} className={styles.dateGroup}>
         {messagesByDate.map((message) => (
-          <div onContextMenu={(e) => onContextMenu(e, message)} key={message.id}>
+          <div
+            ref={(el) => {
+              if (el) {
+                return (messagesRef.current[message.id] = el);
+              }
+            }}
+            onContextMenu={(e) => onContextMenu(e, message)}
+            key={message.id}
+            className={styles.pad}
+          >
             <Message
               createdAt={message.createdAt}
-              replyMessage={data.data.find((msg: TMessage) => message.replyMessage === msg.id) ?? ({} as TMessage)}
+              replyMessage={message.replyMessage ?? {}}
               hasAvatar={false}
               content={message.content}
               sender={message.sender}
@@ -34,6 +61,7 @@ const MessagesByDateList: FC<TMessagesByDateListProps> = memo(({ onContextMenu }
               readed={message.readed ?? []}
               images={message.images ?? []}
               voiceMessage={message.voiceMessage}
+              scrollToMessage={scrollToMessage}
             />
           </div>
         ))}
@@ -45,7 +73,6 @@ const MessagesByDateList: FC<TMessagesByDateListProps> = memo(({ onContextMenu }
       </div>
     );
   });
-});
+};
 
 export { MessagesByDateList };
-

@@ -5,6 +5,7 @@ export * from './useHandleMessageSocket';
 export * from './useHandleOnlineSocket';
 export * from './useLatest';
 export * from './useLongPress';
+export * from './useMessagesListSize';
 export * from './useMessagesPagination';
 export * from './useOutsideClick';
 export * from './useRecordAudio';

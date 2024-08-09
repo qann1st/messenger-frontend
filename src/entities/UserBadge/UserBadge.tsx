@@ -1,5 +1,6 @@
 import { type FC, memo, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useShallow } from 'zustand/react/shallow';
 
 import {
   Avatar,
@@ -34,7 +35,9 @@ const UserBadge: FC<TUserBadgeProps> = memo(
     const animationRef = useRef<HTMLButtonElement>(null);
 
     const { user, setUser } = useUserStore();
-    const { clearDialogs, setIsSearch, setInputValue } = useSearchStore();
+    const [clearDialogs, setIsSearch, setInputValue] = useSearchStore(
+      useShallow((state) => [state.clearDialogs, state.setIsSearch, state.setInputValue]),
+    );
 
     const navigate = useNavigate();
 

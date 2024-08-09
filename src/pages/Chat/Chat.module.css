@@ -1,7 +1,6 @@
 .root {
   width: 100%;
   height: 100%;
-  position: relative;
   background: url('/assets/background.png');
   background-size: cover;
   background-position: center;
@@ -66,21 +65,4 @@
   padding: 15px 15px 0;
   width: 100%;
   position: relative;
-}
-
-.dragging::after {
-  content: 'Drop here!';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  color: var(--white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  z-index: 3;
-  pointer-events: none;
 }

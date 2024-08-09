@@ -6,14 +6,16 @@ import { TMessagePreviewProps, classNames } from '~/shared';
 import styles from './MessagePreview.module.css';
 
 const MessagePreview: FC<TMessagePreviewProps> = memo(
-  ({ message, isVisible, setIsVisible, className, onClose, image, type, icon: Icon, isColor = false }) => (
+  ({ message, isVisible, onClick, setIsVisible, className, onClose, image, type, icon: Icon, isColor = false }) => (
     <div
       className={classNames(
         className,
         styles.reply,
         isVisible && styles.reply_visible,
         type === 'message' && styles.reply_visible,
+        !Icon && styles.pointer,
       )}
+      onClick={onClick}
     >
       {type === 'input' && Icon && <Icon size={32} color='var(--message-background)' />}
       {type === 'message' ? (

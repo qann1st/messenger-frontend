@@ -5,6 +5,7 @@ import { HiOutlinePencil } from 'react-icons/hi';
 import { MdOutlineKeyboardVoice } from 'react-icons/md';
 import { VscSend } from 'react-icons/vsc';
 import { useParams } from 'react-router-dom';
+import { useShallow } from 'zustand/react/shallow';
 
 import { useMessageStore } from '~/entities';
 import {
@@ -23,6 +24,7 @@ import styles from './MessageInput.module.css';
 
 import { useImageSendModalStore } from '../ImageSendModal';
 import type { TMessageInputProps } from './MessageInput.types';
+import { useMessageInputStore } from './model';
 
 const MessageInput: FC<TMessageInputProps> = memo(
   ({
@@ -46,14 +48,25 @@ const MessageInput: FC<TMessageInputProps> = memo(
 
     const dialogId = useParams().dialogId ?? id;
 
-    const {
+    const [
       isVisibleReplyMessage,
       isVisibleEditMessage,
       editMessage,
       setIsVisibleEditMessage,
       replyMessage,
       setIsVisibleReplyMessage,
-    } = useMessageStore();
+    ] = useMessageStore(
+      useShallow((state) => [
+        state.isVisibleReplyMessage,
+        state.isVisibleEditMessage,
+        state.editMessage,
+        state.setIsVisibleEditMessage,
+        state.replyMessage,
+        state.setIsVisibleReplyMessage,
+      ]),
+    );
+
+    const { isDragging, setIsDragging } = useMessageInputStore();
 
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
     const filesInputRef = useRef<HTMLInputElement>(null);
@@ -121,13 +134,31 @@ const MessageInput: FC<TMessageInputProps> = memo(
     };
 
     const handleClipboard = (e: ClipboardEvent<HTMLTextAreaElement>) => {
-      if (e.clipboardData.files) {
+      if (e.clipboardData.files.length > 0) {
         uploadFile(e.clipboardData.files[0]);
       }
     };
 
     return (
       <>
+        {isDragging && (
+          <div
+            onDragOver={(e) => {
+              e.preventDefault();
+              setIsDragging(true);
+            }}
+            onDragLeave={(e) => {
+              e.preventDefault();
+              setIsDragging(false);
+            }}
+            onDrop={(e) => {
+              e.preventDefault();
+              uploadFile(e.dataTransfer.files[0]);
+              setIsDragging(false);
+            }}
+            className={classNames(styles.drag_drop, isDragging && styles.drag_drop_active)}
+          />
+        )}
         <form onSubmit={handleSubmit} className={classNames(styles.root, styles[type])}>
           <input
             onChange={handleFileUpload}

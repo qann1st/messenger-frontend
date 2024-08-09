@@ -45,7 +45,7 @@ export const useMessagePagination = (
 
     if (
       scrollRef.current &&
-      scrollRef.current.scrollHeight - Math.abs(scrollRef.current.scrollTop - scrollRef.current.clientHeight) < 200 &&
+      scrollRef.current.scrollHeight - Math.abs(scrollRef.current.scrollTop - scrollRef.current.clientHeight) < 100 &&
       messages.total > messages.data.length
     ) {
       setIsFetching(true);

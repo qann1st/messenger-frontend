@@ -5,15 +5,16 @@ import { IoClose } from 'react-icons/io5';
 import { QueryClientProvider } from '@tanstack/react-query';
 
 import { useMessageStore } from '~/entities';
-import { MessageInput } from '~/features';
+import { MessageInput, useMessageInputStore } from '~/features';
 import { Skeleton, queryClient, useMobileStore } from '~/shared';
 
 import styles from './ImageSendModal.module.css';
 
 import { useImageSendModalStore } from '../model';
+import { useShallow } from 'zustand/react/shallow';
 
 const ImageSendModal = () => {
-  const { setInputValue: setMessageInputValue } = useMessageStore();
+  const [setMessageInputValue] = useMessageInputStore(useShallow((state) => [state.setInputValue]));
   const { isModalOpen, file, closeModal, recipient, dialogId, inputValue, setInputValue, error } =
     useImageSendModalStore();
   const { type } = useMobileStore();

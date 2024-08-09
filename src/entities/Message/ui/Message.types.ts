@@ -13,4 +13,5 @@ export type TMessageProps = {
   readed: string[];
   voiceMessage?: string;
   voiceLoading?: boolean;
+  scrollToMessage: (id: string) => void;
 };

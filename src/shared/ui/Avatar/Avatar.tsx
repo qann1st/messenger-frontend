@@ -11,7 +11,7 @@ const Avatar: FC<TAvatarProps> = memo(
     const name = firstName?.slice(0, 1).toUpperCase() + lastName?.slice(0, 1).toUpperCase();
 
     return (
-      <div className={classNames(styles.root, styles[size], className)}>
+      <div className={classNames(className, styles.root, styles[size])}>
         <p>{name}</p>
         <div className={classNames(styles.offline, isOnline && styles.online, isActive && styles.active)} />
       </div>

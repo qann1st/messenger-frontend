@@ -1,10 +1,10 @@
-import { type DragEvent, type FC, useEffect, useRef, useState } from 'react';
+import { DragEvent, type FC, useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useShallow } from 'zustand/react/shallow';
 
 import { useQuery } from '@tanstack/react-query';
 
-import { useMessageStore } from '~/entities';
-import { MessageInput, MessagesList, UserInfo, useImageSendModalStore } from '~/features';
+import { ImageModal, ImageSendModal, MessageInput, MessagesList, UserInfo, useMessageInputStore } from '~/features';
 import {
   classNames,
   getRecipientFromUsers,
@@ -21,30 +21,20 @@ const Chat: FC = () => {
   const { user } = useUserStore();
   const { theme } = useThemeStore();
   const { type, lastChat, setLastChat } = useMobileStore();
-  const { inputValue, setInputValue } = useMessageStore();
-  const {
-    openModal,
-    setFile,
-    setRecipient,
-    setDialogId,
-    setError,
-    setInputValue: setImageInputValue,
-  } = useImageSendModalStore();
-
-  const [dragging, setDragging] = useState(false);
+  const setIsDragging = useMessageInputStore(useShallow((state) => state.setIsDragging));
 
   const params = useParams();
   const dialogId = params.dialogId ?? (type !== 'desktop' ? lastChat : '');
   const navigate = useNavigate();
 
-  const { isLoading, data, error } = useQuery({
+  const { data, error, isLoading } = useQuery({
     queryKey: ['chat', dialogId],
     queryFn: async () => {
       const messages = await messengerApi.getChatMessages(dialogId);
       return { ...messages, groupedMessages: groupMessagesByDate(messages.data) };
     },
-    retry: 0,
   });
+  console.log(error);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const chatRef = useRef<HTMLDivElement>(null);
@@ -73,75 +63,43 @@ const Chat: FC = () => {
     };
   }, [user, data]);
 
-  const recipient = getRecipientFromUsers(data?.users ?? [], user?.id ?? '');
+  const recipient = useMemo(() => getRecipientFromUsers(data?.users ?? [], user?.id ?? ''), [data]);
 
   const isDark = theme === 'dark';
 
-  const handleDrop = (e: DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (dragging) {
-      setDragging(false);
-    }
-
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0 && recipient) {
-      openModal();
-      setImageInputValue(inputValue);
-      setInputValue('');
-      messengerApi
-        .uploadFile(e.dataTransfer.files[0])
-        .then((images) => {
-          setFile(images[0]);
-          setRecipient(recipient.id);
-          setDialogId(dialogId ?? '');
-        })
-        .catch(() => {
-          setError('File too large');
-        });
-      e.dataTransfer.clearData();
-    } else {
-      setDragging(false);
-    }
-  };
-
   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    setDragging(true);
-  };
-
-  const handleDragLeave = () => {
-    setDragging(false);
+    setIsDragging(true);
   };
 
   return (
-    <main
-      ref={chatRef}
-      className={classNames(
-        styles.root,
-        isDark && styles.root_dark,
-        type === 'tablet' && styles.tablet,
-        type === 'mobile' && styles.mobile,
-        !params.dialogId && styles.slide,
-      )}
-      onDrop={handleDrop}
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-    >
-      <div className={classNames(dragging && styles.dragging)} />
-      <UserInfo recipient={recipient} />
-      <div className={classNames(styles.background, isDark && styles.background_dark)}>
-        <MessagesList
-          scrollRef={scrollRef}
-          messages={data?.data}
-          groupedMessages={data?.groupedMessages}
-          recipient={recipient}
-          isLoading={isLoading}
-        />
-      </div>
-      <MessageInput inputValue={inputValue} setInputValue={setInputValue} recipient={recipient?.id ?? ''} />
-    </main>
+    <>
+      <main
+        ref={chatRef}
+        className={classNames(
+          styles.root,
+          isDark && styles.root_dark,
+          type === 'tablet' && styles.tablet,
+          type === 'mobile' && styles.mobile,
+          !params.dialogId && styles.slide,
+        )}
+        onDragOver={handleDragOver}
+      >
+        <UserInfo recipient={recipient} />
+        <div className={classNames(styles.background, isDark && styles.background_dark)}>
+          <MessagesList isLoading={isLoading} scrollRef={scrollRef} recipient={recipient} />
+        </div>
+        <Fff recipient={recipient} />
+      </main>
+      <ImageSendModal />
+      <ImageModal />
+    </>
   );
 };
 
 export { Chat };
+
+const Fff = ({ recipient }) => {
+  const { inputValue, setInputValue } = useMessageInputStore();
+  return <MessageInput inputValue={inputValue} setInputValue={setInputValue} recipient={recipient?.id ?? ''} />;
+};

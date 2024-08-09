@@ -2,7 +2,7 @@ import { type FC, useEffect, useRef, useState } from 'react';
 import { BiPause, BiPlay } from 'react-icons/bi';
 import WaveSurfer from 'wavesurfer.js';
 
-import { classNames, useThemeStore } from '~/shared';
+import { classNames, useMobileStore, useThemeStore } from '~/shared';
 
 import styles from './WaveForm.module.css';
 
@@ -10,6 +10,7 @@ import { TWaveformProps } from './WaveForm.types';
 
 const Waveform: FC<TWaveformProps> = ({ src, isMyMessage }) => {
   const { theme } = useThemeStore();
+  const { type } = useMobileStore();
 
   const waveformRef = useRef<HTMLDivElement>(null);
   const wavesurferRef = useRef<WaveSurfer | null>(null);
@@ -29,21 +30,13 @@ const Waveform: FC<TWaveformProps> = ({ src, isMyMessage }) => {
 
     wavesurferRef.current = WaveSurfer.create({
       container: waveformRef.current,
-      barWidth: 2,
-      barRadius: 4,
-      barGap: 2,
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore Strange build error
-      barMinHeight: 2,
-      cursorWidth: 1,
-      backend: 'MediaElement',
-      height: 23,
-      responsive: true,
-      cursorColor: 'transparent',
-      hideScrollbar: true,
-      barHeight: 400,
       waveColor: theme === 'dark' || isMyMessage ? '#fff' : '#000',
       progressColor: isMyMessage ? '#aaaaaa' : '#486cff',
+      height: 23,
+      barWidth: 2,
+      barRadius: 2,
+      barHeight: type !== 'desktop' ? 1100 : 1.5,
+      cursorWidth: 0,
     });
 
     if (src) {
@@ -77,7 +70,7 @@ const Waveform: FC<TWaveformProps> = ({ src, isMyMessage }) => {
         wavesurferRef.current = null;
       }
     };
-  }, [src, theme]);
+  }, [src, theme, type]);
 
   const togglePlayPause = () => {
     if (!isUserInteracted) {

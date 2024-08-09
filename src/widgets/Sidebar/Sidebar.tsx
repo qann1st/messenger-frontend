@@ -8,7 +8,7 @@ import styles from './Sidebar.module.css';
 
 const Sidebar: FC = () => {
   const sidebarRef = useRef<HTMLDivElement>(null);
-  const { isSearch } = useSearchStore();
+  const isSearch = useSearchStore((state) => state.isSearch);
   const { type } = useMobileStore();
 
   const { dialogId } = useParams();

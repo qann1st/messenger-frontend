@@ -12,4 +12,5 @@ export type TMessagePreviewProps = {
   setIsVisible?: (value: boolean) => void;
   onClose?: () => void;
   image?: string;
+  onClick?: () => void;
 };

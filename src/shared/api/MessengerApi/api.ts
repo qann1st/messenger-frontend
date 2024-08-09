@@ -4,6 +4,7 @@ import {
   ApproveDto,
   Chat,
   ChatWithPagination,
+  Page,
   SigninDto,
   SignupDto,
   Success,
@@ -135,6 +136,10 @@ class MessengerApi {
     return this.api
       .post<string[]>('files/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
       .then((response) => response.data);
+  }
+
+  getMessagePageById({ messageId, roomId, limit }: { messageId: string; roomId: string; limit: number }) {
+    return this.api.get<Page>(`chat/messages/page/${messageId}/${roomId}/${limit}`).then((response) => response.data);
   }
 }
 

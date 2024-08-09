@@ -38,7 +38,7 @@ export interface Message {
   id: string;
   sender: User;
   content: string;
-  replyMessage: string;
+  replyMessage: Message;
   forwardedMessage: string;
   chatId: string;
   images: string[];
@@ -50,6 +50,10 @@ export interface Message {
   readed?: string[];
   voiceMessage?: string;
   status?: 'pending' | 'success' | 'error';
+}
+
+export interface Page {
+  page: number;
 }
 
 export interface Chat {
