@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { ImageModal, ImageSendModal, MessageInput, MessagesList, UserInfo, useMessageInputStore } from '~/features';
 import {
+  User,
   classNames,
   getRecipientFromUsers,
   groupMessagesByDate,
@@ -99,7 +100,7 @@ const Chat: FC = () => {
 
 export { Chat };
 
-const Fff = ({ recipient }) => {
+const Fff: FC<{ recipient?: User }> = ({ recipient }) => {
   const { inputValue, setInputValue } = useMessageInputStore();
   return <MessageInput inputValue={inputValue} setInputValue={setInputValue} recipient={recipient?.id ?? ''} />;
 };

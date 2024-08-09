@@ -41,11 +41,12 @@ export const useMessagePagination = (
   }, [isFetching]);
 
   const scrollHandler = () => {
-    const messages = queryClient.getQueryData(['chat', dialogId]);
+    const messages = queryClient.getQueryData<ChatWithPagination>(['chat', dialogId]);
 
     if (
       scrollRef.current &&
       scrollRef.current.scrollHeight - Math.abs(scrollRef.current.scrollTop - scrollRef.current.clientHeight) < 100 &&
+      messages &&
       messages.total > messages.data.length
     ) {
       setIsFetching(true);
