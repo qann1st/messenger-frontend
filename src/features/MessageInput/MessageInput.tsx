@@ -37,14 +37,16 @@ const MessageInput: FC<TMessageInputProps> = memo(
     haveButtons = true,
     type = 'absolute',
   }) => {
-    const {
-      setFile,
-      setRecipient,
-      setDialogId,
-      openModal,
-      setError,
-      setInputValue: setImageInputValue,
-    } = useImageSendModalStore();
+    const [setFile, setRecipient, setDialogId, openModal, setError, setImageInputValue] = useImageSendModalStore(
+      useShallow((state) => [
+        state.setFile,
+        state.setRecipient,
+        state.setDialogId,
+        state.openModal,
+        state.setError,
+        state.setInputValue,
+      ]),
+    );
 
     const dialogId = useParams().dialogId ?? id;
 
@@ -105,7 +107,6 @@ const MessageInput: FC<TMessageInputProps> = memo(
       if (isRecording || !files.type.includes('image')) {
         return;
       }
-      console.log(files.type);
 
       setFile({ type: files.type, url: '' });
       setRecipient('');

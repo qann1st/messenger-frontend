@@ -2,6 +2,7 @@ import { type FC, memo, useEffect, useRef, useState } from 'react';
 import { BiErrorCircle } from 'react-icons/bi';
 import { FaRegClock } from 'react-icons/fa';
 import { IoCheckmark, IoCheckmarkDone } from 'react-icons/io5';
+import { useShallow } from 'zustand/react/shallow';
 
 import { Waveform, useImageModalStore } from '~/features';
 import {
@@ -36,7 +37,7 @@ const Message: FC<TMessageProps> = memo(
     voiceLoading = false,
   }) => {
     const { user } = useUserStore();
-    const { openModal, setImageLink } = useImageModalStore();
+    const [openModal, setImageLink] = useImageModalStore(useShallow((state) => [state.openModal, state.setImageLink]));
     const { type } = useMobileStore();
 
     const messageRef = useRef<HTMLDivElement>(null);
@@ -126,18 +127,20 @@ const Message: FC<TMessageProps> = memo(
               !content && styles.empty_content_info,
             )}
           >
-            <div>
-              {content?.split('\\n').map((line, i) => (
-                // eslint-disable-next-line react/no-array-index-key
-                <span key={i}>
-                  <p
-                    className={styles.text}
-                    dangerouslySetInnerHTML={{ __html: highlightMessage(line, styles, isMyMessage) }}
-                  />
-                  {line === '' && <br />}
-                </span>
-              ))}
-            </div>
+            {content && (
+              <div>
+                {content?.split('\\n').map((line, i) => (
+                  // eslint-disable-next-line react/no-array-index-key
+                  <span key={i}>
+                    <p
+                      className={styles.text}
+                      dangerouslySetInnerHTML={{ __html: highlightMessage(line, styles, isMyMessage) }}
+                    />
+                    {line === '' && <br />}
+                  </span>
+                ))}
+              </div>
+            )}
             <div
               className={classNames(
                 styles.message_info,
