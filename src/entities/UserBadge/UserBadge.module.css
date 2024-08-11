@@ -82,6 +82,10 @@
   padding-right: 8px;
 }
 
+.printing {
+  color: var(--message-background);
+}
+
 .subtitle_active {
   color: var(--active-user-subtitle-color);
 }

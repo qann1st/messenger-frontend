@@ -46,7 +46,7 @@ export const useRecordAudio = (recipient: string) => {
       });
 
       mediaRecorder.addEventListener('stop', () => {
-        if (!isCancelled && recordedChunksRef.current.length > 0) {
+        if (recordedChunksRef.current.length > 0) {
           const newBlob = new Blob(recordedChunksRef.current, { type: options.mimeType });
           recordedChunksRef.current = [];
           if (newBlob.size > 0) {
@@ -58,7 +58,6 @@ export const useRecordAudio = (recipient: string) => {
           streamRef.current = null;
         }
         setIsRecording(false);
-        setIsCancelled(false);
       });
 
       mediaRecorder.start();
@@ -72,8 +71,8 @@ export const useRecordAudio = (recipient: string) => {
   };
 
   const handleStopRecording = () => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
+    if (isRecording) {
+      setIsCancelled(false);
     }
   };
 
@@ -84,6 +83,7 @@ export const useRecordAudio = (recipient: string) => {
   }, [isCancelled]);
 
   const handleCancelRecording = () => {
+    recordedChunksRef.current = [];
     setIsCancelled(true);
   };
 

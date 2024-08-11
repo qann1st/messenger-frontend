@@ -148,7 +148,11 @@ const Message: FC<TMessageProps> = memo(
               )}
             >
               <p
-                className={classNames(styles.time, !content && styles.time_empty, !isMyMessage && styles.time_my)}
+                className={classNames(
+                  styles.time,
+                  !content && !voiceMessage && styles.time_empty,
+                  !isMyMessage && styles.time_my,
+                )}
                 title={`${formatCreatedTime(createdAt, updatedAt)}`}
               >
                 {isEdited && 'edited'} {formattedTime}

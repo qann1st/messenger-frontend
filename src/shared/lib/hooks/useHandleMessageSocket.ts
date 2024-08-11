@@ -192,6 +192,25 @@ export const useHandleMessageSocket = () => {
     });
   };
 
+  const handlePrint = ({ roomId, sender, printing }: { roomId: string; sender: string; printing: boolean }) => {
+    queryClient.setQueryData(['chat', roomId], (oldData: ChatWithPagination) => {
+      const user = getUser();
+
+      if (!user) {
+        return;
+      }
+
+      user.dialogs = user.dialogs.map((dialog) => (dialog.id === roomId ? { ...dialog, printing } : dialog));
+
+      setUser(user);
+
+      return {
+        ...oldData,
+        printing,
+      };
+    });
+  };
+
   useEffect(() => {
     if (!socket) {
       return;
@@ -202,6 +221,7 @@ export const useHandleMessageSocket = () => {
     socket.on('delete-message', handleDeleteMessage);
     socket.on('delete-chat', handleDeleteChat);
     socket.on('read-messages', handleReadMessages);
+    socket.on('print', handlePrint);
 
     return () => {
       socket.off('message', handleMessage);
@@ -209,6 +229,7 @@ export const useHandleMessageSocket = () => {
       socket.off('delete-message', handleDeleteMessage);
       socket.off('delete-chat', handleDeleteChat);
       socket.off('read-messages', handleReadMessages);
+      socket.off('print', handlePrint);
     };
   }, [socket]);
 };

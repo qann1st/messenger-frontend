@@ -30,6 +30,7 @@ const UserBadge: FC<TUserBadgeProps> = memo(
     href,
     userId,
     showContextMenu,
+    printing,
   }) => {
     const linkRef = useRef<HTMLAnchorElement>(null);
     const animationRef = useRef<HTMLButtonElement>(null);
@@ -83,6 +84,7 @@ const UserBadge: FC<TUserBadgeProps> = memo(
         </ul>
       );
     }
+    console.log(printing);
 
     return (
       <li className={classNames(styles.root, isActive && styles.active)}>
@@ -111,10 +113,9 @@ const UserBadge: FC<TUserBadgeProps> = memo(
               {lastMessageImage?.length !== 0 &&
                 lastMessageImage?.[0] !== 'null' &&
                 lastMessageImage !== null &&
-                lastMessageImage !== undefined && (
-                  <img draggable={false} src={lastMessageImage?.[0]} alt='' className={styles.image} />
-                )}
-              {lastMessage && (
+                lastMessageImage !== undefined &&
+                !printing && <img draggable={false} src={lastMessageImage?.[0]} alt='' className={styles.image} />}
+              {lastMessage && !printing && (
                 <p
                   className={classNames(styles.subtitle, isActive && styles.subtitle_active)}
                   dangerouslySetInnerHTML={{
@@ -122,6 +123,7 @@ const UserBadge: FC<TUserBadgeProps> = memo(
                   }}
                 />
               )}
+              {printing && <p className={classNames(styles.printing, styles.subtitle)}>prints...</p>}
               <p className={classNames(styles.subtitle, isActive && styles.subtitle_active)}>
                 {lastMessageImage && !lastMessage && 'Photo'}
                 {lastMessageVoice && '🎤 Voice message'}

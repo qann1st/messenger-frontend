@@ -1,5 +1,6 @@
 import { type MouseEvent, useState } from 'react';
 import { BsTrash } from 'react-icons/bs';
+import { IoOpenOutline } from 'react-icons/io5';
 import { useParams } from 'react-router-dom';
 
 import { UserBadge } from '~/entities';
@@ -40,10 +41,10 @@ const DialogsList = () => {
     }
 
     socket.emit('delete-chat', {
-      roomId: dialogId,
+      roomId: selectedDialog.id,
       recipient: getRecipientFromUsers(selectedDialog.users, user?.id ?? '')?.id,
     });
-    setUser({ ...user, dialogs: user?.dialogs.filter((el) => el.id !== dialogId) } as User);
+    setUser({ ...user, dialogs: user?.dialogs.filter((el) => el.id !== selectedDialog.id) } as User);
   };
 
   const buttons = [
@@ -52,6 +53,14 @@ const DialogsList = () => {
       text: 'Delete',
       isDelete: true,
       onClick: handleDeleteClick,
+    },
+    {
+      icon: IoOpenOutline,
+      text: 'Open in new tab',
+      onClick: () => {
+        hideContextMenu();
+        window.open(`/${selectedDialog?.id}`);
+      },
     },
   ];
 
@@ -66,12 +75,13 @@ const DialogsList = () => {
             <UserBadge
               key={dialog.id}
               href={`/${dialog.id}`}
-              isActive={dialog.id === dialogId}
+              printing={dialog.printing}
               isOnline={recipient?.isOnline}
-              firstName={recipient?.firstname}
               lastName={recipient?.lastname}
-              lastMessage={messages?.content ?? ''}
+              firstName={recipient?.firstname}
+              isActive={dialog.id === dialogId}
               lastMessageImage={messages.images}
+              lastMessage={messages?.content ?? ''}
               lastMessageVoice={messages.voiceMessage}
               showContextMenu={(e) => handleContextMenu(e, dialog)}
             />

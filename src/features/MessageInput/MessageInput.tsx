@@ -74,7 +74,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
     const filesInputRef = useRef<HTMLInputElement>(null);
 
     const { isRecording, handleStartRecording, handleStopRecording, handleCancelRecording } = useRecordAudio(recipient);
-    const { handleSubmit, timer } = useSendMessage(
+    const { handleSubmit, timer, setIsPrinting } = useSendMessage(
       dialogId,
       recipient,
       file,
@@ -97,6 +97,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
     const handleChange = useCallback(
       (e: ChangeEvent<HTMLTextAreaElement>) => {
         if (!isRecording || !isDisabled) {
+          setIsPrinting(true);
           setInputValue(e.target.value);
         }
       },

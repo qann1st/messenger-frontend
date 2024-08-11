@@ -60,6 +60,7 @@ export interface Chat {
   id: string;
   users: User[];
   messages: Message[];
+  printing?: boolean;
 }
 
 export interface User {
@@ -98,4 +99,5 @@ export interface ChatWithPagination {
   total: number;
   page: number;
   limit: number;
+  printing: boolean;
 }

@@ -8,7 +8,7 @@ import styles from './UserInfo.module.css';
 
 import { TUserInfoProps } from './UserInfo.types';
 
-const UserInfo: FC<TUserInfoProps> = memo(({ recipient, hasAvatar = true }) => {
+const UserInfo: FC<TUserInfoProps> = memo(({ recipient, printing, hasAvatar = true }) => {
   const { type, lastChat } = useMobileStore();
   const params = useParams();
   const dialogId = params.dialogId ?? (type !== 'desktop' ? lastChat : '');
@@ -48,7 +48,9 @@ const UserInfo: FC<TUserInfoProps> = memo(({ recipient, hasAvatar = true }) => {
           <Skeleton.Rectangle height={12} width={60} />
         ) : (
           <p className={classNames(styles.text, recipient.isOnline && styles.online)}>
-            {recipient.isOnline ? 'online' : `was ${formatOnlineDate(Number(recipient.lastOnline))}`}
+            {recipient.isOnline && printing && 'prints...'}
+            {recipient.isOnline && !printing && 'online'}
+            {!recipient.isOnline && `was ${formatOnlineDate(Number(recipient.lastOnline))}`}
           </p>
         )}
       </div>

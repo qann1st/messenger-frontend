@@ -85,7 +85,7 @@ const Chat: FC = () => {
         )}
         onDragOver={handleDragOver}
       >
-        <UserInfo recipient={recipient} />
+        <UserInfo recipient={recipient} printing={data?.printing ?? false} />
         <div className={classNames(styles.background, isDark && styles.background_dark)}>
           <MessagesList isLoading={isLoading} scrollRef={scrollRef} recipient={recipient} />
         </div>

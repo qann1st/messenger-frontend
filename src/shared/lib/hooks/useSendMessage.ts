@@ -26,6 +26,7 @@ export const useSendMessage = (
   } = useMessageStore();
 
   const [timer, setTimer] = useState(0);
+  const [isPrinting, setIsPrinting] = useState(false);
 
   useEffect(() => {
     if (isVoice) {
@@ -37,6 +38,32 @@ export const useSendMessage = (
       setTimer(0);
     }
   }, [isVoice]);
+
+  useEffect(() => {
+    if (!inputValue?.length) {
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      setIsPrinting(false);
+    }, 3000);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [inputValue]);
+
+  useEffect(() => {
+    if (!socket) {
+      return;
+    }
+
+    socket.emit('print', {
+      roomId: dialogId,
+      recipient,
+      startPrint: isPrinting,
+    });
+  }, [socket, isPrinting]);
 
   const handleSubmit = (e?: FormEvent<HTMLFormElement>) => {
     e?.preventDefault();
@@ -90,5 +117,5 @@ export const useSendMessage = (
     }
   };
 
-  return { timer, handleSubmit };
+  return { timer, handleSubmit, setIsPrinting };
 };
