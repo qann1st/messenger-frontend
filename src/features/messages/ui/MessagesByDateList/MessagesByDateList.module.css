@@ -3,6 +3,9 @@
   flex-direction: column-reverse;
 }
 
+.scrollContainer {
+}
+
 .info {
   position: sticky;
   top: 10px;

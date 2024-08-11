@@ -63,7 +63,7 @@ const Message: FC<TMessageProps> = memo(
     }, [imageRef.current]);
 
     return (
-      <div ref={messageRef} className={classNames(styles.root, isMyMessage && styles.reverse)}>
+      <article ref={messageRef} className={classNames(styles.root, isMyMessage && styles.reverse)}>
         {hasAvatar && <Avatar firstName={sender.firstname} lastName={sender.lastname} size='medium' />}
         <div
           className={classNames(
@@ -166,7 +166,7 @@ const Message: FC<TMessageProps> = memo(
             </div>
           </div>
         </div>
-      </div>
+      </article>
     );
   },
 );

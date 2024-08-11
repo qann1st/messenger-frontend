@@ -5,12 +5,16 @@
   transition: var(--transition);
   opacity: 1;
   position: relative;
-  text-decoration: none;
   overflow: hidden;
   cursor: pointer;
   border: none;
   background-color: transparent;
   min-height: 75px;
+}
+
+.link {
+  text-decoration: none;
+  width: 100%;
 }
 
 .avatar {
@@ -37,7 +41,7 @@
 .info_subtitle {
   display: flex;
   gap: 5px;
-  align-items: center
+  align-items: center;
 }
 
 .info {

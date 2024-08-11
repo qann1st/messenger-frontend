@@ -44,7 +44,6 @@
     "no-shadow": "off",
     "no-template-curly-in-string": "error",
     "accessor-pairs": "error",
-    "camelcase": "error",
     "curly": "error",
     "eqeqeq": ["error", "always"],
     "no-alert": "error",

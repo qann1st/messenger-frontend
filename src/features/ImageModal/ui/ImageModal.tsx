@@ -1,12 +1,16 @@
 import { createPortal } from 'react-dom';
 import { IoClose } from 'react-icons/io5';
 
+import { useEscCloseModal } from '~/shared/lib/hooks/useEscCloseModal';
+
 import styles from './ImageModal.module.css';
 
 import { useImageModalStore } from '../model';
 
 const ImageModal = () => {
   const { isModalOpen, closeModal, imageLink } = useImageModalStore();
+
+  useEscCloseModal(closeModal);
 
   if (!isModalOpen) {
     return null;

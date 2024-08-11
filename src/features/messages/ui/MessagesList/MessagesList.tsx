@@ -172,7 +172,7 @@ const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoa
 
   return (
     <MessagesListLayout isLoading={isLoading} scrollRef={scrollRef}>
-      <MessagesByDateList messagesRef={messagesRef} onContextMenu={handleContextMenu} />
+      <MessagesByDateList scrollRef={scrollRef} messagesRef={messagesRef} onContextMenu={handleContextMenu} />
       <ContextMenu
         ref={contextMenuRef}
         isToggled={contextMenu.toggled}

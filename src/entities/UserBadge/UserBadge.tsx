@@ -63,34 +63,36 @@ const UserBadge: FC<TUserBadgeProps> = memo(
 
     if (isSearch) {
       return (
-        <button ref={animationRef} draggable='false' className={classNames(styles.root)} onClick={handleButtonClick}>
-          <Avatar
-            className={styles.avatar}
-            isActive={isActive}
-            isOnline={isOnline}
-            size='large'
-            firstName={firstName}
-            lastName={lastName}
-          />
-          <div className={styles.info}>
-            <p className={classNames(styles.name, isActive && styles.name_active)}>
-              {firstName} {lastName}
-            </p>
-            <p className={classNames(styles.subtitle, isActive && styles.subtitle_active)}>{lastMessage}</p>
-          </div>
-        </button>
+        <ul className={classNames(styles.root)}>
+          <button ref={animationRef} draggable='false' onClick={handleButtonClick}>
+            <Avatar
+              className={styles.avatar}
+              isActive={isActive}
+              isOnline={isOnline}
+              size='large'
+              firstName={firstName}
+              lastName={lastName}
+            />
+            <div className={styles.info}>
+              <p className={classNames(styles.name, isActive && styles.name_active)}>
+                {firstName} {lastName}
+              </p>
+              <p className={classNames(styles.subtitle, isActive && styles.subtitle_active)}>{lastMessage}</p>
+            </div>
+          </button>
+        </ul>
       );
     }
 
     return (
-      <>
+      <li className={classNames(styles.root, isActive && styles.active)}>
         <Link
           to={href ?? ''}
           ref={linkRef}
           role='button'
           draggable='false'
-          className={classNames(styles.root, isActive && styles.active)}
           onContextMenu={showContextMenu}
+          className={styles.link}
           onClick={(e) => rippleAnimation({ e, ref: linkRef, className: styles.ripple, size: 125, duration: 800 })}
         >
           <Avatar
@@ -127,7 +129,7 @@ const UserBadge: FC<TUserBadgeProps> = memo(
             </div>
           </div>
         </Link>
-      </>
+      </li>
     );
   },
 );

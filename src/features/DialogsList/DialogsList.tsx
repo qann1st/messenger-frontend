@@ -56,7 +56,7 @@ const DialogsList = () => {
   ];
 
   return (
-    <div className={styles.dialogs}>
+    <ul className={styles.dialogs}>
       {user?.dialogs.length ? (
         user.dialogs.map((dialog) => {
           const recipient = getRecipientFromUsers(dialog.users ?? [], user.id ?? '');
@@ -87,7 +87,7 @@ const DialogsList = () => {
         ref={contextMenuRef}
         buttons={buttons}
       />
-    </div>
+    </ul>
   );
 };
 

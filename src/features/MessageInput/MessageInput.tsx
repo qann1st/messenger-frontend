@@ -88,7 +88,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
     useFocusOnMount(textAreaRef);
 
     const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
+      if (e.key === 'Enter' && !e.shiftKey && inputValue.length) {
         e.preventDefault();
         handleSubmit();
       }

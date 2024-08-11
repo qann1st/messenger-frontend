@@ -13,6 +13,7 @@ tsconfig.node.tsbuildinfo
 node_modules
 dist
 dist-ssr
+dev-dist
 *.local
 
 # Editor directories and files
