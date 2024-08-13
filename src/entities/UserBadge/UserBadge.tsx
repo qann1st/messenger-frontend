@@ -84,7 +84,6 @@ const UserBadge: FC<TUserBadgeProps> = memo(
         </ul>
       );
     }
-    console.log(printing);
 
     return (
       <li className={classNames(styles.root, isActive && styles.active)}>
@@ -124,10 +123,12 @@ const UserBadge: FC<TUserBadgeProps> = memo(
                 />
               )}
               {printing && <p className={classNames(styles.printing, styles.subtitle)}>prints...</p>}
-              <p className={classNames(styles.subtitle, isActive && styles.subtitle_active)}>
-                {lastMessageImage && !lastMessage && 'Photo'}
-                {lastMessageVoice && '🎤 Voice message'}
-              </p>
+              {!printing && (
+                <p className={classNames(styles.subtitle, isActive && styles.subtitle_active)}>
+                  {lastMessageImage && !lastMessage && 'Photo'}
+                  {lastMessageVoice && '🎤 Voice message'}
+                </p>
+              )}
             </div>
           </div>
         </Link>

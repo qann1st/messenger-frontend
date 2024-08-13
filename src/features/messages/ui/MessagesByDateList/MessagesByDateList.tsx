@@ -1,16 +1,22 @@
-import { FC, useCallback } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { useQueryClient } from '@tanstack/react-query';
 
 import { Message } from '~/entities';
-import { ChatWithPagination, type Message as TMessage, formatMessageDate, useMobileStore } from '~/shared';
+import {
+  ChatWithPagination,
+  type Message as TMessage,
+  formatMessageDate,
+  messengerApi,
+  useMobileStore,
+} from '~/shared';
 
 import styles from './MessagesByDateList.module.css';
 
 import { TMessagesByDateListProps } from './MessagesByDateList.types';
 
-const MessagesByDateList: FC<TMessagesByDateListProps> = ({ onContextMenu, messagesRef }) => {
+const MessagesByDateList: FC<TMessagesByDateListProps> = ({ onContextMenu, messagesRef, loadMorePages }) => {
   const { type, lastChat } = useMobileStore();
 
   const dialogId = useParams().dialogId ?? (type !== 'desktop' ? lastChat : '');
@@ -18,21 +24,32 @@ const MessagesByDateList: FC<TMessagesByDateListProps> = ({ onContextMenu, messa
 
   const data = queryClient.getQueryData(['chat', dialogId]) as ChatWithPagination;
 
+  const [loadedMorePages, setLoadedMorePages] = useState<{ fetching: boolean; lastId?: string }>({
+    fetching: false,
+  });
+
   const scrollToMessage = useCallback(async (id: string) => {
     if (messagesRef.current[id]) {
       messagesRef.current[id].scrollIntoView({ behavior: 'smooth', block: 'center' });
       messagesRef.current[id].classList.add(styles.animate);
       setTimeout(() => messagesRef.current[id].classList.remove(styles.animate), 2050);
-    } // else {
-    //   const { page } = await messengerApi.getMessagePageById({ messageId: id, roomId: dialogId, limit: 30 });
-    //   await loadMorePages(page - 1);
-
-    //   console.log(Object.keys(messagesRef.current));
-    //   messagesRef.current[id].scrollIntoView({ behavior: 'smooth', block: 'center' });
-    //   messagesRef.current[id].classList.add(styles.animate);
-    //   setTimeout(() => messagesRef.current[id].classList.remove(styles.animate), 2050);
-    // }
+    } else {
+      setLoadedMorePages({ fetching: true, lastId: id });
+      const { page } = await messengerApi.getMessagePageById({ messageId: id, roomId: dialogId, limit: 30 });
+      await loadMorePages(page).finally(() => setLoadedMorePages({ fetching: false, lastId: id }));
+    }
   }, []);
+
+  useEffect(() => {
+    if (loadedMorePages.fetching) {
+      setLoadedMorePages({ fetching: false });
+    } else {
+      if (loadedMorePages.lastId) {
+        scrollToMessage(loadedMorePages.lastId);
+      }
+    }
+  }, [loadedMorePages]);
+  console.log(loadedMorePages);
 
   return Object.entries<TMessage[]>((data ?? {}).groupedMessages ?? {})?.map(([date, messagesByDate]) => {
     const formattedDate = formatMessageDate(messagesByDate[0] ? messagesByDate[0].createdAt : 0);

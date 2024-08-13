@@ -43,7 +43,7 @@ const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoa
   const { contextMenu, contextMenuRef, showContextMenu, hideContextMenu } = useContextMenu(scrollRef);
   const [isArrowVisible, setIsArrowVisible] = useState(false);
 
-  useMessagePagination(dialogId, scrollRef);
+  const { loadMorePages } = useMessagePagination(dialogId, scrollRef);
 
   useEffect(() => {
     setEditMessage(null);
@@ -172,7 +172,12 @@ const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoa
 
   return (
     <MessagesListLayout isLoading={isLoading} scrollRef={scrollRef}>
-      <MessagesByDateList scrollRef={scrollRef} messagesRef={messagesRef} onContextMenu={handleContextMenu} />
+      <MessagesByDateList
+        loadMorePages={loadMorePages}
+        scrollRef={scrollRef}
+        messagesRef={messagesRef}
+        onContextMenu={handleContextMenu}
+      />
       <ContextMenu
         ref={contextMenuRef}
         isToggled={contextMenu.toggled}

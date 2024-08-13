@@ -65,5 +65,22 @@ export const useMessagePagination = (
     };
   }, [queryData]);
 
-  return { isFetching, setPage };
+  const loadMorePages = async (pagesToLoad: number) => {
+    const newMessages = await messengerApi.getChatMessages(dialogId ?? '', page, pageSize, pageSize * pagesToLoad);
+    queryClient.setQueryData(['chat', dialogId], (oldData: ChatWithPagination) => {
+      if (!oldData) {
+        return {};
+      }
+
+      return {
+        ...oldData,
+        data: [...oldData.data, ...newMessages.data],
+        groupedMessages: groupMessagesByDate([...oldData.data, ...newMessages.data]),
+        total: newMessages.total,
+      };
+    });
+    setPage(page + pagesToLoad);
+  };
+
+  return { isFetching, setPage, loadMorePages };
 };

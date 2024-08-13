@@ -41,6 +41,8 @@ export const useSendMessage = (
 
   useEffect(() => {
     if (!inputValue?.length) {
+      setIsPrinting(false);
+
       return;
     }
 
