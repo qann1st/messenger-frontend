@@ -34,6 +34,7 @@ const Message: FC<TMessageProps> = memo(
     images,
     status,
     scrollToMessage,
+    forwardedMessage,
     voiceLoading = false,
   }) => {
     const { user } = useUserStore();
@@ -74,6 +75,21 @@ const Message: FC<TMessageProps> = memo(
             smallMessage && styles.small_message,
           )}
         >
+          {forwardedMessage.id && (
+            <div className={classNames(styles.forward, isMyMessage && styles.forward_my)}>
+              <p className={styles.forward_from}>Forwarded from</p>
+              <div className={styles.forward_info}>
+                <Avatar
+                  size='small'
+                  firstName={forwardedMessage.sender.firstname}
+                  lastName={forwardedMessage.sender.lastname ?? ''}
+                />
+                <p className={styles.forward_name}>
+                  {`${forwardedMessage.sender.firstname} ${forwardedMessage.sender.lastname ?? ''}`}
+                </p>
+              </div>
+            </div>
+          )}
           {replyMessage.images && (
             <MessagePreview
               type='message'
@@ -130,8 +146,8 @@ const Message: FC<TMessageProps> = memo(
             )}
           >
             <div>
-              {content &&
-                content?.split('\\n').map((line, i) => (
+              {(content || forwardedMessage.content) &&
+                (forwardedMessage.content || content)?.split('\\n').map((line, i) => (
                   // eslint-disable-next-line react/no-array-index-key
                   <span key={i}>
                     <p

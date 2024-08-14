@@ -1,4 +1,5 @@
 import { type FC, memo, useRef } from 'react';
+import { PiShareFatFill } from 'react-icons/pi';
 import { Link, useNavigate } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
 
@@ -15,6 +16,7 @@ import {
 
 import styles from './UserBadge.module.css';
 
+import { useMessageStore } from '../Message';
 import { TUserBadgeProps } from './UserBadge.types';
 
 const UserBadge: FC<TUserBadgeProps> = memo(
@@ -30,8 +32,12 @@ const UserBadge: FC<TUserBadgeProps> = memo(
     href,
     userId,
     showContextMenu,
+    isForward,
     printing,
+    hasForwardedMessage,
     unreadedMessages,
+    onClick,
+    dialog: dialogProps,
   }) => {
     const linkRef = useRef<HTMLAnchorElement>(null);
     const animationRef = useRef<HTMLButtonElement>(null);
@@ -40,6 +46,7 @@ const UserBadge: FC<TUserBadgeProps> = memo(
     const [clearDialogs, setIsSearch, setInputValue] = useSearchStore(
       useShallow((state) => [state.clearDialogs, state.setIsSearch, state.setInputValue]),
     );
+    const setIsVisibleForwardMessage = useMessageStore(useShallow((state) => state.setIsVisibleForwardMessage));
 
     const navigate = useNavigate();
 
@@ -47,6 +54,7 @@ const UserBadge: FC<TUserBadgeProps> = memo(
       clearDialogs();
       setIsSearch(false);
       setInputValue('');
+      setIsVisibleForwardMessage(false);
 
       if (!user) {
         return;
@@ -63,10 +71,20 @@ const UserBadge: FC<TUserBadgeProps> = memo(
       }
     };
 
-    if (isSearch) {
+    if (isSearch || isForward) {
       return (
-        <ul className={classNames(styles.root)}>
-          <button ref={animationRef} draggable='false' onClick={handleButtonClick}>
+        <li className={classNames(styles.root)}>
+          <button
+            ref={animationRef}
+            draggable={false}
+            onClick={() => {
+              if (isForward && onClick && dialogProps) {
+                onClick(dialogProps);
+              } else {
+                handleButtonClick();
+              }
+            }}
+          >
             <Avatar
               className={styles.avatar}
               isActive={isActive}
@@ -82,7 +100,7 @@ const UserBadge: FC<TUserBadgeProps> = memo(
               <p className={classNames(styles.subtitle, isActive && styles.subtitle_active)}>{lastMessage}</p>
             </div>
           </button>
-        </ul>
+        </li>
       );
     }
 
@@ -96,6 +114,7 @@ const UserBadge: FC<TUserBadgeProps> = memo(
           onContextMenu={showContextMenu}
           className={styles.link}
           onClick={(e) => {
+            setIsVisibleForwardMessage(false);
             rippleAnimation({ e, ref: linkRef, className: styles.ripple, size: 125, duration: 800 });
             const userDialog = user?.dialogs.find((dialog) => dialog.id === href?.split('/')[1]);
 
@@ -120,6 +139,7 @@ const UserBadge: FC<TUserBadgeProps> = memo(
             </p>
             <div className={styles.bottom}>
               <div className={styles.info_subtitle}>
+                {hasForwardedMessage && <PiShareFatFill color='var(--active-user-subtitle-color)' size={20} />}
                 {lastMessageImage?.length !== 0 &&
                   lastMessageImage?.[0] !== 'null' &&
                   lastMessageImage !== null &&

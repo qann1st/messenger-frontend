@@ -5,6 +5,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { useQuery } from '@tanstack/react-query';
 
 import { ImageModal, ImageSendModal, MessageInput, MessagesList, UserInfo, useMessageInputStore } from '~/features';
+import { ForwardMessageModal } from '~/features/ForwardMessageModal';
 import {
   User,
   classNames,
@@ -44,7 +45,7 @@ const Chat: FC = () => {
   }, []);
 
   useEffect(() => {
-    if (data && data.data[0].sender.id === user?.id) {
+    if (data && data.data[0]?.sender.id === user?.id) {
       scrollRef.current?.scrollTo({ behavior: 'smooth', top: scrollRef.current.clientHeight });
     }
   }, [data]);
@@ -91,6 +92,7 @@ const Chat: FC = () => {
         </div>
         <Fff recipient={recipient} />
       </main>
+      <ForwardMessageModal />
       <ImageSendModal />
       <ImageModal />
     </>

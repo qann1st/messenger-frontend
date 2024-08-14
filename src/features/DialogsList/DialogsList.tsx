@@ -1,4 +1,4 @@
-import { type MouseEvent, useState } from 'react';
+import { FC, type MouseEvent, useState } from 'react';
 import { BsTrash } from 'react-icons/bs';
 import { IoOpenOutline } from 'react-icons/io5';
 import { useParams } from 'react-router-dom';
@@ -17,7 +17,11 @@ import {
 
 import styles from './DialogsList.module.css';
 
-const DialogsList = () => {
+const DialogsList: FC<{ hasIsActive?: boolean; isForward?: boolean; onUserClick: (dialog: Chat) => void }> = ({
+  onUserClick,
+  hasIsActive = true,
+  isForward = false,
+}) => {
   const { type, lastChat } = useMobileStore();
 
   const dialogId = useParams().dialogId ?? (type !== 'desktop' ? lastChat : '');
@@ -74,15 +78,19 @@ const DialogsList = () => {
           return (
             <UserBadge
               key={dialog.id}
+              dialog={dialog}
+              isForward={isForward}
+              hasForwardedMessage={!!messages.forwardedMessage?.chatId}
               href={`/${dialog.id}`}
               printing={dialog.printing}
               isOnline={recipient?.isOnline}
               lastName={recipient?.lastname}
               firstName={recipient?.firstname}
-              isActive={dialog.id === dialogId}
-              lastMessageImage={messages.images}
-              lastMessage={messages?.content ?? ''}
-              lastMessageVoice={messages.voiceMessage}
+              onClick={() => onUserClick(dialog)}
+              isActive={hasIsActive && dialog.id === dialogId}
+              lastMessageImage={messages?.images[0] ? messages.images : messages.forwardedMessage?.images}
+              lastMessage={messages?.content ?? messages.forwardedMessage?.content}
+              lastMessageVoice={messages.voiceMessage ?? messages.forwardedMessage?.voiceMessage}
               unreadedMessages={dialog.unreadedMessages}
               showContextMenu={(e) => handleContextMenu(e, dialog)}
             />

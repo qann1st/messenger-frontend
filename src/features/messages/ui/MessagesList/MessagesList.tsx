@@ -3,10 +3,13 @@ import { BsReply, BsTrash } from 'react-icons/bs';
 import { GoChevronDown } from 'react-icons/go';
 import { HiOutlinePencil } from 'react-icons/hi';
 import { MdContentCopy } from 'react-icons/md';
+import { PiShareFat } from 'react-icons/pi';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useShallow } from 'zustand/react/shallow';
 
 import { useMessageStore } from '~/entities';
+import { useForwardMessageModalStore } from '~/features/ForwardMessageModal';
 import { useMessageInputStore } from '~/features/MessageInput';
 import {
   ContextMenu,
@@ -34,8 +37,11 @@ const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoa
     replyMessage,
     setEditMessage,
     setIsVisibleEditMessage,
+    forwardMessage,
+    setIsVisibleForwardMessage,
   } = useMessageStore();
   const setInputValue = useMessageInputStore((state) => state.setInputValue);
+  const openModal = useForwardMessageModalStore(useShallow((state) => state.openModal));
 
   const { user, socket } = useUserStore();
   const { dialogId } = useParams();
@@ -49,8 +55,8 @@ const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoa
   const { loadMorePages } = useMessagePagination(dialogId, scrollRef);
 
   useEffect(() => {
-    setEditMessage(null);
     setInputValue('');
+    setEditMessage(null);
     setReplyMessage(null);
     setIsVisibleEditMessage(false);
     setIsVisibleReplyMessage(false);
@@ -101,6 +107,9 @@ const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoa
     if (editMessage) {
       setIsVisibleEditMessage(false);
     }
+    if (forwardMessage) {
+      setIsVisibleForwardMessage(false);
+    }
 
     if (selectedMessage) {
       setReplyMessage(selectedMessage);
@@ -124,7 +133,10 @@ const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoa
   const handleEditMessage = () => {
     hideContextMenu();
     if (replyMessage) {
-      setIsVisibleReplyMessage(false);
+      setIsVisibleEditMessage(false);
+    }
+    if (forwardMessage) {
+      setIsVisibleForwardMessage(false);
     }
 
     if (selectedMessage) {
@@ -150,6 +162,16 @@ const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoa
       icon: BsReply,
       text: 'Reply',
       onClick: handleReplyMessage,
+    },
+    {
+      icon: PiShareFat,
+      text: 'Forward',
+      onClick: () => {
+        if (selectedMessage) {
+          openModal(selectedMessage);
+        }
+        hideContextMenu();
+      },
     },
     {
       icon: HiOutlinePencil,

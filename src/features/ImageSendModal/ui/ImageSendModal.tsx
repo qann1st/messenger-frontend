@@ -19,9 +19,15 @@ const ImageSendModal = () => {
     useImageSendModalStore();
   const { type } = useMobileStore();
 
-  useEscCloseModal(closeModal);
-
   const [isLoading, setIsLoading] = useState(true);
+
+  const onClose = () => {
+    setMessageInputValue(inputValue);
+    setInputValue('');
+    closeModal();
+  };
+
+  useEscCloseModal(onClose);
 
   useEffect(() => {
     if (isModalOpen) {
@@ -32,12 +38,6 @@ const ImageSendModal = () => {
   if (!isModalOpen) {
     return null;
   }
-
-  const onClose = () => {
-    setMessageInputValue(inputValue);
-    setInputValue('');
-    closeModal();
-  };
 
   const isImage = file?.type.includes('image');
 

@@ -18,7 +18,10 @@ export const useHandleMessageSocket = () => {
     queryClient.setQueryData(['chat', message.chatId], (oldData: ChatWithPagination) => {
       const user = getUser();
 
-      if (!user || (!message.voiceMessage && !message.content && !message.images.length)) {
+      if (
+        !user ||
+        (!message.voiceMessage && !message.content && !message.images.length && !message.forwardedMessage.chatId)
+      ) {
         return;
       }
 

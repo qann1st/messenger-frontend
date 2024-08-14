@@ -71,6 +71,7 @@ const MessagesByDateList: FC<TMessagesByDateListProps> = ({ onContextMenu, messa
             className={styles.pad}
           >
             <Message
+              forwardedMessage={message.forwardedMessage ?? {}}
               createdAt={message.createdAt}
               replyMessage={message.replyMessage ?? {}}
               hasAvatar={false}

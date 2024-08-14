@@ -3,6 +3,7 @@ import { Message, User } from '~/shared';
 export type TMessageProps = {
   sender: User;
   replyMessage: Message;
+  forwardedMessage: Message;
   content: string;
   hasAvatar: boolean;
   createdAt: string;

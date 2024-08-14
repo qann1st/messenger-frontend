@@ -7,16 +7,18 @@ import { classNames } from '../helpers';
 
 export const useMessagesListSize = (styles: CSSModuleClasses) => {
   const inputValue = useMessageInputStore(useShallow((state) => state.inputValue));
-  const [isVisibleEditMessage, isVisibleReplyMessage] = useMessageStore(
-    useShallow((state) => [state.isVisibleEditMessage, state.isVisibleReplyMessage]),
+  const [isVisibleEditMessage, isVisibleReplyMessage, isVisibleForwardMessage] = useMessageStore(
+    useShallow((state) => [state.isVisibleEditMessage, state.isVisibleReplyMessage, state.isVisibleForwardMessage]),
   );
+  const isVisible = isVisibleReplyMessage || isVisibleEditMessage || isVisibleForwardMessage;
+  const hasSpacing = inputValue.includes('\n');
+  const hasBigSpacing = inputValue.split(/\r?\n/).length - 1 >= 2;
 
   return classNames(
-    inputValue.includes('\n') && styles.root_spacing,
-    inputValue.includes('\n') && (isVisibleReplyMessage || isVisibleEditMessage) && styles.root_reply_spacing,
-    inputValue.split(/\r?\n/).length - 1 >= 2 && styles.root_spacing_big,
-    inputValue.split(/\r?\n/).length - 1 >= 2 &&
-      (isVisibleReplyMessage || isVisibleEditMessage) &&
-      styles.root_spacing_reply_big,
+    hasSpacing && styles.root_spacing,
+    isVisible && styles.root_reply,
+    hasSpacing && isVisible && styles.root_reply_spacing,
+    hasBigSpacing && isVisible && styles.root_spacing_reply_big,
+    hasBigSpacing && styles.root_spacing_big,
   );
 };

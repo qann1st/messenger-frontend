@@ -39,7 +39,7 @@ export interface Message {
   sender: User;
   content: string;
   replyMessage: Message;
-  forwardedMessage: string;
+  forwardedMessage: Message;
   chatId: string;
   images: string[];
   /** @format date-time */

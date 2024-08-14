@@ -5,6 +5,7 @@ import { FaRegFaceSmile } from 'react-icons/fa6';
 import { GoPaperclip } from 'react-icons/go';
 import { HiOutlinePencil } from 'react-icons/hi';
 import { MdOutlineKeyboardVoice } from 'react-icons/md';
+import { PiShareFat } from 'react-icons/pi';
 import { VscSend } from 'react-icons/vsc';
 import { useParams } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
@@ -63,6 +64,9 @@ const MessageInput: FC<TMessageInputProps> = memo(
       setIsVisibleEditMessage,
       replyMessage,
       setIsVisibleReplyMessage,
+      isVisibleForwardMessage,
+      forwardMessage,
+      setIsVisibleForwardMessage,
     ] = useMessageStore(
       useShallow((state) => [
         state.isVisibleReplyMessage,
@@ -71,6 +75,9 @@ const MessageInput: FC<TMessageInputProps> = memo(
         state.setIsVisibleEditMessage,
         state.replyMessage,
         state.setIsVisibleReplyMessage,
+        state.isVisibleForwardMessage,
+        state.forwardMessage,
+        state.setIsVisibleForwardMessage,
       ]),
     );
 
@@ -100,7 +107,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
     useFocusOnMount(textAreaRef);
 
     const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-      if (e.key === 'Enter' && !e.shiftKey && inputValue.length) {
+      if (e.key === 'Enter' && !e.shiftKey && (inputValue.length || forwardMessage)) {
         e.preventDefault();
         handleSubmit();
       }
@@ -108,12 +115,12 @@ const MessageInput: FC<TMessageInputProps> = memo(
 
     const handleChange = useCallback(
       (e: ChangeEvent<HTMLTextAreaElement>) => {
-        if (!isRecording || !isDisabled) {
+        if (!isRecording && !isDisabled && !forwardMessage?.chatId) {
           setIsPrinting(true);
           setInputValue(e.target.value);
         }
       },
-      [isRecording, isDisabled],
+      [isRecording, isDisabled, forwardMessage],
     );
 
     const uploadFile = (files: File) => {
@@ -184,6 +191,17 @@ const MessageInput: FC<TMessageInputProps> = memo(
           />
           <div className={styles.content}>
             <div className={classNames(styles.wrapper, isVisibleReplyMessage && styles.wrapper_reply)}>
+              {isVisibleForwardMessage && forwardMessage && (
+                <MessagePreview
+                  isColor
+                  message={forwardMessage ?? ({} as Message)}
+                  isVisible={isVisibleForwardMessage}
+                  setIsVisible={setIsVisibleForwardMessage}
+                  type='input'
+                  icon={PiShareFat}
+                  className={classNames(styles.preview)}
+                />
+              )}
               {isVisibleEditMessage && editMessage && (
                 <MessagePreview
                   isColor
@@ -276,7 +294,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
                     />
                   </div>
                 )}
-                {!isRecording && (
+                {!isRecording && !isVisibleForwardMessage && (
                   <button
                     className={styles.icon_button}
                     onClick={() => setIsVisibleEmojiPicker((prev) => !prev)}
@@ -286,12 +304,12 @@ const MessageInput: FC<TMessageInputProps> = memo(
                     <FaRegFaceSmile size={24} className={styles.icon} />
                   </button>
                 )}
-                {inputValue.length === 0 && !isRecording && type === 'absolute' && (
+                {inputValue.length === 0 && !isRecording && !isVisibleForwardMessage && type === 'absolute' && (
                   <button className={styles.icon_button} onClick={() => handleStartRecording()} type='button'>
                     <MdOutlineKeyboardVoice size={24} className={styles.icon} />
                   </button>
                 )}
-                {((inputValue.length !== 0 && !isRecording) || type !== 'absolute') && (
+                {((inputValue.length !== 0 && !isRecording) || type !== 'absolute' || isVisibleForwardMessage) && (
                   <button className={styles.icon_button} type='submit'>
                     <VscSend className={styles.icon} />
                   </button>

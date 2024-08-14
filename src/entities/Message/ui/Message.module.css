@@ -10,6 +10,33 @@
   align-self: flex-end;
 }
 
+.forward {
+  color: var(--black);
+  display: flex;
+  flex-direction: column;
+  gap: 1px
+}
+
+.forward_my {
+  color: var(--white);
+}
+
+.forward_info {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.forward_from {
+  font-size: 13px;
+  font-weight: 300;
+}
+
+.forward_name {
+  font-size: 13px;
+  font-weight: 600;
+}
+
 .content {
   max-width: 480px;
   background: var(--message-background);

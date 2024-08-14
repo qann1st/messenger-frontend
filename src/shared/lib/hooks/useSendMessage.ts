@@ -23,6 +23,10 @@ export const useSendMessage = (
     setIsVisibleEditMessage,
     setReplyMessage,
     setIsVisibleReplyMessage,
+    forwardMessage,
+    setForwardMessage,
+    setIsVisibleForwardMessage,
+    isVisibleForwardMessage,
   } = useMessageStore();
 
   const [timer, setTimer] = useState(0);
@@ -76,13 +80,17 @@ export const useSendMessage = (
       return;
     }
 
-    if (!isModalOpen && (!inputValue || !inputValue.trim() || isVoice)) {
+    if (!isModalOpen && (!inputValue || !inputValue.trim() || isVoice) && !isVisibleForwardMessage) {
       return;
     }
 
     const formattedMessage = inputValue?.trim().replaceAll(/\n/g, '\\n');
 
-    if (!isModalOpen && ((formattedMessage?.length ?? 0) < 1 || (formattedMessage?.length ?? 0) > 1000)) {
+    if (
+      !isModalOpen &&
+      ((formattedMessage?.length ?? 0) < 1 || (formattedMessage?.length ?? 0) > 1000) &&
+      !isVisibleForwardMessage
+    ) {
       return;
     }
 
@@ -107,13 +115,24 @@ export const useSendMessage = (
         return;
       }
 
-      socket?.emit('message', {
-        content: formattedMessage,
-        recipient,
-        chatId: dialogId,
-        replyMessage: replyMessage?.id,
-        images: file ? [file] : [],
-      });
+      if (forwardMessage && isVisibleForwardMessage) {
+        socket?.emit('message', {
+          recipient,
+          chatId: dialogId,
+          forwardedMessage: forwardMessage?.id,
+          images: file ? [file] : [],
+        });
+        setForwardMessage(null);
+        setIsVisibleForwardMessage(false);
+      } else {
+        socket?.emit('message', {
+          content: formattedMessage,
+          recipient,
+          chatId: dialogId,
+          replyMessage: replyMessage?.id,
+          images: file ? [file] : [],
+        });
+      }
 
       setReplyMessage(null);
       setIsVisibleReplyMessage(false);

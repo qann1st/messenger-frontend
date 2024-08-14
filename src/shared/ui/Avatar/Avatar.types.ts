@@ -2,7 +2,7 @@ export type TAvatarProps = {
   firstName?: string;
   className?: string;
   lastName?: string;
-  size?: 'medium' | 'large';
+  size?: 'small' | 'medium' | 'large';
   isOnline?: boolean;
   isActive?: boolean;
 };
