@@ -1,4 +1,4 @@
-export const formatCreatedTime = (createdAt: string, updatedAt: string, edited: boolean) => {
+export const formatCreatedTime = (createdAt: string, updatedAt: string) => {
   const formatter = new Intl.DateTimeFormat('en', {
     year: 'numeric',
     month: 'numeric',
@@ -11,7 +11,7 @@ export const formatCreatedTime = (createdAt: string, updatedAt: string, edited: 
 
   const createdAtFormatted = formatter.format(new Date(createdAt));
 
-  if (edited) {
+  if (updatedAt !== createdAt) {
     const updatedAtFormatted = formatter.format(new Date(updatedAt));
 
     return `${createdAtFormatted}\nUpdated: ${updatedAtFormatted}`;

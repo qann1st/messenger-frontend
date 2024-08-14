@@ -7,5 +7,4 @@ export type TMessageInputProps = {
   haveButtons?: boolean;
   isDisabled?: boolean;
   setInputValue: (value: string) => void;
-  addInputValue: (value: string) => void;
 };

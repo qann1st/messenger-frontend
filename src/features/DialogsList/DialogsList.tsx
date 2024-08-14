@@ -83,7 +83,6 @@ const DialogsList = () => {
               lastMessageImage={messages.images}
               lastMessage={messages?.content ?? ''}
               lastMessageVoice={messages.voiceMessage}
-              unreadedMessages={dialog.unreadedMessages}
               showContextMenu={(e) => handleContextMenu(e, dialog)}
             />
           );

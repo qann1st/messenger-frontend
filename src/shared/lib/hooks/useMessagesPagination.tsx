@@ -1,26 +1,25 @@
-import { useEffect, useRef, useState } from 'react';
-import { useShallow } from 'zustand/react/shallow';
+import { RefObject, useEffect, useState } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { useMessageStore } from '~/entities';
 import { ChatWithPagination, groupMessagesByDate, messengerApi } from '~/shared';
 
-export const useMessagePagination = (dialogId: string | undefined, pageSize = 30) => {
-  const scrollRef = useMessageStore(useShallow((state) => state.scrollRef));
-
+export const useMessagePagination = (
+  dialogId: string | undefined,
+  scrollRef: RefObject<HTMLDivElement>,
+  pageSize = 30,
+) => {
+  const [page, setPage] = useState(2);
   const [isFetching, setIsFetching] = useState(false);
-  const pageRef = useRef(2);
-  console.log(scrollRef);
 
   const queryClient = useQueryClient();
   const queryData = queryClient.getQueryData(['chat', dialogId]);
 
   useEffect(() => {
     if (isFetching) {
-      const fetchMessages = async () => {
-        try {
-          const newMessages = await messengerApi.getChatMessages(dialogId ?? '', pageRef.current, pageSize);
+      messengerApi
+        .getChatMessages(dialogId ?? '', page, pageSize)
+        .then((newMessages) => {
           queryClient.setQueryData(['chat', dialogId], (oldData: ChatWithPagination) => {
             if (!oldData) {
               return {};
@@ -33,13 +32,11 @@ export const useMessagePagination = (dialogId: string | undefined, pageSize = 30
               total: newMessages.total,
             };
           });
-          pageRef.current += 1;
-        } finally {
+        })
+        .finally(() => {
           setIsFetching(false);
-        }
-      };
-
-      fetchMessages();
+          setPage(page + 1);
+        });
     }
   }, [isFetching]);
 
@@ -68,27 +65,5 @@ export const useMessagePagination = (dialogId: string | undefined, pageSize = 30
     };
   }, [queryData]);
 
-  const loadMorePages = async (pagesToLoad: number) => {
-    const newMessages = await messengerApi.getChatMessages(
-      dialogId ?? '',
-      pageRef.current,
-      pageSize,
-      pageSize * pagesToLoad,
-    );
-    queryClient.setQueryData(['chat', dialogId], (oldData: ChatWithPagination) => {
-      if (!oldData) {
-        return {};
-      }
-
-      return {
-        ...oldData,
-        data: [...oldData.data, ...newMessages.data],
-        groupedMessages: groupMessagesByDate([...oldData.data, ...newMessages.data]),
-        total: newMessages.total,
-      };
-    });
-    pageRef.current += pagesToLoad;
-  };
-
-  return { isFetching, loadMorePages };
+  return { isFetching, setPage };
 };

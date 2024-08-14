@@ -11,7 +11,6 @@ import {
   getRecipientFromUsers,
   groupMessagesByDate,
   messengerApi,
-  useHandleMessageSocket,
   useMobileStore,
   useThemeStore,
   useUserStore,
@@ -37,9 +36,8 @@ const Chat: FC = () => {
     },
   });
 
+  const scrollRef = useRef<HTMLDivElement>(null);
   const chatRef = useRef<HTMLDivElement>(null);
-
-  useHandleMessageSocket();
 
   useEffect(() => {
     setLastChat(params.dialogId ?? '');
@@ -89,7 +87,7 @@ const Chat: FC = () => {
       >
         <UserInfo recipient={recipient} printing={data?.printing ?? false} />
         <div className={classNames(styles.background, isDark && styles.background_dark)}>
-          <MessagesList isLoading={isLoading} recipient={recipient} />
+          <MessagesList isLoading={isLoading} scrollRef={scrollRef} recipient={recipient} />
         </div>
         <Fff recipient={recipient} />
       </main>
@@ -102,13 +100,6 @@ const Chat: FC = () => {
 export { Chat };
 
 const Fff: FC<{ recipient?: User }> = ({ recipient }) => {
-  const { inputValue, setInputValue, addInputValue } = useMessageInputStore();
-  return (
-    <MessageInput
-      inputValue={inputValue}
-      setInputValue={setInputValue}
-      addInputValue={addInputValue}
-      recipient={recipient?.id ?? ''}
-    />
-  );
+  const { inputValue, setInputValue } = useMessageInputStore();
+  return <MessageInput inputValue={inputValue} setInputValue={setInputValue} recipient={recipient?.id ?? ''} />;
 };

@@ -42,7 +42,6 @@
   display: flex;
   gap: 5px;
   align-items: center;
-  width: 100%;
 }
 
 .info {
@@ -59,7 +58,7 @@
 .name {
   color: var(--black);
   font-weight: 700;
-  font-size: 18px;
+  font-size: 16px;
   text-wrap: nowrap;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -70,29 +69,10 @@
   color: var(--white);
 }
 
-.unreaded {
-  color: var(--white);
-  background: var(--message-background);
-  min-height: 22px;
-  min-width: 22px;
-  border-radius: 100px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-right: 10px;
-}
-
-.bottom {
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .subtitle {
   color: var(--user-subtitle-color);
-  font-weight: 500;
-  font-size: 16px;
+  font-weight: 700;
+  font-size: 11px;
   text-wrap: nowrap;
   text-overflow: ellipsis;
   white-space: nowrap;

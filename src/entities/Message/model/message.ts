@@ -9,8 +9,6 @@ export const useMessageStore = create<TMessageState>((set, get) => ({
   selectedMessage: null,
   editMessage: null,
   otherInputFocus: false,
-  scrollRef: { current: undefined },
-  setScrollRef: (ref) => set({ scrollRef: { current: ref } }),
   setReplyMessage: (message) => set({ replyMessage: message }),
   setSelectedMessage: (message) => set({ selectedMessage: message }),
   setIsVisibleReplyMessage: (isVisible) => set({ isVisibleReplyMessage: isVisible }),

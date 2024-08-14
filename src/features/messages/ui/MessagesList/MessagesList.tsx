@@ -1,4 +1,4 @@
-import { type FC, type MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { type FC, type MouseEvent, memo, useCallback, useEffect, useRef, useState } from 'react';
 import { BsReply, BsTrash } from 'react-icons/bs';
 import { GoChevronDown } from 'react-icons/go';
 import { HiOutlinePencil } from 'react-icons/hi';
@@ -22,7 +22,7 @@ import { MessagesByDateList } from '../MessagesByDateList';
 import { MessagesListLayout } from '../MessagesListLayout';
 import type { TMessagesListProps } from './MessagesList.types';
 
-const MessagesList: FC<TMessagesListProps> = ({ recipient, isLoading }) => {
+const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoading }) => {
   const {
     selectedMessage,
     setReplyMessage,
@@ -32,7 +32,6 @@ const MessagesList: FC<TMessagesListProps> = ({ recipient, isLoading }) => {
     replyMessage,
     setEditMessage,
     setIsVisibleEditMessage,
-    scrollRef,
   } = useMessageStore();
   const setInputValue = useMessageInputStore((state) => state.setInputValue);
 
@@ -44,7 +43,7 @@ const MessagesList: FC<TMessagesListProps> = ({ recipient, isLoading }) => {
   const { contextMenu, contextMenuRef, showContextMenu, hideContextMenu } = useContextMenu(scrollRef);
   const [isArrowVisible, setIsArrowVisible] = useState(false);
 
-  const { loadMorePages } = useMessagePagination(dialogId);
+  useMessagePagination(dialogId, scrollRef);
 
   useEffect(() => {
     setEditMessage(null);
@@ -61,7 +60,7 @@ const MessagesList: FC<TMessagesListProps> = ({ recipient, isLoading }) => {
   }, []);
 
   const handleScroll = () => {
-    if (scrollRef && scrollRef.current) {
+    if (scrollRef.current) {
       if (scrollRef.current.scrollTop < -scrollRef.current.clientHeight) {
         setIsArrowVisible(true);
       } else {
@@ -77,23 +76,20 @@ const MessagesList: FC<TMessagesListProps> = ({ recipient, isLoading }) => {
   }, [selectedMessage]);
 
   const handleArrowClick = () => {
-    if (scrollRef && scrollRef.current) {
+    if (scrollRef.current) {
       scrollRef.current.scrollTo({ behavior: 'smooth', top: scrollRef.current.clientHeight });
     }
   };
 
   useEffect(() => {
-    if (!scrollRef || !scrollRef.current) {
-      return;
+    if (scrollRef.current) {
+      scrollRef.current.addEventListener('scroll', handleScroll);
     }
 
-    scrollRef.current.addEventListener('scroll', handleScroll);
-
     return () => {
-      if (!scrollRef || !scrollRef.current) {
-        return;
+      if (scrollRef.current) {
+        scrollRef.current.removeEventListener('scroll', handleScroll);
       }
-      scrollRef.current.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
@@ -175,8 +171,8 @@ const MessagesList: FC<TMessagesListProps> = ({ recipient, isLoading }) => {
   }
 
   return (
-    <MessagesListLayout isLoading={isLoading}>
-      <MessagesByDateList loadMorePages={loadMorePages} messagesRef={messagesRef} onContextMenu={handleContextMenu} />
+    <MessagesListLayout isLoading={isLoading} scrollRef={scrollRef}>
+      <MessagesByDateList scrollRef={scrollRef} messagesRef={messagesRef} onContextMenu={handleContextMenu} />
       <ContextMenu
         ref={contextMenuRef}
         isToggled={contextMenu.toggled}
@@ -189,6 +185,6 @@ const MessagesList: FC<TMessagesListProps> = ({ recipient, isLoading }) => {
       </button>
     </MessagesListLayout>
   );
-};
+});
 
 export { MessagesList };

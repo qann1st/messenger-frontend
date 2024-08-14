@@ -5,7 +5,6 @@ export type TImageSendModalState = {
   dialogId: string;
   inputValue: string;
   error: string;
-  addInputValue: (value: string) => void;
   setInputValue: (value: string) => void;
   openModal: () => void;
   closeModal: () => void;

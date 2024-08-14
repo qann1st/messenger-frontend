@@ -31,7 +31,6 @@ const UserBadge: FC<TUserBadgeProps> = memo(
     userId,
     showContextMenu,
     printing,
-    unreadedMessages,
   }) => {
     const linkRef = useRef<HTMLAnchorElement>(null);
     const animationRef = useRef<HTMLButtonElement>(null);
@@ -85,6 +84,7 @@ const UserBadge: FC<TUserBadgeProps> = memo(
         </ul>
       );
     }
+    console.log(printing);
 
     return (
       <li className={classNames(styles.root, isActive && styles.active)}>
@@ -95,16 +95,7 @@ const UserBadge: FC<TUserBadgeProps> = memo(
           draggable='false'
           onContextMenu={showContextMenu}
           className={styles.link}
-          onClick={(e) => {
-            rippleAnimation({ e, ref: linkRef, className: styles.ripple, size: 125, duration: 800 });
-            const userDialog = user?.dialogs.find((dialog) => dialog.id === href?.split('/')[1]);
-
-            if (userDialog) {
-              userDialog.unreadedMessages = 0;
-
-              setUser({ ...user, dialogs: user?.dialogs } as User);
-            }
-          }}
+          onClick={(e) => rippleAnimation({ e, ref: linkRef, className: styles.ripple, size: 125, duration: 800 })}
         >
           <Avatar
             className={styles.avatar}
@@ -118,30 +109,25 @@ const UserBadge: FC<TUserBadgeProps> = memo(
             <p className={classNames(styles.name, isActive && styles.name_active)}>
               {firstName} {lastName}
             </p>
-            <div className={styles.bottom}>
-              <div className={styles.info_subtitle}>
-                {lastMessageImage?.length !== 0 &&
-                  lastMessageImage?.[0] !== 'null' &&
-                  lastMessageImage !== null &&
-                  lastMessageImage !== undefined &&
-                  !printing && <img draggable={false} src={lastMessageImage?.[0]} alt='' className={styles.image} />}
-                {lastMessage && !printing && (
-                  <p
-                    className={classNames(styles.subtitle, 'emoji', isActive && styles.subtitle_active)}
-                    dangerouslySetInnerHTML={{
-                      __html: highlightMessage(lastMessage?.split('\\n').join(' ') ?? '', styles, false),
-                    }}
-                  />
-                )}
-                {printing && <p className={classNames(styles.printing, styles.subtitle)}>prints...</p>}
-                {!printing && (lastMessageImage?.length || lastMessageVoice) && (
-                  <p className={classNames(styles.subtitle, 'emoji', isActive && styles.subtitle_active)}>
-                    {lastMessageImage && !lastMessage && 'Photo'}
-                    {lastMessageVoice && '🎤 Voice message'}
-                  </p>
-                )}
-              </div>
-              {unreadedMessages > 0 && <p className={styles.unreaded}>{unreadedMessages}</p>}
+            <div className={styles.info_subtitle}>
+              {lastMessageImage?.length !== 0 &&
+                lastMessageImage?.[0] !== 'null' &&
+                lastMessageImage !== null &&
+                lastMessageImage !== undefined &&
+                !printing && <img draggable={false} src={lastMessageImage?.[0]} alt='' className={styles.image} />}
+              {lastMessage && !printing && (
+                <p
+                  className={classNames(styles.subtitle, isActive && styles.subtitle_active)}
+                  dangerouslySetInnerHTML={{
+                    __html: highlightMessage(lastMessage?.split('\\n').join(' ') ?? '', styles, false),
+                  }}
+                />
+              )}
+              {printing && <p className={classNames(styles.printing, styles.subtitle)}>prints...</p>}
+              <p className={classNames(styles.subtitle, isActive && styles.subtitle_active)}>
+                {lastMessageImage && !lastMessage && 'Photo'}
+                {lastMessageVoice && '🎤 Voice message'}
+              </p>
             </div>
           </div>
         </Link>

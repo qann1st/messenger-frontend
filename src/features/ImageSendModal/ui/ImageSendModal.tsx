@@ -15,7 +15,7 @@ import { useImageSendModalStore } from '../model';
 
 const ImageSendModal = () => {
   const [setMessageInputValue] = useMessageInputStore(useShallow((state) => [state.setInputValue]));
-  const { isModalOpen, file, closeModal, recipient, dialogId, inputValue, setInputValue, error, addInputValue } =
+  const { isModalOpen, file, closeModal, recipient, dialogId, inputValue, setInputValue, error } =
     useImageSendModalStore();
   const { type } = useMobileStore();
 
@@ -77,7 +77,6 @@ const ImageSendModal = () => {
             )}
             <QueryClientProvider client={queryClient}>
               <MessageInput
-                addInputValue={addInputValue}
                 file={file.url}
                 type='not-absolute'
                 dialogId={dialogId}

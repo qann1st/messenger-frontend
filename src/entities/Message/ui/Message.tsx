@@ -45,7 +45,7 @@ const Message: FC<TMessageProps> = memo(
 
     const [smallMessage, setSmallMessage] = useState(false);
 
-    const [isImageLoading, setIsImageLoading] = useState(true);
+    const [isImageLoading, setIsImageLoading] = useState(!!images[0]);
 
     const date = new Date(isEdited ? updatedAt : createdAt);
 
@@ -98,9 +98,7 @@ const Message: FC<TMessageProps> = memo(
               </div>
             </div>
           )}
-          {images[0] && isImageLoading && (
-            <Skeleton.Rectangle borderRadius='var(--border-radius-8)' width={400} height={300} />
-          )}
+          {isImageLoading && <Skeleton.Rectangle borderRadius='var(--border-radius-8)' width={400} height={300} />}
           {images[0] && (
             <img
               onClick={() => {
@@ -135,7 +133,7 @@ const Message: FC<TMessageProps> = memo(
                   // eslint-disable-next-line react/no-array-index-key
                   <span key={i}>
                     <p
-                      className={classNames(styles.text, 'emoji')}
+                      className={styles.text}
                       dangerouslySetInnerHTML={{ __html: highlightMessage(line, styles, isMyMessage) }}
                     />
                     {line === '' && <br />}
@@ -155,7 +153,7 @@ const Message: FC<TMessageProps> = memo(
                   !content && !voiceMessage && styles.time_empty,
                   !isMyMessage && styles.time_my,
                 )}
-                title={`${formatCreatedTime(createdAt, updatedAt, isEdited ?? false)}`}
+                title={`${formatCreatedTime(createdAt, updatedAt)}`}
               >
                 {isEdited && 'edited'} {formattedTime}
               </p>

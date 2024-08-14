@@ -96,11 +96,10 @@ class MessengerApi {
     return this.api.get<TExists>(`users/exists/${email}`).then((response) => response.data);
   }
 
-  getChatMessages(roomId: string, page = 1, limit = 30, newLimit?: number) {
+  getChatMessages(roomId: string, page = 1, limit = 30) {
     const params = new URLSearchParams({
       page: page.toString(),
       limit: limit.toString(),
-      newLimit: newLimit ? newLimit.toString() : '0',
     });
 
     return this.api
