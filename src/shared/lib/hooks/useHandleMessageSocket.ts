@@ -37,6 +37,10 @@ export const useHandleMessageSocket = () => {
       if (dialog) {
         dialog.messages = [message];
 
+        if (message.sender.id !== user.id && dialogId !== message.chatId) {
+          dialog.unreadedMessages += 1;
+        }
+
         user.dialogs.splice(dialogIndex, 1);
 
         user.dialogs.unshift(dialog);
@@ -60,7 +64,7 @@ export const useHandleMessageSocket = () => {
         arr.unshift(message);
       }
 
-      if (oldData.total > oldData.data.length) {
+      if (oldData.total > oldData.data?.length) {
         oldData.data.pop();
       }
 

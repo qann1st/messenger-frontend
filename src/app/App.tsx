@@ -1,5 +1,8 @@
 import { type FC } from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+import { useThemeStore } from '~/shared';
 import { useAppInit } from '~/shared/lib/hooks/useAppInit';
 
 import { Providers } from './Providers';
@@ -8,6 +11,7 @@ import './styles';
 
 const App: FC = () => {
   const { fetching } = useAppInit();
+  const { theme } = useThemeStore();
 
   if (fetching) {
     return (
@@ -21,6 +25,7 @@ const App: FC = () => {
     <>
       <Providers>
         <AppRoutes />
+        <ToastContainer position='top-center' theme={theme} autoClose={3000} />
       </Providers>
     </>
   );

@@ -2,7 +2,9 @@ import { type FC, type MouseEvent, memo, useCallback, useEffect, useRef, useStat
 import { BsReply, BsTrash } from 'react-icons/bs';
 import { GoChevronDown } from 'react-icons/go';
 import { HiOutlinePencil } from 'react-icons/hi';
+import { MdContentCopy } from 'react-icons/md';
 import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { useMessageStore } from '~/entities';
 import { useMessageInputStore } from '~/features/MessageInput';
@@ -39,11 +41,12 @@ const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoa
   const { dialogId } = useParams();
 
   const messagesRef = useRef<{ [key: string]: HTMLDivElement }>({});
+  const currentScrollRef = scrollRef.current;
 
   const { contextMenu, contextMenuRef, showContextMenu, hideContextMenu } = useContextMenu(scrollRef);
   const [isArrowVisible, setIsArrowVisible] = useState(false);
 
-  useMessagePagination(dialogId, scrollRef);
+  const { loadMorePages } = useMessagePagination(dialogId, scrollRef);
 
   useEffect(() => {
     setEditMessage(null);
@@ -91,7 +94,7 @@ const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoa
         scrollRef.current.removeEventListener('scroll', handleScroll);
       }
     };
-  }, []);
+  }, [currentScrollRef]);
 
   const handleReplyMessage = () => {
     hideContextMenu();
@@ -135,6 +138,15 @@ const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoa
 
   const buttons = [
     {
+      icon: MdContentCopy,
+      text: 'Copy text',
+      onClick: () => {
+        toast.info('Copied to clipboard');
+        navigator.clipboard.writeText(selectedMessage?.content || '');
+        hideContextMenu();
+      },
+    },
+    {
       icon: BsReply,
       text: 'Reply',
       onClick: handleReplyMessage,
@@ -172,7 +184,12 @@ const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoa
 
   return (
     <MessagesListLayout isLoading={isLoading} scrollRef={scrollRef}>
-      <MessagesByDateList scrollRef={scrollRef} messagesRef={messagesRef} onContextMenu={handleContextMenu} />
+      <MessagesByDateList
+        loadMorePages={loadMorePages}
+        scrollRef={scrollRef}
+        messagesRef={messagesRef}
+        onContextMenu={handleContextMenu}
+      />
       <ContextMenu
         ref={contextMenuRef}
         isToggled={contextMenu.toggled}

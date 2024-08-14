@@ -61,6 +61,7 @@ export interface Chat {
   users: User[];
   messages: Message[];
   printing?: boolean;
+  unreadedMessages: number;
 }
 
 export interface User {

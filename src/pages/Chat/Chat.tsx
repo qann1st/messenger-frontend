@@ -44,6 +44,12 @@ const Chat: FC = () => {
   }, []);
 
   useEffect(() => {
+    if (data && data.data[0].sender.id === user?.id) {
+      scrollRef.current?.scrollTo({ behavior: 'smooth', top: scrollRef.current.clientHeight });
+    }
+  }, [data]);
+
+  useEffect(() => {
     if (error) {
       navigate('/');
     }
@@ -76,13 +82,7 @@ const Chat: FC = () => {
     <>
       <main
         ref={chatRef}
-        className={classNames(
-          styles.root,
-          isDark && styles.root_dark,
-          type === 'tablet' && styles.tablet,
-          type === 'mobile' && styles.mobile,
-          !params.dialogId && styles.slide,
-        )}
+        className={classNames(styles.root, isDark && styles.root_dark, styles[type], !params.dialogId && styles.slide)}
         onDragOver={handleDragOver}
       >
         <UserInfo recipient={recipient} printing={data?.printing ?? false} />
@@ -100,6 +100,13 @@ const Chat: FC = () => {
 export { Chat };
 
 const Fff: FC<{ recipient?: User }> = ({ recipient }) => {
-  const { inputValue, setInputValue } = useMessageInputStore();
-  return <MessageInput inputValue={inputValue} setInputValue={setInputValue} recipient={recipient?.id ?? ''} />;
+  const { inputValue, setInputValue, addInputValue } = useMessageInputStore();
+  return (
+    <MessageInput
+      inputValue={inputValue}
+      setInputValue={setInputValue}
+      addInputValue={addInputValue}
+      recipient={recipient?.id ?? ''}
+    />
+  );
 };

@@ -45,7 +45,7 @@ const Message: FC<TMessageProps> = memo(
 
     const [smallMessage, setSmallMessage] = useState(false);
 
-    const [isImageLoading, setIsImageLoading] = useState(!!images[0]);
+    const [isImageLoading, setIsImageLoading] = useState(true);
 
     const date = new Date(isEdited ? updatedAt : createdAt);
 
@@ -98,7 +98,9 @@ const Message: FC<TMessageProps> = memo(
               </div>
             </div>
           )}
-          {isImageLoading && <Skeleton.Rectangle borderRadius='var(--border-radius-8)' width={400} height={300} />}
+          {images[0] && isImageLoading && (
+            <Skeleton.Rectangle borderRadius='var(--border-radius-8)' width={400} height={300} />
+          )}
           {images[0] && (
             <img
               onClick={() => {
@@ -133,7 +135,7 @@ const Message: FC<TMessageProps> = memo(
                   // eslint-disable-next-line react/no-array-index-key
                   <span key={i}>
                     <p
-                      className={styles.text}
+                      className={classNames(styles.text, 'emoji')}
                       dangerouslySetInnerHTML={{ __html: highlightMessage(line, styles, isMyMessage) }}
                     />
                     {line === '' && <br />}
