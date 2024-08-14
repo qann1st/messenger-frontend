@@ -2,7 +2,12 @@ import { RefObject, useEffect } from 'react';
 
 import { useLatest } from './useLatest';
 
-export const useOutsideClick = (elementRef: RefObject<HTMLElement>, handler: () => void, attached = true) => {
+export const useOutsideClick = (
+  elementRef: RefObject<HTMLElement>,
+  handler: () => void,
+  attached = true,
+  exceptionRef?: RefObject<HTMLElement>,
+) => {
   const latestHandler = useLatest(handler);
 
   useEffect(() => {
@@ -10,8 +15,8 @@ export const useOutsideClick = (elementRef: RefObject<HTMLElement>, handler: () 
       return;
     }
 
-    const handleClick = (e: globalThis.MouseEvent) => {
-      if (!elementRef.current) {
+    const handleClick = (e: MouseEvent) => {
+      if (!elementRef.current || exceptionRef?.current?.contains(e.target as Node)) {
         return;
       }
 
@@ -27,5 +32,5 @@ export const useOutsideClick = (elementRef: RefObject<HTMLElement>, handler: () 
       document.removeEventListener('click', handleClick);
       document.removeEventListener('mousedown', handleClick);
     };
-  }, [elementRef, latestHandler, attached]);
+  }, [elementRef, latestHandler, attached, exceptionRef]);
 };

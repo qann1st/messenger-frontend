@@ -1,12 +1,10 @@
 import { Outlet } from 'react-router-dom';
 
-import { useHandleMessageSocket, useMobileStore } from '~/shared';
+import { useMobileStore } from '~/shared';
 import { Sidebar } from '~/widgets';
 
 const MainLayout = () => {
   const { type } = useMobileStore();
-
-  useHandleMessageSocket();
 
   if (type !== 'desktop') {
     return (

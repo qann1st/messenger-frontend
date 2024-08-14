@@ -1,3 +1,5 @@
+import { RefObject } from 'react';
+
 import type { Message } from '~/shared';
 
 export type TMessageState = {
@@ -7,6 +9,8 @@ export type TMessageState = {
   replyMessage: Message | null;
   editMessage: Message | null;
   otherInputFocus: boolean;
+  scrollRef: { current: RefObject<HTMLDivElement> | undefined };
+  setScrollRef: (ref: RefObject<HTMLDivElement>) => void;
   setSelectedMessage: (messageId: Message | null) => void;
   setReplyMessage: (message: Message | null) => void;
   setIsVisibleReplyMessage: (isVisible: boolean) => void;

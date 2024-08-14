@@ -1,7 +1,6 @@
-import { type ReactNode, type RefObject } from 'react';
+import { type ReactNode } from 'react';
 
 export type TMessagesListLayoutProps = {
-  scrollRef: RefObject<HTMLDivElement>;
   children: ReactNode;
   isLoading: boolean;
 };

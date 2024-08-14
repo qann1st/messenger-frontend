@@ -185,3 +185,9 @@
     opacity: 1;
   }
 }
+
+.emoji_picker {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+}

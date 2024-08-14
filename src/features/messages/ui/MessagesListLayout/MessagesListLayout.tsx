@@ -8,10 +8,12 @@ import styles from './MessagesListLayout.module.css';
 
 import { TMessagesListLayoutProps } from './MessagesListLayout.types';
 
-const MessagesListLayout: FC<TMessagesListLayoutProps> = ({ children, scrollRef, isLoading }) => {
+const MessagesListLayout: FC<TMessagesListLayoutProps> = ({ children, isLoading }) => {
   const [isVisibleReplyMessage, isVisibleEditMessage] = useMessageStore(
     useShallow((state) => [state.isVisibleReplyMessage, state.isVisibleEditMessage]),
   );
+
+  const setScrollRef = useMessageStore(useShallow((state) => state.setScrollRef));
 
   return (
     <div
@@ -21,7 +23,7 @@ const MessagesListLayout: FC<TMessagesListLayoutProps> = ({ children, scrollRef,
         (isVisibleReplyMessage || isVisibleEditMessage) && styles.root_reply,
         isLoading && styles.pad,
       )}
-      ref={scrollRef}
+      ref={(el) => setScrollRef(el)}
     >
       {children}
     </div>

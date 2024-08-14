@@ -12,5 +12,6 @@ export type TUserBadgeProps = {
   lastMessageImage?: string[];
   lastMessageVoice?: string;
   printing?: boolean;
+  unreadedMessages: number;
   showContextMenu?: (e: MouseEvent<HTMLAnchorElement>) => void;
 };
