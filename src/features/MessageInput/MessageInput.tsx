@@ -1,5 +1,7 @@
+import EmojiPicker, { EmojiStyle, Theme } from 'emoji-picker-react';
 import { ChangeEvent, ClipboardEvent, type FC, KeyboardEvent, memo, useCallback, useRef } from 'react';
 import { BsReply, BsTrash } from 'react-icons/bs';
+import { FaRegFaceSmile } from 'react-icons/fa6';
 import { GoPaperclip } from 'react-icons/go';
 import { HiOutlinePencil } from 'react-icons/hi';
 import { MdOutlineKeyboardVoice } from 'react-icons/md';
@@ -15,10 +17,13 @@ import {
   formatMilliseconds,
   messengerApi,
   useFocusOnMount,
+  useOutsideClick,
   useRecordAudio,
   useSendMessage,
   useTextareaAutoResize,
+  useThemeStore,
 } from '~/shared';
+import { useEscCloseModal } from '~/shared/lib/hooks/useEscCloseModal';
 
 import styles from './MessageInput.module.css';
 
@@ -32,6 +37,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
     dialogId: id,
     inputValue,
     setInputValue,
+    addInputValue,
     file,
     isDisabled = false,
     haveButtons = true,
@@ -72,9 +78,13 @@ const MessageInput: FC<TMessageInputProps> = memo(
 
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
     const filesInputRef = useRef<HTMLInputElement>(null);
+    const buttonRef = useRef<HTMLButtonElement>(null);
+    const emojiRef = useRef<HTMLDivElement>(null);
+
+    const { theme } = useThemeStore();
 
     const { isRecording, handleStartRecording, handleStopRecording, handleCancelRecording } = useRecordAudio(recipient);
-    const { handleSubmit, timer, setIsPrinting } = useSendMessage(
+    const { handleSubmit, timer, setIsPrinting, isVisibleEmojiPicker, setIsVisibleEmojiPicker } = useSendMessage(
       dialogId,
       recipient,
       file,
@@ -85,6 +95,8 @@ const MessageInput: FC<TMessageInputProps> = memo(
     );
 
     useTextareaAutoResize(textAreaRef, inputValue);
+    useOutsideClick(emojiRef, () => setIsVisibleEmojiPicker(false), true, buttonRef);
+    useEscCloseModal(() => setIsVisibleEmojiPicker(false));
     useFocusOnMount(textAreaRef);
 
     const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -208,7 +220,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
                 )}
                 <textarea
                   style={{ height: '50px' }}
-                  placeholder='Message'
+                  placeholder={isRecording ? 'Recording...' : 'Message'}
                   value={inputValue}
                   onKeyDown={handleKeyDown}
                   onPaste={handleClipboard}
@@ -243,13 +255,35 @@ const MessageInput: FC<TMessageInputProps> = memo(
                   <button
                     type='button'
                     className={styles.icon_button}
-                    onClick={async () => {
-                      if (handleStopRecording) {
-                        handleStopRecording();
+                    onClick={() => {
+                      if (handleCancelRecording) {
+                        handleCancelRecording();
                       }
                     }}
                   >
                     <VscSend className={styles.icon} />
+                  </button>
+                )}
+                {isVisibleEmojiPicker && (
+                  <div className={styles.emoji_picker} ref={emojiRef}>
+                    <EmojiPicker
+                      lazyLoadEmojis
+                      searchDisabled
+                      skinTonesDisabled
+                      theme={theme === 'dark' ? Theme.DARK : Theme.LIGHT}
+                      emojiStyle={EmojiStyle.GOOGLE}
+                      onEmojiClick={(e) => addInputValue(e.emoji)}
+                    />
+                  </div>
+                )}
+                {!isRecording && (
+                  <button
+                    className={styles.icon_button}
+                    onClick={() => setIsVisibleEmojiPicker((prev) => !prev)}
+                    type='button'
+                    ref={buttonRef}
+                  >
+                    <FaRegFaceSmile size={24} className={styles.icon} />
                   </button>
                 )}
                 {inputValue.length === 0 && !isRecording && type === 'absolute' && (

@@ -100,6 +100,13 @@ const Chat: FC = () => {
 export { Chat };
 
 const Fff: FC<{ recipient?: User }> = ({ recipient }) => {
-  const { inputValue, setInputValue } = useMessageInputStore();
-  return <MessageInput inputValue={inputValue} setInputValue={setInputValue} recipient={recipient?.id ?? ''} />;
+  const { inputValue, setInputValue, addInputValue } = useMessageInputStore();
+  return (
+    <MessageInput
+      inputValue={inputValue}
+      setInputValue={setInputValue}
+      addInputValue={addInputValue}
+      recipient={recipient?.id ?? ''}
+    />
+  );
 };

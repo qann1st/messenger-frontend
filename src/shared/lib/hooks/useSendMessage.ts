@@ -27,6 +27,7 @@ export const useSendMessage = (
 
   const [timer, setTimer] = useState(0);
   const [isPrinting, setIsPrinting] = useState(false);
+  const [isVisibleEmojiPicker, setIsVisibleEmojiPicker] = useState(false);
 
   useEffect(() => {
     if (isVoice) {
@@ -119,5 +120,5 @@ export const useSendMessage = (
     }
   };
 
-  return { timer, handleSubmit, setIsPrinting };
+  return { timer, handleSubmit, setIsPrinting, isVisibleEmojiPicker, setIsVisibleEmojiPicker };
 };

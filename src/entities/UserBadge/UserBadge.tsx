@@ -127,7 +127,7 @@ const UserBadge: FC<TUserBadgeProps> = memo(
                   !printing && <img draggable={false} src={lastMessageImage?.[0]} alt='' className={styles.image} />}
                 {lastMessage && !printing && (
                   <p
-                    className={classNames(styles.subtitle, isActive && styles.subtitle_active)}
+                    className={classNames(styles.subtitle, 'emoji', isActive && styles.subtitle_active)}
                     dangerouslySetInnerHTML={{
                       __html: highlightMessage(lastMessage?.split('\\n').join(' ') ?? '', styles, false),
                     }}
@@ -135,7 +135,7 @@ const UserBadge: FC<TUserBadgeProps> = memo(
                 )}
                 {printing && <p className={classNames(styles.printing, styles.subtitle)}>prints...</p>}
                 {!printing && (lastMessageImage?.length || lastMessageVoice) && (
-                  <p className={classNames(styles.subtitle, isActive && styles.subtitle_active)}>
+                  <p className={classNames(styles.subtitle, 'emoji', isActive && styles.subtitle_active)}>
                     {lastMessageImage && !lastMessage && 'Photo'}
                     {lastMessageVoice && '🎤 Voice message'}
                   </p>

@@ -11,5 +11,5 @@ export const useEscCloseModal = (callback: () => void) => {
     return () => {
       document.removeEventListener('keydown', listener);
     };
-  }, [callback]);
+  }, []);
 };

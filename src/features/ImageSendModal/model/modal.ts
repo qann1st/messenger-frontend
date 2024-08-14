@@ -2,7 +2,7 @@ import { create } from 'zustand';
 
 import { TImageSendModalState } from './modal.types';
 
-export const useImageSendModalStore = create<TImageSendModalState>((set) => ({
+export const useImageSendModalStore = create<TImageSendModalState>((set, get) => ({
   isModalOpen: false,
   file: { url: '', type: '' },
   recipient: '',
@@ -10,6 +10,7 @@ export const useImageSendModalStore = create<TImageSendModalState>((set) => ({
   inputValue: '',
   error: '',
   setInputValue: (inputValue) => set({ inputValue }),
+  addInputValue: (inputValue) => set({ inputValue: get().inputValue + inputValue }),
   openModal: () => set({ isModalOpen: true, dialogId: '', recipient: '' }),
   closeModal: () => set({ isModalOpen: false }),
   setFile: (file) => set({ file }),
