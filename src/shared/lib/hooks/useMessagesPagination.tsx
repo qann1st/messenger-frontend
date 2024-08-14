@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useState } from 'react';
+import { RefObject, useEffect, useRef, useState } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -9,17 +9,17 @@ export const useMessagePagination = (
   scrollRef: RefObject<HTMLDivElement>,
   pageSize = 30,
 ) => {
-  const [page, setPage] = useState(2);
   const [isFetching, setIsFetching] = useState(false);
+  const pageRef = useRef(2); // Используем useRef для отслеживания текущей страницы
 
   const queryClient = useQueryClient();
   const queryData = queryClient.getQueryData(['chat', dialogId]);
 
   useEffect(() => {
     if (isFetching) {
-      messengerApi
-        .getChatMessages(dialogId ?? '', page, pageSize)
-        .then((newMessages) => {
+      const fetchMessages = async () => {
+        try {
+          const newMessages = await messengerApi.getChatMessages(dialogId ?? '', pageRef.current, pageSize);
           queryClient.setQueryData(['chat', dialogId], (oldData: ChatWithPagination) => {
             if (!oldData) {
               return {};
@@ -32,11 +32,13 @@ export const useMessagePagination = (
               total: newMessages.total,
             };
           });
-        })
-        .finally(() => {
+          pageRef.current += 1; // Обновляем номер текущей страницы
+        } finally {
           setIsFetching(false);
-          setPage(page + 1);
-        });
+        }
+      };
+
+      fetchMessages();
     }
   }, [isFetching]);
 
@@ -66,7 +68,12 @@ export const useMessagePagination = (
   }, [queryData]);
 
   const loadMorePages = async (pagesToLoad: number) => {
-    const newMessages = await messengerApi.getChatMessages(dialogId ?? '', page, pageSize, pageSize * pagesToLoad);
+    const newMessages = await messengerApi.getChatMessages(
+      dialogId ?? '',
+      pageRef.current,
+      pageSize,
+      pageSize * pagesToLoad,
+    );
     queryClient.setQueryData(['chat', dialogId], (oldData: ChatWithPagination) => {
       if (!oldData) {
         return {};
@@ -79,8 +86,8 @@ export const useMessagePagination = (
         total: newMessages.total,
       };
     });
-    setPage(page + pagesToLoad);
+    pageRef.current += pagesToLoad;
   };
 
-  return { isFetching, setPage, loadMorePages };
+  return { isFetching, loadMorePages };
 };

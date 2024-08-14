@@ -91,7 +91,7 @@ const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoa
         scrollRef.current.removeEventListener('scroll', handleScroll);
       }
     };
-  }, []);
+  }, [scrollRef]);
 
   const handleReplyMessage = () => {
     hideContextMenu();

@@ -35,8 +35,12 @@ const MessagesByDateList: FC<TMessagesByDateListProps> = ({ onContextMenu, messa
       setTimeout(() => messagesRef.current[id].classList.remove(styles.animate), 2050);
     } else {
       setLoadedMorePages({ fetching: true, lastId: id });
-      const { page } = await messengerApi.getMessagePageById({ messageId: id, roomId: dialogId, limit: 30 });
-      await loadMorePages(page).finally(() => setLoadedMorePages({ fetching: false, lastId: id }));
+      const { page: scrollPage } = await messengerApi.getMessagePageById({
+        messageId: id,
+        roomId: dialogId,
+        limit: 30,
+      });
+      await loadMorePages(scrollPage).finally(() => setLoadedMorePages({ fetching: false, lastId: id }));
     }
   }, []);
 
@@ -44,12 +48,11 @@ const MessagesByDateList: FC<TMessagesByDateListProps> = ({ onContextMenu, messa
     if (loadedMorePages.fetching) {
       setLoadedMorePages({ fetching: false });
     } else {
-      if (loadedMorePages.lastId) {
+      if (loadedMorePages.lastId && messagesRef.current[loadedMorePages.lastId]) {
         scrollToMessage(loadedMorePages.lastId);
       }
     }
   }, [loadedMorePages]);
-  console.log(loadedMorePages);
 
   return Object.entries<TMessage[]>((data ?? {}).groupedMessages ?? {})?.map(([date, messagesByDate]) => {
     const formattedDate = formatMessageDate(messagesByDate[0] ? messagesByDate[0].createdAt : 0);
