@@ -31,6 +31,7 @@ const SearchDialogsList = () => {
           firstName={dialog.firstname}
           lastName={dialog.lastname}
           lastMessage={`@${dialog.username}`}
+          unreadedMessages={0}
           userId={dialog.id}
           isSearch
         />

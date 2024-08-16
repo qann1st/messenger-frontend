@@ -17,7 +17,7 @@ import {
 
 import styles from './DialogsList.module.css';
 
-const DialogsList: FC<{ hasIsActive?: boolean; isForward?: boolean; onUserClick: (dialog: Chat) => void }> = ({
+const DialogsList: FC<{ hasIsActive?: boolean; isForward?: boolean; onUserClick?: (dialog: Chat) => void }> = ({
   onUserClick,
   hasIsActive = true,
   isForward = false,
@@ -86,11 +86,11 @@ const DialogsList: FC<{ hasIsActive?: boolean; isForward?: boolean; onUserClick:
               isOnline={recipient?.isOnline}
               lastName={recipient?.lastname}
               firstName={recipient?.firstname}
-              onClick={() => onUserClick(dialog)}
+              onClick={() => onUserClick?.(dialog)}
               isActive={hasIsActive && dialog.id === dialogId}
-              lastMessageImage={messages?.images[0] ? messages.images : messages.forwardedMessage?.images}
+              lastMessageImage={messages?.images?.length > 0 ? messages.images : messages.forwardedMessage?.images}
               lastMessage={messages?.content ?? messages.forwardedMessage?.content}
-              lastMessageVoice={messages.voiceMessage ?? messages.forwardedMessage?.voiceMessage}
+              lastMessageVoice={messages.voiceMessage || messages.forwardedMessage?.voiceMessage}
               unreadedMessages={dialog.unreadedMessages}
               showContextMenu={(e) => handleContextMenu(e, dialog)}
             />

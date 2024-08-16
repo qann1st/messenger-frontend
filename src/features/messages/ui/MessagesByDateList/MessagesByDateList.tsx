@@ -81,8 +81,8 @@ const MessagesByDateList: FC<TMessagesByDateListProps> = ({ onContextMenu, messa
               updatedAt={message.updatedAt}
               status={message.status}
               readed={message.readed ?? []}
-              images={message.images ?? []}
-              voiceMessage={message.voiceMessage}
+              images={(message.images ? message.images : message.forwardedMessage?.images) ?? []}
+              voiceMessage={message.voiceMessage ? message.voiceMessage : message.forwardedMessage?.voiceMessage}
               scrollToMessage={scrollToMessage}
             />
           </div>

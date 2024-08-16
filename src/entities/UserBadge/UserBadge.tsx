@@ -156,7 +156,7 @@ const UserBadge: FC<TUserBadgeProps> = memo(
                 {printing && <p className={classNames(styles.printing, styles.subtitle)}>prints...</p>}
                 {!printing && (lastMessageImage?.length || lastMessageVoice) && (
                   <p className={classNames(styles.subtitle, 'emoji', isActive && styles.subtitle_active)}>
-                    {lastMessageImage && !lastMessage && 'Photo'}
+                    {lastMessageImage && lastMessageImage.length > 0 && !lastMessage && 'Photo'}
                     {lastMessageVoice && '🎤 Voice message'}
                   </p>
                 )}

@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import { VitePWA } from 'vite-plugin-pwa';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 import react from '@vitejs/plugin-react';
@@ -8,23 +9,23 @@ export default defineConfig({
   plugins: [
     react(),
     tsconfigPaths(),
-    // VitePWA({
-    //   registerType: 'autoUpdate',
-    //   manifest: {
-    //     name: 'Messenger',
-    //     short_name: 'MSNGR',
-    //     description: "Messenger's clone",
-    //     theme_color: '#ffffff',
-    //   },
-    //   workbox: {
-    //     cleanupOutdatedCaches: true,
-    //     clientsClaim: true,
-    //     skipWaiting: true,
-    //   },
-    //   devOptions: {
-    //     enabled: true,
-    //     type: 'module',
-    //   },
-    // }),
+    VitePWA({
+      registerType: 'autoUpdate',
+      manifest: {
+        name: 'Messenger',
+        short_name: 'MSNGR',
+        description: "Messenger's clone",
+        theme_color: '#ffffff',
+      },
+      workbox: {
+        cleanupOutdatedCaches: true,
+        clientsClaim: true,
+        skipWaiting: true,
+      },
+      devOptions: {
+        enabled: true,
+        type: 'module',
+      },
+    }),
   ],
 });

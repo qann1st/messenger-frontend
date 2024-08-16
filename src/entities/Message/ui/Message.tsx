@@ -114,13 +114,13 @@ const Message: FC<TMessageProps> = memo(
               </div>
             </div>
           )}
-          {images[0] && isImageLoading && (
+          {(images[0] || (forwardedMessage.images && forwardedMessage.images[0])) && isImageLoading && (
             <Skeleton.Rectangle borderRadius='var(--border-radius-8)' width={400} height={300} />
           )}
-          {images[0] && (
+          {(images[0] || (forwardedMessage.images && forwardedMessage.images[0])) && (
             <img
               onClick={() => {
-                setImageLink(images[0]);
+                setImageLink(images[0] ?? forwardedMessage.images[0]);
                 openModal();
               }}
               onLoad={() => setIsImageLoading(false)}
@@ -134,7 +134,7 @@ const Message: FC<TMessageProps> = memo(
                 type === 'mobile' && styles.image_mobile,
                 !isImageLoading && styles.image_loaded,
               )}
-              src={images[0]}
+              src={images[0] ?? forwardedMessage.images[0]}
               alt=''
             />
           )}

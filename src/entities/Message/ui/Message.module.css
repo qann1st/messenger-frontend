@@ -14,7 +14,8 @@
   color: var(--black);
   display: flex;
   flex-direction: column;
-  gap: 1px
+  gap: 1px;
+  padding-bottom: 2px;
 }
 
 .forward_my {
