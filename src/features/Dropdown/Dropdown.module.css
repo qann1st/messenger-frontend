@@ -1,0 +1,49 @@
+.dropdownMenu {
+  padding: var(--spacing-1);
+  border-radius: var(--border-radius-8);
+  display: flex;
+  visibility: hidden;
+  opacity: 0;
+  flex-direction: column;
+  position: absolute;
+  transition: opacity 0.2s ease-in-out;
+  background: var(--context-menu-background);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.37);
+  max-width: 250px;
+  width: 100%;
+  z-index: 3;
+}
+
+.dropdownMenu_visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.dropdownMenu_visible .dropdown_button {
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--black);
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-6);
+  border-radius: var(--border-radius-5);
+  transition: var(--transition);
+}
+
+.dropdownMenu_visible .dropdown_button_delete {
+  color: var(--color-error);
+}
+
+.dropdownMenu_visible .dropdown_button:hover {
+  background: var(--context-item-hover-background);
+}
+
+.dropdown_button {
+  padding: var(--spacing-2);
+}

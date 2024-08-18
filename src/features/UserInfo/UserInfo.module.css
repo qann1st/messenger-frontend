@@ -34,4 +34,10 @@
   background-color: transparent;
   border: none;
   color: var(--black);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.back:hover {
+  color: var(--message-background);
 }

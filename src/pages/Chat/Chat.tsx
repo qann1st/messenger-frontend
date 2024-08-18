@@ -45,12 +45,6 @@ const Chat: FC = () => {
   }, []);
 
   useEffect(() => {
-    if (data && data.data[0]?.sender.id === user?.id) {
-      scrollRef.current?.scrollTo({ behavior: 'smooth', top: scrollRef.current.clientHeight });
-    }
-  }, [data]);
-
-  useEffect(() => {
     if (error) {
       navigate('/');
     }

@@ -7,6 +7,7 @@
   align-items: center;
   user-select: none;
   font-weight: 600;
+  position: relative;
 }
 
 .small {
@@ -33,8 +34,8 @@
   position: absolute;
   background: #6caee7;
   border-radius: var(--border-radius-circle);
-  bottom: 3px;
-  right: 3px;
+  bottom: 0;
+  right: 0;
   border: 2px solid var(--sidebar-background);
   transition: var(--transition);
   transform: scale(0);

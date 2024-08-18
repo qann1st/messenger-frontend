@@ -14,9 +14,9 @@ const SearchDialogsList = () => {
   if (fetching) {
     return (
       <div className={styles.dialogs}>
-        {new Array(10).fill(null).map((_, i) => (
+        {new Array(30).fill(null).map((_, i) => (
           // eslint-disable-next-line react/no-array-index-key
-          <Skeleton.Rectangle key={i} className={styles.skeleton} width='100%' height='75px' />
+          <Skeleton.Rectangle key={i} borderRadius='16px' width='100%' height='75px' />
         ))}
       </div>
     );

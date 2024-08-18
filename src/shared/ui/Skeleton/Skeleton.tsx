@@ -13,7 +13,7 @@ const Skeleton: FC<TSkeletonComponentProps> & {
   const style =
     type === 'circle'
       ? { width: size, height: size, borderRadius: borderRadius ?? '50%' }
-      : { width, height, borderRadius };
+      : { width, minHeight: height, borderRadius };
 
   return (
     <div

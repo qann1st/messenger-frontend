@@ -1,7 +1,7 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { Message } from '~/entities';
 import {
@@ -19,10 +19,17 @@ import { TMessagesByDateListProps } from './MessagesByDateList.types';
 const MessagesByDateList: FC<TMessagesByDateListProps> = ({ onContextMenu, messagesRef, loadMorePages }) => {
   const { type, lastChat } = useMobileStore();
 
-  const dialogId = useParams().dialogId ?? (type !== 'desktop' ? lastChat : '');
+  const params = useParams();
+  const dialogId = params.dialogId ?? (type !== 'desktop' ? lastChat : '');
   const queryClient = useQueryClient();
 
-  const data = queryClient.getQueryData(['chat', dialogId]) as ChatWithPagination;
+  const cachedData = queryClient.getQueryData<ChatWithPagination>(['chat', dialogId]);
+
+  const { data = cachedData } = useQuery<ChatWithPagination>({
+    queryKey: ['chat', dialogId],
+    initialData: () => queryClient.getQueryData(['chat', dialogId]),
+    enabled: !cachedData,
+  });
 
   const [loadedMorePages, setLoadedMorePages] = useState<{ fetching: boolean; lastId?: string }>({
     fetching: false,
@@ -37,7 +44,7 @@ const MessagesByDateList: FC<TMessagesByDateListProps> = ({ onContextMenu, messa
       setLoadedMorePages({ fetching: true, lastId: id });
       const { page: scrollPage } = await messengerApi.getMessagePageById({
         messageId: id,
-        roomId: dialogId,
+        roomId: window.location.pathname.split('/')[1] ?? '',
         limit: 30,
       });
       await loadMorePages(scrollPage).finally(() => setLoadedMorePages({ fetching: false, lastId: id }));
@@ -54,7 +61,7 @@ const MessagesByDateList: FC<TMessagesByDateListProps> = ({ onContextMenu, messa
     }
   }, [loadedMorePages]);
 
-  return Object.entries<TMessage[]>((data ?? {}).groupedMessages ?? {})?.map(([date, messagesByDate]) => {
+  return Object.entries<TMessage[]>(data?.groupedMessages ?? {})?.map(([date, messagesByDate]) => {
     const formattedDate = formatMessageDate(messagesByDate[0] ? messagesByDate[0].createdAt : 0);
 
     return (

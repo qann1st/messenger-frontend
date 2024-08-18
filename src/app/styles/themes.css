@@ -3,6 +3,7 @@ body[theme='light'] {
   --black: #000000;
 
   --user-subtitle-color: #696969;
+  --hover-user-badge: rgb(230, 230, 230);
 
   --active-user-badge-background: #2b5278;
   --active-user-subtitle-color: rgba(255, 255, 255, 0.45);
@@ -42,6 +43,7 @@ body[theme='dark'] {
   --black: #ffffff;
 
   --user-subtitle-color: #a9a9a9;
+  --hover-user-badge: #2a2d30;
 
   --active-user-badge-background: #1e3a56;
   --active-user-subtitle-color: rgba(255, 255, 255, 0.65);

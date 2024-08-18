@@ -54,7 +54,7 @@ const Resizer: FC<TResizerProps> = memo(({ elementRef }) => {
     if (type === 'desktop') {
       if (elementRef.current) {
         elementRef.current.style.width = localStorage.getItem('sidebarWidth') ?? '400px';
-        elementRef.current.style.maxWidth = '30vw';
+        elementRef.current.style.maxWidth = '33vw';
       }
     }
 

@@ -1,7 +1,7 @@
 .dialogs {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 3px;
   transition: var(--transition);
   overflow: auto;
   scrollbar-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);

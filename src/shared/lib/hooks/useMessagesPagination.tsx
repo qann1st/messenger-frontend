@@ -10,7 +10,7 @@ export const useMessagePagination = (
   pageSize = 30,
 ) => {
   const [isFetching, setIsFetching] = useState(false);
-  const pageRef = useRef(2); // Используем useRef для отслеживания текущей страницы
+  const pageRef = useRef(2);
 
   const queryClient = useQueryClient();
   const queryData = queryClient.getQueryData(['chat', dialogId]);
@@ -32,7 +32,7 @@ export const useMessagePagination = (
               total: newMessages.total,
             };
           });
-          pageRef.current += 1; // Обновляем номер текущей страницы
+          pageRef.current += 1;
         } finally {
           setIsFetching(false);
         }
@@ -47,7 +47,7 @@ export const useMessagePagination = (
 
     if (
       scrollRef.current &&
-      scrollRef.current.scrollHeight - Math.abs(scrollRef.current.scrollTop - scrollRef.current.clientHeight) < 100 &&
+      scrollRef.current.scrollHeight - Math.abs(scrollRef.current.scrollTop - scrollRef.current.clientHeight) < 400 &&
       messages &&
       messages.total > messages.data.length
     ) {

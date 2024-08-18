@@ -1,6 +1,5 @@
-import { type FC, type MouseEvent, memo, useCallback, useEffect, useRef, useState } from 'react';
+import { type FC, type MouseEvent, memo, useCallback, useEffect, useRef } from 'react';
 import { BsReply, BsTrash } from 'react-icons/bs';
-import { GoChevronDown } from 'react-icons/go';
 import { HiOutlinePencil } from 'react-icons/hi';
 import { MdContentCopy } from 'react-icons/md';
 import { PiShareFat } from 'react-icons/pi';
@@ -11,11 +10,11 @@ import { useShallow } from 'zustand/react/shallow';
 import { useMessageStore } from '~/entities';
 import { useForwardMessageModalStore } from '~/features/ForwardMessageModal';
 import { useMessageInputStore } from '~/features/MessageInput';
+import { ScrollToBottomButton } from '~/features/ScrollToBottomButton';
 import {
   ContextMenu,
   Skeleton,
   type Message as TMessage,
-  classNames,
   useContextMenu,
   useMessagePagination,
   useUserStore,
@@ -47,10 +46,8 @@ const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoa
   const { dialogId } = useParams();
 
   const messagesRef = useRef<{ [key: string]: HTMLDivElement }>({});
-  const currentScrollRef = scrollRef.current;
 
   const { contextMenu, contextMenuRef, showContextMenu, hideContextMenu } = useContextMenu(scrollRef);
-  const [isArrowVisible, setIsArrowVisible] = useState(false);
 
   const { loadMorePages } = useMessagePagination(dialogId, scrollRef);
 
@@ -63,44 +60,16 @@ const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoa
     setSelectedMessage(null);
   }, [dialogId]);
 
-  const handleContextMenu = useCallback((e: MouseEvent<HTMLDivElement>, message: TMessage) => {
-    setSelectedMessage(message);
-    showContextMenu(e);
-  }, []);
-
-  const handleScroll = () => {
-    if (scrollRef.current) {
-      if (scrollRef.current.scrollTop < -scrollRef.current.clientHeight) {
-        setIsArrowVisible(true);
-      } else {
-        setIsArrowVisible(false);
-      }
-    }
-  };
-
   useEffect(() => {
     if (!selectedMessage) {
       hideContextMenu();
     }
   }, [selectedMessage]);
 
-  const handleArrowClick = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTo({ behavior: 'smooth', top: scrollRef.current.clientHeight });
-    }
-  };
-
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.addEventListener('scroll', handleScroll);
-    }
-
-    return () => {
-      if (scrollRef.current) {
-        scrollRef.current.removeEventListener('scroll', handleScroll);
-      }
-    };
-  }, [currentScrollRef]);
+  const handleContextMenu = useCallback((e: MouseEvent<HTMLDivElement>, message: TMessage) => {
+    setSelectedMessage(message);
+    showContextMenu(e);
+  }, []);
 
   const handleReplyMessage = () => {
     hideContextMenu();
@@ -219,9 +188,7 @@ const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoa
         posY={contextMenu.position.y}
         buttons={buttons}
       />
-      <button onClick={handleArrowClick} className={classNames(styles.arrow, isArrowVisible && styles.arrow_visible)}>
-        <GoChevronDown size={32} />
-      </button>
+      <ScrollToBottomButton scrollRef={scrollRef} />
     </MessagesListLayout>
   );
 });

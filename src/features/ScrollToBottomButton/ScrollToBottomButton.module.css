@@ -1,0 +1,28 @@
+.arrow {
+  position: fixed;
+  right: 0;
+  border-radius: var(--border-radius-circle);
+  background-color: var(--sidebar-background);
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 30px;
+  transition: var(--transition);
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(50px);
+  color: var(--black);
+  border: none;
+}
+
+.arrow:hover {
+  background-color: var(--active-user-badge-background);
+  color: var(--white);
+}
+
+.arrow_visible {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}

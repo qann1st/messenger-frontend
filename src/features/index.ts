@@ -5,7 +5,7 @@ export * from './MessageInput';
 export * from './Resizer';
 export * from './SearchDialogsList';
 export * from './SearchInput';
-export * from './ThemeButton';
 export * from './UserInfo';
 export * from './WaveForm';
 export * from './messages';
+export * from './ScrollToBottomButton';

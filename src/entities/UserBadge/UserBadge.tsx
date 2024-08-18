@@ -10,6 +10,7 @@ import {
   highlightMessage,
   messengerApi,
   rippleAnimation,
+  useMobileStore,
   useSearchStore,
   useUserStore,
 } from '~/shared';
@@ -46,6 +47,7 @@ const UserBadge: FC<TUserBadgeProps> = memo(
     const [clearDialogs, setIsSearch, setInputValue] = useSearchStore(
       useShallow((state) => [state.clearDialogs, state.setIsSearch, state.setInputValue]),
     );
+    const setLastChat = useMobileStore(useShallow((state) => state.setLastChat));
     const setIsVisibleForwardMessage = useMessageStore(useShallow((state) => state.setIsVisibleForwardMessage));
 
     const navigate = useNavigate();
@@ -54,6 +56,7 @@ const UserBadge: FC<TUserBadgeProps> = memo(
       clearDialogs();
       setIsSearch(false);
       setInputValue('');
+      setLastChat(href?.split('/')[1] ?? '');
       setIsVisibleForwardMessage(false);
 
       if (!user) {
@@ -73,10 +76,11 @@ const UserBadge: FC<TUserBadgeProps> = memo(
 
     if (isSearch || isForward) {
       return (
-        <li className={classNames(styles.root)}>
+        <li className={classNames(styles.root, styles.non_active)}>
           <button
             ref={animationRef}
             draggable={false}
+            className={styles.button}
             onClick={() => {
               if (isForward && onClick && dialogProps) {
                 onClick(dialogProps);
@@ -85,19 +89,20 @@ const UserBadge: FC<TUserBadgeProps> = memo(
               }
             }}
           >
-            <Avatar
-              className={styles.avatar}
-              isActive={isActive}
-              isOnline={isOnline}
-              size='large'
-              firstName={firstName}
-              lastName={lastName}
-            />
             <div className={styles.info}>
-              <p className={classNames(styles.name, isActive && styles.name_active)}>
-                {firstName} {lastName}
-              </p>
-              <p className={classNames(styles.subtitle, isActive && styles.subtitle_active)}>{lastMessage}</p>
+              <Avatar
+                className={styles.avatar}
+                isActive={isActive}
+                isOnline={isOnline}
+                size='medium'
+                firstName={firstName}
+                lastName={lastName}
+              />
+              <div className={styles.right}>
+                <p className={classNames(styles.name, isActive && styles.name_active)}>
+                  {firstName} {lastName}
+                </p>
+              </div>
             </div>
           </button>
         </li>
@@ -105,7 +110,7 @@ const UserBadge: FC<TUserBadgeProps> = memo(
     }
 
     return (
-      <li className={classNames(styles.root, isActive && styles.active)}>
+      <li className={classNames(styles.root, isActive && styles.active, !isActive && styles.non_active)}>
         <Link
           to={href ?? ''}
           ref={linkRef}
@@ -115,6 +120,7 @@ const UserBadge: FC<TUserBadgeProps> = memo(
           className={styles.link}
           onClick={(e) => {
             setIsVisibleForwardMessage(false);
+            setLastChat(href?.split('/')[1] ?? '');
             rippleAnimation({ e, ref: linkRef, className: styles.ripple, size: 125, duration: 800 });
             const userDialog = user?.dialogs.find((dialog) => dialog.id === href?.split('/')[1]);
 
@@ -125,43 +131,45 @@ const UserBadge: FC<TUserBadgeProps> = memo(
             }
           }}
         >
-          <Avatar
-            className={styles.avatar}
-            isActive={isActive}
-            isOnline={isOnline}
-            size='large'
-            firstName={firstName}
-            lastName={lastName}
-          />
           <div className={styles.info}>
-            <p className={classNames(styles.name, isActive && styles.name_active)}>
-              {firstName} {lastName}
-            </p>
-            <div className={styles.bottom}>
-              <div className={styles.info_subtitle}>
-                {hasForwardedMessage && <PiShareFatFill color='var(--active-user-subtitle-color)' size={20} />}
-                {lastMessageImage?.length !== 0 &&
-                  lastMessageImage?.[0] !== 'null' &&
-                  lastMessageImage !== null &&
-                  lastMessageImage !== undefined &&
-                  !printing && <img draggable={false} src={lastMessageImage?.[0]} alt='' className={styles.image} />}
-                {lastMessage && !printing && (
-                  <p
-                    className={classNames(styles.subtitle, 'emoji', isActive && styles.subtitle_active)}
-                    dangerouslySetInnerHTML={{
-                      __html: highlightMessage(lastMessage?.split('\\n').join(' ') ?? '', styles, false),
-                    }}
-                  />
-                )}
-                {printing && <p className={classNames(styles.printing, styles.subtitle)}>prints...</p>}
-                {!printing && (lastMessageImage?.length || lastMessageVoice) && (
-                  <p className={classNames(styles.subtitle, 'emoji', isActive && styles.subtitle_active)}>
-                    {lastMessageImage && lastMessageImage.length > 0 && !lastMessage && 'Photo'}
-                    {lastMessageVoice && '🎤 Voice message'}
-                  </p>
-                )}
+            <Avatar
+              className={styles.avatar}
+              isActive={isActive}
+              isOnline={isOnline}
+              size='medium'
+              firstName={firstName}
+              lastName={lastName}
+            />
+            <div className={styles.right}>
+              <p className={classNames(styles.name, isActive && styles.name_active)}>
+                {firstName} {lastName}
+              </p>
+              <div className={styles.bottom}>
+                <div className={styles.info_subtitle}>
+                  {hasForwardedMessage && <PiShareFatFill color='var(--active-user-subtitle-color)' size={20} />}
+                  {lastMessageImage?.length !== 0 &&
+                    lastMessageImage?.[0] !== 'null' &&
+                    lastMessageImage !== null &&
+                    lastMessageImage !== undefined &&
+                    !printing && <img draggable={false} src={lastMessageImage?.[0]} alt='' className={styles.image} />}
+                  {lastMessage && !printing && (
+                    <p
+                      className={classNames(styles.subtitle, 'emoji', isActive && styles.subtitle_active)}
+                      dangerouslySetInnerHTML={{
+                        __html: highlightMessage(lastMessage?.split('\\n').join(' ') ?? '', styles, false),
+                      }}
+                    />
+                  )}
+                  {printing && <p className={classNames(styles.printing, styles.subtitle)}>prints...</p>}
+                  {!printing && (lastMessageImage?.length || lastMessageVoice) && (
+                    <p className={classNames(styles.subtitle, 'emoji', isActive && styles.subtitle_active)}>
+                      {lastMessageImage && lastMessageImage.length > 0 && !lastMessage && 'Photo'}
+                      {lastMessageVoice && '🎤 Voice message'}
+                    </p>
+                  )}
+                </div>
+                {unreadedMessages > 0 && <p className={styles.unreaded}>{unreadedMessages}</p>}
               </div>
-              {unreadedMessages > 0 && <p className={styles.unreaded}>{unreadedMessages}</p>}
             </div>
           </div>
         </Link>
