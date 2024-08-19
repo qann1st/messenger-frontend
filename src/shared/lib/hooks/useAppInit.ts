@@ -37,12 +37,12 @@ export const useAppInit = () => {
     document.body.setAttribute('theme', theme);
   }, [theme]);
 
-  const token = localStorage.getItem('token');
+  const token = document.cookie.split('=')[1];
 
   useEffect(() => {
     setSocket(
       io(import.meta.env.VITE_MESSENGER_SOCKET_CHAT, {
-        auth: { token: document.cookie.split('=')[1] },
+        auth: { token },
       }),
     );
   }, [token]);
