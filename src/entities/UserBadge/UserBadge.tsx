@@ -7,7 +7,6 @@ import {
   Avatar,
   User,
   classNames,
-  highlightMessage,
   messengerApi,
   rippleAnimation,
   useMobileStore,
@@ -153,14 +152,11 @@ const UserBadge: FC<TUserBadgeProps> = memo(
                     lastMessageImage !== undefined &&
                     !printing && <img draggable={false} src={lastMessageImage?.[0]} alt='' className={styles.image} />}
                   {lastMessage && !printing && (
-                    <p
-                      className={classNames(styles.subtitle, 'emoji', isActive && styles.subtitle_active)}
-                      dangerouslySetInnerHTML={{
-                        __html: highlightMessage(lastMessage?.split('\\n').join(' ') ?? '', styles, false),
-                      }}
-                    />
+                    <p className={classNames(styles.subtitle, 'emoji', isActive && styles.subtitle_active)}>
+                      {lastMessage}
+                    </p>
                   )}
-                  {printing && <p className={classNames(styles.printing, styles.subtitle)}>prints...</p>}
+                  {printing && <p className={classNames(styles.printing, styles.subtitle)}>is typing...</p>}
                   {!printing && (lastMessageImage?.length || lastMessageVoice) && (
                     <p className={classNames(styles.subtitle, 'emoji', isActive && styles.subtitle_active)}>
                       {lastMessageImage && lastMessageImage.length > 0 && !lastMessage && 'Photo'}

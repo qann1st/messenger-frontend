@@ -19,6 +19,7 @@ import {
   useMessagePagination,
   useUserStore,
 } from '~/shared';
+import { useOptimistSendMessage } from '~/shared/lib/hooks/useOptimistSendMessage';
 
 import styles from './MessagesList.module.css';
 
@@ -50,6 +51,7 @@ const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoa
   const { contextMenu, contextMenuRef, showContextMenu, hideContextMenu } = useContextMenu(scrollRef);
 
   const { loadMorePages } = useMessagePagination(dialogId, scrollRef);
+  const { deleteMessage } = useOptimistSendMessage();
 
   useEffect(() => {
     setInputValue('');
@@ -92,11 +94,7 @@ const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoa
       return;
     }
 
-    socket.emit('delete-message', {
-      messageId: selectedMessage?.id,
-      roomId: dialogId,
-      recipient: recipient?.id,
-    });
+    if (selectedMessage) {deleteMessage(selectedMessage);}
   };
 
   const handleEditMessage = () => {

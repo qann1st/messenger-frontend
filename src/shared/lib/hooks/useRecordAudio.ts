@@ -1,21 +1,20 @@
 import { useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
 
 import { useMessageStore } from '~/entities';
-import { useUserStore } from '~/shared';
+
+import { useOptimistSendMessage } from './useOptimistSendMessage';
 
 export const useRecordAudio = (recipient: string) => {
-  const { replyMessage, setIsVisibleReplyMessage, setReplyMessage } = useMessageStore();
-  const { socket } = useUserStore();
+  const { setIsVisibleReplyMessage, setReplyMessage } = useMessageStore();
 
   const [isRecording, setIsRecording] = useState(false);
   const [isCancelled, setIsCancelled] = useState(false);
 
+  const { sendMessage } = useOptimistSendMessage();
+
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const recordedChunksRef = useRef<Blob[]>([]);
   const streamRef = useRef<MediaStream | null>(null);
-
-  const { dialogId } = useParams();
 
   const initRecording = async () => {
     try {
@@ -83,19 +82,12 @@ export const useRecordAudio = (recipient: string) => {
   }, [isCancelled]);
 
   const handleCancelRecording = () => {
-    recordedChunksRef.current = [];
-    setIsCancelled(true);
+    mediaRecorderRef.current?.stop();
   };
 
   const sendAudioToServer = async (sendBlob: Blob) => {
     if (sendBlob) {
-      socket?.emit('message', {
-        recipient,
-        chatId: dialogId,
-        replyMessage: replyMessage?.id,
-        voiceMessage: sendBlob,
-        size: sendBlob.size,
-      });
+      sendMessage({ size: sendBlob.size, voiceMessage: sendBlob });
       setIsVisibleReplyMessage(false);
       setReplyMessage(null);
     }

@@ -11,7 +11,6 @@ import {
   Skeleton,
   classNames,
   formatCreatedTime,
-  highlightMessage,
   useMobileStore,
   useUserStore,
 } from '~/shared';
@@ -150,10 +149,7 @@ const Message: FC<TMessageProps> = memo(
                 (forwardedMessage.content || content)?.split('\\n').map((line, i) => (
                   // eslint-disable-next-line react/no-array-index-key
                   <span key={i}>
-                    <p
-                      className={classNames(styles.text, 'emoji')}
-                      dangerouslySetInnerHTML={{ __html: highlightMessage(line, styles, isMyMessage) }}
-                    />
+                    <p className={classNames(styles.text, 'emoji')}>{line}</p>
                     {line === '' && <br />}
                   </span>
                 ))}

@@ -16,6 +16,10 @@ export const useMessagePagination = (
   const queryData = queryClient.getQueryData(['chat', dialogId]);
 
   useEffect(() => {
+    pageRef.current = 2;
+  }, [dialogId]);
+
+  useEffect(() => {
     if (isFetching) {
       const fetchMessages = async () => {
         try {

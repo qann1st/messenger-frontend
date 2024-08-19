@@ -133,7 +133,7 @@
 .text {
   color: var(--white);
   font-size: 16px;
-  word-break: break-all;
+  word-break: normal;
 }
 
 .time {

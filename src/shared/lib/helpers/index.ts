@@ -5,6 +5,5 @@ export * from './formatMilliseconds';
 export * from './formatOnlineDate';
 export * from './getRecipientFromUsers';
 export * from './groupMessageByDate';
-export * from './highlightMessage';
 export * from './rippleAnimation';
 export * from './uuidv4';

@@ -1,8 +1,8 @@
-import { type FC, useEffect, useRef, useState } from 'react';
+import { type FC, MouseEvent, useEffect, useRef, useState } from 'react';
 import { BiPause, BiPlay } from 'react-icons/bi';
 import WaveSurfer from 'wavesurfer.js';
 
-import { classNames, useMobileStore, useThemeStore } from '~/shared';
+import { classNames, rippleAnimation, useMobileStore, useThemeStore } from '~/shared';
 
 import styles from './WaveForm.module.css';
 
@@ -12,6 +12,7 @@ const Waveform: FC<TWaveformProps> = ({ src, isMyMessage }) => {
   const { theme } = useThemeStore();
   const { type } = useMobileStore();
 
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const waveformRef = useRef<HTMLDivElement>(null);
   const wavesurferRef = useRef<WaveSurfer | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -72,7 +73,14 @@ const Waveform: FC<TWaveformProps> = ({ src, isMyMessage }) => {
     };
   }, [src, theme, type]);
 
-  const togglePlayPause = () => {
+  const togglePlayPause = (e: MouseEvent<HTMLElement>) => {
+    rippleAnimation({
+      e,
+      className: isMyMessage ? styles.ripple_my : styles.ripple,
+      ref: buttonRef,
+      size: 15,
+      duration: 800,
+    });
     if (!isUserInteracted) {
       setIsUserInteracted(true);
       if (wavesurferRef.current) {
@@ -91,7 +99,11 @@ const Waveform: FC<TWaveformProps> = ({ src, isMyMessage }) => {
 
   return (
     <div className={styles.root}>
-      <button className={classNames(styles.button, isMyMessage && styles.button_my)} onClick={togglePlayPause}>
+      <button
+        ref={buttonRef}
+        className={classNames(styles.button, isMyMessage && styles.button_my)}
+        onClick={togglePlayPause}
+      >
         {isPlaying ? <BiPause size={40} /> : <BiPlay size={40} />}
       </button>
       <div className={styles.content}>

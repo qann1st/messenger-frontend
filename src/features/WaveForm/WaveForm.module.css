@@ -8,7 +8,7 @@
 .waveform {
   max-width: 280px;
   min-width: 140px;
-  
+
   @media (max-width: 600px) {
     max-width: 50vw;
     min-width: 150px;
@@ -23,6 +23,9 @@
   align-items: center;
   border-radius: var(--border-radius-circle);
   padding: 5px;
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
 }
 
 .button_my {
@@ -42,4 +45,33 @@
 
 .timer_my {
   color: var(--white);
+}
+
+.ripple {
+  background: rgba(200, 200, 200, 0.4);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  position: absolute;
+  animation: ripple 0.8s ease-in-out;
+}
+
+.ripple_my {
+  background: rgba(100, 100, 100, 0.4);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  position: absolute;
+  animation: ripple 0.8s ease-in-out;
+}
+
+@keyframes ripple {
+  from {
+    opacity: 1;
+    transform: scale(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2);
+  }
 }

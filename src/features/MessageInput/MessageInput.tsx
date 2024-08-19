@@ -90,7 +90,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
 
     const { theme } = useThemeStore();
 
-    const { isRecording, handleStartRecording, handleStopRecording, handleCancelRecording } = useRecordAudio(recipient);
+    const { isRecording, handleStartRecording, handleCancelRecording } = useRecordAudio(recipient);
     const { handleSubmit, timer, setIsPrinting, isVisibleEmojiPicker, setIsVisibleEmojiPicker } = useSendMessage(
       dialogId,
       recipient,
@@ -98,7 +98,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
       isRecording,
       inputValue,
       setInputValue,
-      handleStopRecording,
+      handleCancelRecording,
     );
 
     useTextareaAutoResize(textAreaRef, inputValue);
@@ -107,7 +107,12 @@ const MessageInput: FC<TMessageInputProps> = memo(
     useFocusOnMount(textAreaRef);
 
     const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-      if (e.key === 'Enter' && !e.shiftKey && (inputValue.length || forwardMessage)) {
+      if (
+        e.key === 'Enter' &&
+        !e.shiftKey &&
+        (inputValue.length || forwardMessage || type === 'not-absolute') &&
+        !isDisabled
+      ) {
         e.preventDefault();
         handleSubmit();
       }
@@ -181,7 +186,15 @@ const MessageInput: FC<TMessageInputProps> = memo(
             className={classNames(styles.drag_drop, isDragging && styles.drag_drop_active)}
           />
         )}
-        <form onSubmit={handleSubmit} className={classNames(styles.root, styles[type])}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!isDisabled) {
+              handleSubmit();
+            }
+          }}
+          className={classNames(styles.root, styles[type])}
+        >
           <input
             onChange={handleFileUpload}
             className={styles.files_input}

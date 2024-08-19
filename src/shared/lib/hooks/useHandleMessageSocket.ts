@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useMessageStore } from '~/entities';
-import { type Chat, type ChatWithPagination, Message, User, useUserStore } from '~/shared';
+import { type Chat, type ChatWithPagination, Message, User, getRecipientFromUsers, useUserStore } from '~/shared';
 
 export const useHandleMessageSocket = () => {
   const queryClient = useQueryClient();
@@ -14,10 +14,104 @@ export const useHandleMessageSocket = () => {
   const { socket, getUser, setUser } = useUserStore();
   const { getReplyMessage, setIsVisibleReplyMessage } = useMessageStore();
 
-  const handleDeleteMessage = (message: Message) => {
-    queryClient.setQueryData(['chat', message.chatId], (oldData: ChatWithPagination) => {
-      const user = getUser();
+  const audio = document.querySelector('audio') as HTMLAudioElement;
 
+  const handleMessage = (message: Message) => {
+    const user = getUser();
+    if (message.sender.id === user?.id) {
+      queryClient.setQueryData(['chat', message.chatId], (oldData: ChatWithPagination) => {
+        const messageDate = new Date(message.createdAt).toDateString();
+        const updatedMessages = oldData.groupedMessages[messageDate].map((msg) =>
+          msg.id === message.id ? { ...msg, status: 'success' } : msg,
+        );
+
+        return {
+          ...oldData,
+          groupedMessages: {
+            ...oldData.groupedMessages,
+            [messageDate]: updatedMessages,
+          },
+        };
+      });
+      return;
+    }
+
+    queryClient.setQueryData(['chat', message.chatId], (oldData: ChatWithPagination) => {
+      if (
+        !user ||
+        (!message.voiceMessage && !message.content && !message.images.length && !message.forwardedMessage.chatId)
+      ) {
+        return;
+      }
+
+      const dialogIndex = user.dialogs.findIndex((d) => d.id === message.chatId);
+      const dialog = user.dialogs[dialogIndex];
+
+      const dialogId = window.location.pathname.split('/')[1];
+
+      if (dialogId === message.chatId) {
+        socket?.emit('read-messages', {
+          roomId: dialogId,
+          recipient: getRecipientFromUsers(dialog?.users ?? [], user.id)?.id,
+        });
+      } else {
+        if (document.hidden) {
+          audio.play().catch((error) => {
+            console.error('Failed to play sound:', error);
+          });
+        }
+      }
+
+      if (dialog) {
+        dialog.messages = [message];
+
+        if (message.sender.id !== user.id && dialogId !== message.chatId) {
+          dialog.unreadedMessages += 1;
+        }
+
+        user.dialogs.splice(dialogIndex, 1);
+
+        user.dialogs.unshift(dialog);
+      } else {
+        user.dialogs.unshift({
+          id: message.chatId,
+          messages: [message],
+          users: [message.sender, user],
+        } as Chat);
+      }
+
+      setUser(user);
+
+      let groupedMessages = oldData?.groupedMessages ?? {};
+      const date = new Date(message.createdAt).toDateString();
+      const arr = groupedMessages[date];
+
+      if (!arr) {
+        groupedMessages = { [date]: [message], ...groupedMessages };
+      } else {
+        arr.unshift(message);
+      }
+
+      if (oldData.total > oldData.data?.length) {
+        oldData.data.pop();
+      }
+
+      return {
+        ...oldData,
+        data: [message, ...(oldData?.data ?? [])],
+        total: (oldData?.total ?? 0) + 1,
+        groupedMessages,
+      };
+    });
+  };
+
+  const handleDeleteMessage = (message: Message) => {
+    const user = getUser();
+    if (message.sender.id === user?.id) {
+      return;
+    }
+
+    queryClient.setQueryData(['chat', message.chatId], (oldData: ChatWithPagination) => {
       if (!user) {
         return oldData;
       }
@@ -157,6 +251,7 @@ export const useHandleMessageSocket = () => {
       return;
     }
 
+    socket.on('message', handleMessage);
     socket.on('edit-message', handleEditMessage);
     socket.on('delete-message', handleDeleteMessage);
     socket.on('delete-chat', handleDeleteChat);
@@ -164,6 +259,7 @@ export const useHandleMessageSocket = () => {
     socket.on('print', handlePrint);
 
     return () => {
+      socket.off('message', handleMessage);
       socket.off('edit-message', handleEditMessage);
       socket.off('delete-message', handleDeleteMessage);
       socket.off('delete-chat', handleDeleteChat);

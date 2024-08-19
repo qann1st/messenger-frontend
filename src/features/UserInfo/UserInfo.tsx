@@ -48,7 +48,7 @@ const UserInfo: FC<TUserInfoProps> = memo(({ recipient, printing, hasAvatar = tr
           <Skeleton.Rectangle height={12} width={60} />
         ) : (
           <p className={classNames(styles.text, recipient.isOnline && styles.online)}>
-            {recipient.isOnline && printing && 'prints...'}
+            {recipient.isOnline && printing && 'is typing...'}
             {recipient.isOnline && !printing && 'online'}
             {!recipient.isOnline && `was ${formatOnlineDate(Number(recipient.lastOnline))}`}
           </p>
