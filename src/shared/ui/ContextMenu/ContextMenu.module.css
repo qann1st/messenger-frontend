@@ -8,8 +8,8 @@
   position: absolute;
   transition: opacity 0.2s ease-in-out;
   background: var(--context-menu-background);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(50px);
+  backdrop-filter: blur(50px);
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.37);
   max-width: 250px;
   width: 100%;
@@ -34,6 +34,8 @@
   gap: var(--spacing-6);
   border-radius: var(--border-radius-5);
   transition: var(--transition);
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .contextMenu_visible .context_button_delete {

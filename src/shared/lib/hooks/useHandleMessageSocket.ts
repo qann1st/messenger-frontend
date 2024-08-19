@@ -6,15 +6,18 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useMessageStore } from '~/entities';
 import { type Chat, type ChatWithPagination, Message, User, getRecipientFromUsers, useUserStore } from '~/shared';
 
+import { TSettings } from '../types';
+import { useLocalStorage } from './useLocalStorage';
+
 export const useHandleMessageSocket = () => {
   const queryClient = useQueryClient();
 
   const navigate = useNavigate();
 
+  const [settings] = useLocalStorage<TSettings>('settings', { isSoundNotifications: true });
+
   const { socket, getUser, setUser } = useUserStore();
   const { getReplyMessage, setIsVisibleReplyMessage } = useMessageStore();
-
-  const audio = document.querySelector('audio') as HTMLAudioElement;
 
   const handleMessage = (message: Message) => {
     const user = getUser();
@@ -55,7 +58,9 @@ export const useHandleMessageSocket = () => {
           recipient: getRecipientFromUsers(dialog?.users ?? [], user.id)?.id,
         });
       } else {
-        if (document.hidden) {
+        const audio = new Audio('/assets/notification-sound.mp3');
+
+        if (document.hidden && settings?.isSoundNotifications) {
           audio.play().catch((error) => {
             console.error('Failed to play sound:', error);
           });

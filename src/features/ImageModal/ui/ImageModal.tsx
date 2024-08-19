@@ -1,7 +1,7 @@
 import { createPortal } from 'react-dom';
 import { IoClose } from 'react-icons/io5';
 
-import { useEscCloseModal } from '~/shared/lib/hooks/useEscCloseModal';
+import { useEscCloseModal } from '~/shared';
 
 import styles from './ImageModal.module.css';
 

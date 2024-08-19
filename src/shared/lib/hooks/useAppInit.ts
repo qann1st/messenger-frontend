@@ -1,10 +1,13 @@
 import { useEffect } from 'react';
 import { io } from 'socket.io-client';
+import { useShallow } from 'zustand/react/shallow';
 
-import { useMobileStore, useThemeStore, useUserStore } from '~/shared/model';
+import { useMobileStore, useThemeStore, useUserStore } from '~/shared';
 
 export const useAppInit = () => {
-  const { fetchUser, fetching, setSocket } = useUserStore();
+  const [fetchUser, fetching, setSocket] = useUserStore(
+    useShallow((state) => [state.fetchUser, state.fetching, state.setSocket]),
+  );
   const { setType } = useMobileStore();
   const { theme } = useThemeStore();
 
@@ -34,13 +37,15 @@ export const useAppInit = () => {
     document.body.setAttribute('theme', theme);
   }, [theme]);
 
+  const token = localStorage.getItem('token');
+
   useEffect(() => {
     setSocket(
       io(import.meta.env.VITE_MESSENGER_SOCKET_CHAT, {
-        auth: { token: localStorage.getItem('token') },
+        auth: { token: document.cookie.split('=')[1] },
       }),
     );
-  }, [localStorage.getItem('token')]);
+  }, [token]);
 
   return {
     fetching,

@@ -1,6 +1,7 @@
 import { type FC, type MouseEvent, memo, useCallback, useEffect, useRef } from 'react';
 import { BsReply, BsTrash } from 'react-icons/bs';
 import { HiOutlinePencil } from 'react-icons/hi';
+import { IoIosCheckmarkCircleOutline } from 'react-icons/io';
 import { MdContentCopy } from 'react-icons/md';
 import { PiShareFat } from 'react-icons/pi';
 import { useParams } from 'react-router-dom';
@@ -8,18 +9,18 @@ import { toast } from 'react-toastify';
 import { useShallow } from 'zustand/react/shallow';
 
 import { useMessageStore } from '~/entities';
-import { useForwardMessageModalStore } from '~/features/ForwardMessageModal';
-import { useMessageInputStore } from '~/features/MessageInput';
-import { ScrollToBottomButton } from '~/features/ScrollToBottomButton';
+import { ScrollToBottomButton, useForwardMessageModalStore, useMessageInputStore } from '~/features';
 import {
   ContextMenu,
+  Message,
   Skeleton,
   type Message as TMessage,
   useContextMenu,
   useMessagePagination,
+  useMobileStore,
+  useOptimistSendMessage,
   useUserStore,
 } from '~/shared';
-import { useOptimistSendMessage } from '~/shared/lib/hooks/useOptimistSendMessage';
 
 import styles from './MessagesList.module.css';
 
@@ -33,6 +34,8 @@ const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoa
     setReplyMessage,
     setIsVisibleReplyMessage,
     setSelectedMessage,
+    selectedMessages,
+    addSelectedMessages,
     editMessage,
     replyMessage,
     setEditMessage,
@@ -41,6 +44,7 @@ const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoa
     setIsVisibleForwardMessage,
   } = useMessageStore();
   const setInputValue = useMessageInputStore((state) => state.setInputValue);
+  const type = useMobileStore(useShallow((state) => state.type));
   const openModal = useForwardMessageModalStore(useShallow((state) => state.openModal));
 
   const { user, socket } = useUserStore();
@@ -94,7 +98,9 @@ const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoa
       return;
     }
 
-    if (selectedMessage) {deleteMessage(selectedMessage);}
+    if (selectedMessage) {
+      deleteMessage(selectedMessage);
+    }
   };
 
   const handleEditMessage = () => {
@@ -114,6 +120,7 @@ const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoa
   };
 
   const isMySelectedMessage = selectedMessage ? selectedMessage.sender.id === user?.id : true;
+  const isShowSelectedMessages = !selectedMessages.find((el) => el.id === selectedMessage?.id);
 
   const buttons = [
     {
@@ -124,11 +131,13 @@ const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoa
         navigator.clipboard.writeText(selectedMessage?.content || '');
         hideContextMenu();
       },
+      show: isShowSelectedMessages,
     },
     {
       icon: BsReply,
       text: 'Reply',
       onClick: handleReplyMessage,
+      show: isShowSelectedMessages,
     },
     {
       icon: PiShareFat,
@@ -139,33 +148,42 @@ const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoa
         }
         hideContextMenu();
       },
+      show: isShowSelectedMessages,
     },
     {
       icon: HiOutlinePencil,
       text: 'Edit',
       onClick: handleEditMessage,
-      show: isMySelectedMessage && !selectedMessage?.voiceMessage,
+      show: isMySelectedMessage && !selectedMessage?.voiceMessage && isShowSelectedMessages,
+    },
+    {
+      icon: IoIosCheckmarkCircleOutline,
+      text: 'Select',
+      onClick: () => {
+        if (selectedMessage) {
+          addSelectedMessages(selectedMessage);
+        }
+        hideContextMenu();
+      },
+      show: isShowSelectedMessages,
     },
     {
       icon: BsTrash,
       text: 'Delete',
       isDelete: true,
       onClick: handleDeleteMessage,
+      show: isShowSelectedMessages,
     },
   ];
 
   if (isLoading) {
     return (
       <div className={styles.skeletons}>
-        {new Array(30).fill(null).map((_, i) => (
+        {new Array(Math.trunc(window.innerHeight * 0.015)).fill(null).map((_, i) => (
           // eslint-disable-next-line react/no-array-index-key
-          <span key={i} style={{ alignSelf: Math.random() > 0.5 ? 'flex-end' : 'flex-start' }}>
-            <Skeleton.Rectangle
-              width={100 * (Math.random() > 0.5 ? 2 : 1)}
-              height={46 * (Math.random() > 0.5 ? 2 : 1)}
-              borderRadius='var(--border-radius-8)'
-            />
-          </span>
+          <div key={i} style={{ alignSelf: Math.random() > 0.5 ? 'flex-end' : 'flex-start' }}>
+            <Skeleton.Rectangle width={200} height={46} borderRadius='var(--border-radius-8)' />
+          </div>
         ))}
       </div>
     );
@@ -178,6 +196,11 @@ const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoa
         scrollRef={scrollRef}
         messagesRef={messagesRef}
         onContextMenu={handleContextMenu}
+        onClick={(e, message: Message) => {
+          if (type !== 'desktop') {
+            addSelectedMessages(message);
+          }
+        }}
       />
       <ContextMenu
         ref={contextMenuRef}

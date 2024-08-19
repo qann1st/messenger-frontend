@@ -6,8 +6,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { QueryClientProvider } from '@tanstack/react-query';
 
 import { MessageInput, useMessageInputStore } from '~/features';
-import { Skeleton, classNames, queryClient, useMobileStore } from '~/shared';
-import { useEscCloseModal } from '~/shared/lib/hooks/useEscCloseModal';
+import { Skeleton, classNames, queryClient, useEscCloseModal, useMobileStore } from '~/shared';
 
 import styles from './ImageSendModal.module.css';
 

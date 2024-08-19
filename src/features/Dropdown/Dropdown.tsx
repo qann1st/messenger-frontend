@@ -4,6 +4,7 @@ import { classNames } from '~/shared';
 
 import styles from './Dropdown.module.css';
 
+import { Switcher } from '../Switcher';
 import { TDropdownProps } from './Dropdown.types';
 
 const Dropdown = forwardRef<HTMLDivElement, TDropdownProps>(({ buttons, isToggled, className }, ref) => (
@@ -16,7 +17,10 @@ const Dropdown = forwardRef<HTMLDivElement, TDropdownProps>(({ buttons, isToggle
             className={classNames(styles.dropdown_button, button.isDelete && styles.dropdown_button_delete)}
             onClick={() => button.onClick?.(ref as RefObject<HTMLButtonElement>)}
           >
-            <Icon size={20} /> {button.text}
+            <div className={styles.icon_text}>
+              <Icon size={20} /> {button.text}
+            </div>
+            {button.checkbox && isToggled && <Switcher isActive={button.isActive ?? false} />}
           </div>
         ),
     )}

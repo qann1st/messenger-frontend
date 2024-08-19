@@ -14,6 +14,10 @@
   z-index: 1;
 }
 
+.root:hover {
+  scrollbar-color: var(--scrollbar-color) rgba(0, 0, 0, 0);
+}
+
 .root_reply {
   height: calc(100% - 128px);
 }

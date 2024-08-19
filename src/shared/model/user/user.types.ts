@@ -4,11 +4,11 @@ import type { User } from '~/shared';
 
 export type TUserState = {
   user: User | null;
-  setUser: (user: User) => void;
+  setUser: (user: TUserState['user']) => void;
   getUser: () => TUserState['user'];
   fetchUser: () => Promise<void>;
   fetching: boolean;
   error: string | null;
   socket: Socket | null;
-  setSocket: (socket: Socket) => void;
+  setSocket: (socket: TUserState['socket']) => void;
 };

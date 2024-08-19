@@ -18,7 +18,7 @@ body[theme='light'] {
   --scrollbar-color: rgba(90, 90, 90, 0.3);
 
   --context-menu-background: rgba(255, 255, 255, 0.7);
-  --context-item-hover-background: rgba(0, 0, 0, 0.2);
+  --context-item-hover-background: rgba(0, 0, 0, 0.04);
 
   --input-background: #e2e2e2;
   --input-placeholder: #696969;
@@ -36,6 +36,9 @@ body[theme='light'] {
   --color-message-error: #e57373;
 
   --outline-icon-button-color: rgb(112, 117, 121, 0.8);
+
+  --checkbox-background: #c4c9cc;
+  --checkbox-circle: #ffffff;
 }
 
 body[theme='dark'] {
@@ -55,7 +58,7 @@ body[theme='dark'] {
   --recipient-message-text: #ffffff;
   --recipient-reply-text: #000000;
 
-  --context-menu-background: rgba(0, 0, 0, 0.7);
+  --context-menu-background: rgba(33, 36, 37, 0.7);
   --context-item-hover-background: rgba(0, 0, 0, 0.4);
 
   --scrollbar-color: rgba(90, 90, 90, 0.3);
@@ -76,4 +79,7 @@ body[theme='dark'] {
   --color-message-error: #e57373;
 
   --outline-icon-button-color: rgb(170, 170, 170, 0.8);
+
+  --checkbox-background: #707579;
+  --checkbox-circle: #1d1d1d;
 }

@@ -1,4 +1,4 @@
-import { FC, type MouseEvent, useState } from 'react';
+import { FC, type MouseEvent, useRef, useState } from 'react';
 import { BsTrash } from 'react-icons/bs';
 import { IoOpenOutline } from 'react-icons/io5';
 import { useParams } from 'react-router-dom';
@@ -26,8 +26,9 @@ const DialogsList: FC<{ hasIsActive?: boolean; isForward?: boolean; onUserClick?
 
   const dialogId = useParams().dialogId ?? (type !== 'desktop' ? lastChat : '');
 
+  const scrollRef = useRef<HTMLUListElement>(null);
   const { socket, user, setUser } = useUserStore();
-  const { contextMenu, contextMenuRef, showContextMenu, hideContextMenu } = useContextMenu();
+  const { contextMenu, contextMenuRef, showContextMenu, hideContextMenu } = useContextMenu<HTMLUListElement>(scrollRef);
 
   const [selectedDialog, setSelectedDialog] = useState<Chat | null>(null);
 
@@ -53,12 +54,6 @@ const DialogsList: FC<{ hasIsActive?: boolean; isForward?: boolean; onUserClick?
 
   const buttons = [
     {
-      icon: BsTrash,
-      text: 'Delete',
-      isDelete: true,
-      onClick: handleDeleteClick,
-    },
-    {
       icon: IoOpenOutline,
       text: 'Open in new tab',
       onClick: () => {
@@ -66,10 +61,16 @@ const DialogsList: FC<{ hasIsActive?: boolean; isForward?: boolean; onUserClick?
         window.open(`/${selectedDialog?.id}`);
       },
     },
+    {
+      icon: BsTrash,
+      text: 'Delete',
+      isDelete: true,
+      onClick: handleDeleteClick,
+    },
   ];
 
   return (
-    <ul className={styles.dialogs}>
+    <ul className={styles.dialogs} ref={scrollRef}>
       {user?.dialogs.length ? (
         user.dialogs.map((dialog) => {
           const recipient = getRecipientFromUsers(dialog.users ?? [], user.id ?? '');
@@ -89,7 +90,7 @@ const DialogsList: FC<{ hasIsActive?: boolean; isForward?: boolean; onUserClick?
               onClick={() => onUserClick?.(dialog)}
               isActive={hasIsActive && dialog.id === dialogId}
               lastMessageImage={messages?.images?.length > 0 ? messages.images : messages.forwardedMessage?.images}
-              lastMessage={messages?.content ?? messages.forwardedMessage?.content}
+              lastMessage={messages?.content || messages.forwardedMessage?.content}
               lastMessageVoice={messages.voiceMessage || messages.forwardedMessage?.voiceMessage}
               unreadedMessages={dialog.unreadedMessages}
               showContextMenu={(e) => handleContextMenu(e, dialog)}

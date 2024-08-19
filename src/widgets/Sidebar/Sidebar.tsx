@@ -1,11 +1,24 @@
 import { FC, useRef, useState } from 'react';
-import { MdDarkMode, MdLightMode, MdMenu } from 'react-icons/md';
-import { useParams } from 'react-router-dom';
+import { HiOutlineSpeakerWave } from 'react-icons/hi2';
+import { LuLogOut } from 'react-icons/lu';
+import { MdDarkMode, MdMenu } from 'react-icons/md';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useShallow } from 'zustand/react/shallow';
 
 import { DialogsList, Resizer, SearchDialogsList, SearchInput } from '~/features';
-import { Dropdown } from '~/features/Dropdown/Dropdown';
-import { classNames, useMobileStore, useOutsideClick, useSearchStore, useThemeStore } from '~/shared';
-import { toggleDarkMode } from '~/shared/lib/helpers/toggleDarkMode';
+import { Dropdown } from '~/features';
+import {
+  classNames,
+  messengerApi,
+  useMobileStore,
+  useOutsideClick,
+  useSearchStore,
+  useThemeStore,
+  useUserStore,
+} from '~/shared';
+import { toggleDarkMode } from '~/shared';
+import { useLocalStorage } from '~/shared';
+import { TSettings } from '~/shared';
 
 import styles from './Sidebar.module.css';
 
@@ -16,12 +29,16 @@ const Sidebar: FC = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const dropdownButtonRef = useRef<HTMLButtonElement>(null);
 
+  const [settings, setSettings] = useLocalStorage<TSettings>('settings', { isSoundNotifications: true });
+
   useOutsideClick(dropdownRef, () => setIsToggledDropdownMenu(false), isToggledDropdownMenu, dropdownButtonRef);
 
   const isSearch = useSearchStore((state) => state.isSearch);
+  const [setSocket, setUser] = useUserStore(useShallow((state) => [state.setSocket, state.setUser]));
   const { type } = useMobileStore();
   const { theme, toggleTheme } = useThemeStore();
 
+  const navigate = useNavigate();
   const { dialogId } = useParams();
 
   return (
@@ -53,10 +70,32 @@ const Sidebar: FC = () => {
             setIsVisible={setIsToggledDropdownMenu}
             buttons={[
               {
-                icon: theme === 'dark' ? MdLightMode : MdDarkMode,
-                text: theme === 'dark' ? 'Light mode' : 'Dark mode',
+                icon: MdDarkMode,
+                text: 'Dark mode',
                 onClick: (ref) => {
                   toggleDarkMode(theme, toggleTheme, ref);
+                },
+                checkbox: true,
+                isActive: theme === 'dark',
+              },
+              {
+                icon: HiOutlineSpeakerWave,
+                text: 'Sound notifications',
+                onClick: () => {
+                  setSettings((prev) => ({ ...prev, isSoundNotifications: !prev.isSoundNotifications }));
+                },
+                checkbox: true,
+                isActive: settings.isSoundNotifications,
+              },
+              {
+                icon: LuLogOut,
+                text: 'Log out',
+                isDelete: true,
+                onClick: async () => {
+                  await messengerApi.logout();
+                  setSocket(null);
+                  setUser(null);
+                  navigate('/');
                 },
               },
             ]}

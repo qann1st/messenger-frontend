@@ -6,4 +6,5 @@ export * from './formatOnlineDate';
 export * from './getRecipientFromUsers';
 export * from './groupMessageByDate';
 export * from './rippleAnimation';
+export * from './toggleDarkMode';
 export * from './uuidv4';

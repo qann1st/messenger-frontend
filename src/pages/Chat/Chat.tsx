@@ -1,11 +1,18 @@
-import { DragEvent, type FC, useEffect, useMemo, useRef } from 'react';
+import { DragEvent, type FC, RefObject, memo, useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
 
 import { useQuery } from '@tanstack/react-query';
 
-import { ImageModal, ImageSendModal, MessageInput, MessagesList, UserInfo, useMessageInputStore } from '~/features';
-import { ForwardMessageModal } from '~/features/ForwardMessageModal';
+import {
+  ForwardMessageModal,
+  ImageModal,
+  ImageSendModal,
+  MessageInput,
+  MessagesList,
+  UserInfo,
+  useMessageInputStore,
+} from '~/features';
 import {
   User,
   classNames,
@@ -81,10 +88,8 @@ const Chat: FC = () => {
         onDragOver={handleDragOver}
       >
         <UserInfo recipient={recipient} printing={data?.printing ?? false} />
-        <div className={classNames(styles.background, isDark && styles.background_dark)}>
-          <MessagesList isLoading={isLoading} scrollRef={scrollRef} recipient={recipient} />
-        </div>
-        <Fff recipient={recipient} />
+        <Ggg isLoading={isLoading} recipient={recipient} scrollRef={scrollRef} isDark={isDark} />
+        <Fff scrollRef={scrollRef} recipient={recipient} />
       </main>
       <ForwardMessageModal />
       <ImageSendModal />
@@ -95,14 +100,24 @@ const Chat: FC = () => {
 
 export { Chat };
 
-const Fff: FC<{ recipient?: User }> = ({ recipient }) => {
+const Ggg: FC<{ recipient?: User; scrollRef: RefObject<HTMLDivElement>; isLoading: boolean; isDark: boolean }> = memo(
+  ({ isLoading, recipient, scrollRef, isDark }) => (
+    <div className={classNames(styles.background, isDark && styles.background_dark)}>
+      <MessagesList isLoading={isLoading} scrollRef={scrollRef} recipient={recipient} />
+    </div>
+  ),
+);
+
+const Fff: FC<{ recipient?: User; scrollRef?: RefObject<HTMLDivElement> }> = memo(({ recipient, scrollRef }) => {
   const { inputValue, setInputValue, addInputValue } = useMessageInputStore();
+
   return (
     <MessageInput
       inputValue={inputValue}
+      scrollRef={scrollRef}
       setInputValue={setInputValue}
       addInputValue={addInputValue}
       recipient={recipient?.id ?? ''}
     />
   );
-};
+});

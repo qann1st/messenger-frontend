@@ -10,6 +10,8 @@ export type TDropdownProps = {
     isDelete?: boolean;
     show?: boolean;
     onClick?: (ref?: RefObject<HTMLButtonElement>) => void;
+    checkbox?: boolean;
+    isActive?: boolean;
   }[];
   setIsVisible?: (value: boolean) => void;
 };

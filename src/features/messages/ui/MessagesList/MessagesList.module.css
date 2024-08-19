@@ -4,15 +4,11 @@
   align-items: center;
 }
 
-.root:hover {
-  scrollbar-color: var(--scrollbar-color) rgba(0, 0, 0, 0);
-}
-
 .skeletons {
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   gap: var(--spacing-1);
   max-width: 1280px;
   width: 100%;
-  padding: 0 10px;
+  padding: 0 10px 60px;
 }

@@ -65,12 +65,13 @@ const MessagePreview: FC<TMessagePreviewProps> = memo(
         </div>
       )}
       {type === 'input' && (
-        <IoClose
-          cursor='pointer'
-          onClick={() => (onClose ? onClose() : setIsVisible && setIsVisible(false))}
-          size={32}
-          color='var(--message-background)'
-        />
+        <button className={styles.close}>
+          <IoClose
+            cursor='pointer'
+            onClick={() => (onClose ? onClose() : setIsVisible && setIsVisible(false))}
+            size={32}
+          />
+        </button>
       )}
     </div>
   ),

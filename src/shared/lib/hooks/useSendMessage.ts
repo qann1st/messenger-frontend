@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, RefObject, useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
 import { useMessageStore } from '~/entities';
@@ -15,6 +15,7 @@ export const useSendMessage = (
   inputValue?: string,
   setInputValue?: (inputValue: string) => void,
   onStopRecording?: () => void,
+  scrollRef?: RefObject<HTMLDivElement>,
 ) => {
   const [socket] = useUserStore(useShallow((state) => [state.socket]));
   const { closeModal, isModalOpen } = useImageSendModalStore();
@@ -31,7 +32,7 @@ export const useSendMessage = (
     isVisibleForwardMessage,
   } = useMessageStore();
 
-  const { sendMessage } = useOptimistSendMessage();
+  const { sendMessage } = useOptimistSendMessage(scrollRef);
 
   const [timer, setTimer] = useState(0);
   const [isPrinting, setIsPrinting] = useState(false);

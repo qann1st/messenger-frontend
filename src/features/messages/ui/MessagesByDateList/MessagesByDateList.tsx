@@ -1,9 +1,10 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useShallow } from 'zustand/react/shallow';
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { Message } from '~/entities';
+import { Message, useMessageStore } from '~/entities';
 import {
   ChatWithPagination,
   type Message as TMessage,
@@ -16,7 +17,12 @@ import styles from './MessagesByDateList.module.css';
 
 import { TMessagesByDateListProps } from './MessagesByDateList.types';
 
-const MessagesByDateList: FC<TMessagesByDateListProps> = ({ onContextMenu, messagesRef, loadMorePages }) => {
+const MessagesByDateList: FC<TMessagesByDateListProps> = ({
+  onContextMenu,
+  onClick,
+  messagesRef,
+  loadMorePages,
+}) => {
   const { type, lastChat } = useMobileStore();
 
   const params = useParams();
@@ -34,6 +40,9 @@ const MessagesByDateList: FC<TMessagesByDateListProps> = ({ onContextMenu, messa
   const [loadedMorePages, setLoadedMorePages] = useState<{ fetching: boolean; lastId?: string }>({
     fetching: false,
   });
+  const [setIsVisibleReplyMessage, setReplyMessage] = useMessageStore(
+    useShallow((state) => [state.setIsVisibleReplyMessage, state.setReplyMessage]),
+  );
 
   const scrollToMessage = useCallback(async (id: string) => {
     if (messagesRef.current[id]) {
@@ -74,6 +83,12 @@ const MessagesByDateList: FC<TMessagesByDateListProps> = ({ onContextMenu, messa
               }
             }}
             onContextMenu={(e) => onContextMenu(e, message)}
+            onClick={(e) => onClick(e, message)}
+            onDoubleClick={(e) => {
+              e.preventDefault();
+              setIsVisibleReplyMessage(true);
+              setReplyMessage(message);
+            }}
             key={message.id}
             className={styles.pad}
           >

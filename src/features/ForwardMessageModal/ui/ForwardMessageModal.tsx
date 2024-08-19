@@ -5,9 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
 
 import { useMessageStore } from '~/entities';
-import { DialogsList } from '~/features/DialogsList';
-import { classNames } from '~/shared';
-import { useEscCloseModal } from '~/shared/lib/hooks/useEscCloseModal';
+import { DialogsList } from '~/features';
+import { classNames, useEscCloseModal } from '~/shared';
 
 import styles from './ForwardMessageModal.module.css';
 

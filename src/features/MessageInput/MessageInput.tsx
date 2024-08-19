@@ -17,6 +17,7 @@ import {
   classNames,
   formatMilliseconds,
   messengerApi,
+  useEscCloseModal,
   useFocusOnMount,
   useOutsideClick,
   useRecordAudio,
@@ -24,7 +25,6 @@ import {
   useTextareaAutoResize,
   useThemeStore,
 } from '~/shared';
-import { useEscCloseModal } from '~/shared/lib/hooks/useEscCloseModal';
 
 import styles from './MessageInput.module.css';
 
@@ -40,6 +40,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
     setInputValue,
     addInputValue,
     file,
+    scrollRef,
     isDisabled = false,
     haveButtons = true,
     type = 'absolute',
@@ -99,6 +100,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
       inputValue,
       setInputValue,
       handleCancelRecording,
+      scrollRef,
     );
 
     useTextareaAutoResize(textAreaRef, inputValue);
@@ -299,8 +301,6 @@ const MessageInput: FC<TMessageInputProps> = memo(
                   <div className={styles.emoji_picker} ref={emojiRef}>
                     <EmojiPicker
                       lazyLoadEmojis
-                      searchDisabled
-                      skinTonesDisabled
                       theme={theme === 'dark' ? Theme.DARK : Theme.LIGHT}
                       emojiStyle={EmojiStyle.GOOGLE}
                       onEmojiClick={(e) => addInputValue(e.emoji)}

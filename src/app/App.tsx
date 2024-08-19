@@ -3,7 +3,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { useThemeStore } from '~/shared';
-import { useAppInit } from '~/shared/lib/hooks/useAppInit';
+import { useAppInit } from '~/shared';
 
 import { Providers } from './Providers';
 import { AppRoutes } from './Providers/AppRoutes';

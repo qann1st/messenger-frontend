@@ -16,6 +16,15 @@
   visibility: visible;
 }
 
+.close {
+  color: var(--outline-icon-button-color);
+  transition: var(--transition);
+}
+
+.close:hover {
+  color: var(--message-background);
+}
+
 .reply_message {
   position: absolute;
 }

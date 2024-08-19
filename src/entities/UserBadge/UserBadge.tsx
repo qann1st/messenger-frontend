@@ -153,7 +153,7 @@ const UserBadge: FC<TUserBadgeProps> = memo(
                     !printing && <img draggable={false} src={lastMessageImage?.[0]} alt='' className={styles.image} />}
                   {lastMessage && !printing && (
                     <p className={classNames(styles.subtitle, 'emoji', isActive && styles.subtitle_active)}>
-                      {lastMessage}
+                      {lastMessage.split('\\n').join(' ')}
                     </p>
                   )}
                   {printing && <p className={classNames(styles.printing, styles.subtitle)}>is typing...</p>}

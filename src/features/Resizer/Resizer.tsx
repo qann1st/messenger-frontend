@@ -1,7 +1,6 @@
-import { type FC, useCallback, useEffect, useState } from 'react';
-import { memo } from 'react';
+import { type FC, memo, useCallback, useEffect, useState } from 'react';
 
-import { classNames, useMobileStore } from '~/shared';
+import { classNames, useLocalStorage, useMobileStore } from '~/shared';
 
 import styles from './Resizer.module.css';
 
@@ -9,6 +8,8 @@ import type { TResizerProps } from './Resizer.types';
 
 const Resizer: FC<TResizerProps> = memo(({ elementRef }) => {
   const [isResizing, setIsResizing] = useState(false);
+  const [width, setWidth] = useLocalStorage('sidebarWidth', '400px');
+
   const { type } = useMobileStore();
 
   const resizeElement = useCallback(
@@ -17,7 +18,7 @@ const Resizer: FC<TResizerProps> = memo(({ elementRef }) => {
         const sidebarWidth = `${e.pageX}px`;
 
         elementRef.current.style.width = sidebarWidth;
-        localStorage.setItem('sidebarWidth', sidebarWidth);
+        setWidth(sidebarWidth);
       }
     },
     [isResizing, elementRef],
@@ -43,7 +44,7 @@ const Resizer: FC<TResizerProps> = memo(({ elementRef }) => {
   }, [isResizing, resizeElement]);
 
   useEffect(() => {
-    const sidebarWidth = localStorage.getItem('sidebarWidth') ?? '400px';
+    const sidebarWidth = width;
 
     if (elementRef.current) {
       elementRef.current.style.width = sidebarWidth;
@@ -53,7 +54,7 @@ const Resizer: FC<TResizerProps> = memo(({ elementRef }) => {
   useEffect(() => {
     if (type === 'desktop') {
       if (elementRef.current) {
-        elementRef.current.style.width = localStorage.getItem('sidebarWidth') ?? '400px';
+        elementRef.current.style.width = width;
         elementRef.current.style.maxWidth = '33vw';
       }
     }

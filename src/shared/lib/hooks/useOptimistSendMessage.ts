@@ -1,14 +1,14 @@
+import { RefObject } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useMessageStore } from '~/entities';
-import { Chat, ChatWithPagination, Message } from '~/shared/api';
-import { useUserStore } from '~/shared/model';
+import { Chat, ChatWithPagination, Message, useUserStore } from '~/shared';
 
 import { getRecipientFromUsers, uuidv4 } from '../helpers';
 
-export const useOptimistSendMessage = () => {
+export const useOptimistSendMessage = (scrollRef?: RefObject<HTMLDivElement>) => {
   const [socket, getUser, setUser] = useUserStore(useShallow((state) => [state.socket, state.getUser, state.setUser]));
   const { replyMessage, forwardMessage, getReplyMessage, setIsVisibleReplyMessage } = useMessageStore();
 
@@ -115,6 +115,8 @@ export const useOptimistSendMessage = () => {
         groupedMessages,
       };
     });
+
+    scrollRef?.current?.scrollTo({ behavior: 'smooth', top: 0 });
 
     socket?.emit('message', {
       id: newMessage.id,

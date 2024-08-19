@@ -34,11 +34,9 @@ class MessengerApi {
           response: { status },
         } = error;
         if (status === 401) {
-          const tokens = await axios
+          await axios
             .post(`${import.meta.env.VITE_MESSENGER_API_URL}auth/refresh`, {}, { withCredentials: true })
             .then((res) => res.data);
-
-          localStorage.setItem('token', tokens.accessToken);
 
           return this.api(config);
         }
@@ -57,17 +55,11 @@ class MessengerApi {
   }
 
   signInApproved(data: ApproveDto) {
-    return this.api.post<TokensDto>('auth/signin/approved', data).then((response) => {
-      localStorage.setItem('token', response.data.accessToken);
-      return response.data;
-    });
+    return this.api.post<TokensDto>('auth/signin/approved', data).then((response) => response.data);
   }
 
   approve(data: ApproveDto) {
-    return this.api.post<TokensDto>('auth/approve', data).then((response) => {
-      localStorage.setItem('token', response.data.accessToken);
-      return response.data;
-    });
+    return this.api.post<TokensDto>('auth/approve', data).then((response) => response.data);
   }
 
   logout() {

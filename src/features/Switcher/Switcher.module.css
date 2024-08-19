@@ -1,0 +1,28 @@
+.root {
+  width: 32px;
+  height: 14px;
+  background-color: var(--checkbox-background);
+  border-radius: var(--border-radius-10);
+  position: relative;
+  transition: var(--transition);
+}
+
+.active {
+  background-color: var(--message-background);
+}
+
+.circle {
+  width: 20px;
+  height: 20px;
+  background-color: var(--checkbox-circle);
+  border: 2px solid var(--checkbox-background);
+  border-radius: var(--border-radius-circle);
+  top: -3px;
+  position: absolute;
+  transition: var(--transition);
+}
+
+.active .circle {
+  border: 2px solid var(--message-background);
+  transform: translateX(12px);
+}

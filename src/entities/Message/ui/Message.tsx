@@ -144,7 +144,12 @@ const Message: FC<TMessageProps> = memo(
               !content && styles.empty_content_info,
             )}
           >
-            <div>
+            <div
+              onDoubleClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            >
               {(content || forwardedMessage.content) &&
                 (forwardedMessage.content || content)?.split('\\n').map((line, i) => (
                   // eslint-disable-next-line react/no-array-index-key

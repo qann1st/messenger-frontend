@@ -1,8 +1,8 @@
-import { MouseEvent, useEffect, useRef, useState } from 'react';
+import { MouseEvent, useRef, useState } from 'react';
 
 import { useOutsideClick } from './useOutsideClick';
 
-export const useContextMenu = (scrollRef?: React.RefObject<HTMLDivElement>) => {
+export const useContextMenu = <T extends HTMLElement = HTMLDivElement>(scrollRef?: React.RefObject<T>) => {
   const [contextMenu, setContextMenu] = useState({
     position: { x: 0, y: 0 },
     toggled: false,
@@ -21,22 +21,29 @@ export const useContextMenu = (scrollRef?: React.RefObject<HTMLDivElement>) => {
 
     if (scrollRef?.current) {
       const scrollAttr = scrollRef.current.getBoundingClientRect();
+
       x = clientX - scrollAttr.left + scrollRef.current.scrollLeft;
       y = clientY - scrollAttr.top + scrollRef.current.scrollTop;
 
-      // Check if context menu overflows to the right or bottom
-      const isLeft = x + contextMenuAttr.width > scrollRef.current.clientWidth + scrollRef.current.scrollLeft;
-      const isTop = y + contextMenuAttr.height > scrollRef.current.clientHeight + scrollRef.current.scrollTop;
+      const isLeft = x + contextMenuAttr.width > scrollAttr.width + scrollRef.current.scrollLeft;
+      const isTop = y + contextMenuAttr.height > scrollAttr.height + scrollRef.current.scrollTop;
 
-      x = isLeft ? x - contextMenuAttr.width : x;
-      y = isTop ? y - contextMenuAttr.height : y;
+      if (isLeft) {
+        x = Math.max(scrollRef.current.scrollLeft, x - contextMenuAttr.width);
+      }
+      if (isTop) {
+        y = Math.max(scrollRef.current.scrollTop, y - contextMenuAttr.height) + 20;
+      }
     } else {
-      // Check if context menu overflows to the right or bottom
       const isLeft = x + contextMenuAttr.width > window.innerWidth;
       const isTop = y + contextMenuAttr.height > window.innerHeight;
 
-      x = isLeft ? x - contextMenuAttr.width : x;
-      y = isTop ? y - contextMenuAttr.height : y;
+      if (isLeft) {
+        x = Math.max(0, x - contextMenuAttr.width);
+      }
+      if (isTop) {
+        y = Math.max(0, y - contextMenuAttr.height);
+      }
     }
 
     return { x, y };
