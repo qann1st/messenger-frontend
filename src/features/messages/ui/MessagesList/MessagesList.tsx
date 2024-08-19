@@ -34,7 +34,6 @@ const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoa
     setReplyMessage,
     setIsVisibleReplyMessage,
     setSelectedMessage,
-    selectedMessages,
     addSelectedMessages,
     editMessage,
     replyMessage,
@@ -120,7 +119,8 @@ const MessagesList: FC<TMessagesListProps> = memo(({ recipient, scrollRef, isLoa
   };
 
   const isMySelectedMessage = selectedMessage ? selectedMessage.sender.id === user?.id : true;
-  const isShowSelectedMessages = !selectedMessages.find((el) => el.id === selectedMessage?.id);
+  const isShowSelectedMessages = true;
+  // const isShowSelectedMessages = !selectedMessages.find((el) => el.id === selectedMessage?.id);
 
   const buttons = [
     {

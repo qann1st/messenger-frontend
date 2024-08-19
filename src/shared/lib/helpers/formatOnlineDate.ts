@@ -9,7 +9,9 @@ export const formatOnlineDate = (dateTimeString: string | number): string => {
 
   const relativeTimeFormatter = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
 
-  if (diffInSeconds < 60) {
+  if (date.getTime() === 0) {
+    return 'long ago';
+  } else if (diffInSeconds < 60) {
     return relativeTimeFormatter.format(-diffInSeconds, 'seconds');
   } else if (diffInMinutes < 60) {
     return relativeTimeFormatter.format(-diffInMinutes, 'minutes');
