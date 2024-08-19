@@ -10,6 +10,7 @@ import { TSettings } from '../types';
 import { useLocalStorage } from './useLocalStorage';
 
 export const useHandleMessageSocket = () => {
+  const audio = document.querySelector('#audio') as HTMLAudioElement;
   const queryClient = useQueryClient();
 
   const navigate = useNavigate();
@@ -58,8 +59,6 @@ export const useHandleMessageSocket = () => {
           recipient: getRecipientFromUsers(dialog?.users ?? [], user.id)?.id,
         });
       } else {
-        const audio = new Audio('/assets/notification-sound.mp3');
-
         if (document.hidden && settings?.isSoundNotifications) {
           audio.play().catch((error) => {
             console.error('Failed to play sound:', error);

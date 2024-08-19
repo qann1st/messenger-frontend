@@ -11,7 +11,6 @@ export const useMessageStore = create<TMessageState>((set, get) => ({
   selectedMessage: null,
   selectedMessages: [],
   editMessage: null,
-  otherInputFocus: false,
   setForwardMessage: (message) => set({ forwardMessage: message }),
   setIsVisibleForwardMessage: (isVisible) => set({ isVisibleForwardMessage: isVisible }),
   setReplyMessage: (message) => set({ replyMessage: message }),
@@ -26,5 +25,4 @@ export const useMessageStore = create<TMessageState>((set, get) => ({
   setIsVisibleEditMessage: (isVisible) => set({ isVisibleEditMessage: isVisible }),
   setEditMessage: (message) => set({ editMessage: message }),
   getReplyMessage: () => get().replyMessage,
-  setOtherInputFocus: (value) => set({ otherInputFocus: value }),
 }));

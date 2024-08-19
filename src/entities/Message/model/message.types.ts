@@ -9,7 +9,6 @@ export type TMessageState = {
   isVisibleEditMessage: boolean;
   replyMessage: Message | null;
   editMessage: Message | null;
-  otherInputFocus: boolean;
   setForwardMessage: (message: Message | null) => void;
   setIsVisibleForwardMessage: (isVisible: boolean) => void;
   addSelectedMessages: (message: Message) => void;
@@ -19,5 +18,4 @@ export type TMessageState = {
   setIsVisibleEditMessage: (isVisible: boolean) => void;
   setEditMessage: (message: Message | null) => void;
   getReplyMessage: () => TMessageState['replyMessage'];
-  setOtherInputFocus: (value: boolean) => void;
 };

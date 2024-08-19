@@ -1,14 +1,12 @@
 import { type ChangeEvent, type FC, type FormEvent, memo } from 'react';
 import { FaSearch } from 'react-icons/fa';
 
-import { useMessageStore } from '~/entities';
 import { Input, useSearchStore } from '~/shared';
 
 import type { TSearchInputProps } from './SearchInput.types';
 
 const SearchInput: FC<TSearchInputProps> = memo(({ className }) => {
   const { fetchUsers, clearDialogs, setIsSearch, inputValue, setInputValue } = useSearchStore();
-  const { setOtherInputFocus } = useMessageStore();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -28,15 +26,7 @@ const SearchInput: FC<TSearchInputProps> = memo(({ className }) => {
 
   return (
     <form onSubmit={handleSubmit} className={className}>
-      <Input
-        onFocus={() => setOtherInputFocus(true)}
-        onBlur={() => setOtherInputFocus(false)}
-        minLength={1}
-        value={inputValue}
-        onChange={handleChange}
-        leftIcon={<FaSearch />}
-        placeholder='Search'
-      />
+      <Input minLength={1} value={inputValue} onChange={handleChange} leftIcon={<FaSearch />} placeholder='Search' />
     </form>
   );
 });

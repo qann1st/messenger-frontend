@@ -13,7 +13,7 @@ export const toggleDarkMode = async (
     toggleTheme();
   });
 
-  const reverse = theme === 'light';
+  const reverse = theme === 'dark';
 
   document.documentElement.classList.add('no-view-transition');
   document.documentElement.classList.toggle('reverse', reverse);
