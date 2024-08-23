@@ -1,4 +1,4 @@
-import { type FC } from 'react';
+import { type FC, Suspense } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -22,10 +22,18 @@ const App: FC = () => {
 
   return (
     <>
-      <Providers>
-        <AppRoutes />
-        <ToastContainer position='top-center' theme={theme} autoClose={3000} />
-      </Providers>
+      <Suspense
+        fallback={
+          <div className='wrapper wrapper_background'>
+            <span className='loader' />
+          </div>
+        }
+      >
+        <Providers>
+          <AppRoutes />
+          <ToastContainer position='top-center' theme={theme} autoClose={3000} />
+        </Providers>
+      </Suspense>
     </>
   );
 };
