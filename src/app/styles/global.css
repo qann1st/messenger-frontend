@@ -106,8 +106,12 @@
   width: 100vw;
 }
 
-.layout__background_mobile {
+.layout__background_tablet {
   transform: translateX(-50vw);
+}
+
+.layout__background_mobile {
+  transform: translateX(-100vw);
 }
 
 html,

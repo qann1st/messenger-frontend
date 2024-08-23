@@ -41,7 +41,7 @@ const MainLayout = () => {
           className={classNames(
             'layout__background',
             `layout__background_${theme}`,
-            type !== 'desktop' && dialogId && 'layout__background_mobile',
+            type !== 'desktop' && dialogId && `layout__background_${type}`,
           )}
         />
         <Outlet />

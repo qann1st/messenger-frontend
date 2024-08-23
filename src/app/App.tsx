@@ -6,7 +6,6 @@ import { useAppInit, useThemeStore } from '~/shared';
 
 import { Providers } from './Providers';
 import { AppRoutes } from './Providers/AppRoutes';
-import './styles';
 
 const App: FC = () => {
   const { fetching } = useAppInit();
