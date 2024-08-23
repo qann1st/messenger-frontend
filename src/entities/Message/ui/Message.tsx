@@ -86,6 +86,9 @@ const Message: FC<TMessageProps> = memo(
           if (x > 30) {
             setReplyMessage(message);
             setIsVisibleReplyMessage(true);
+            if ('vibrate' in navigator) {
+              navigator.vibrate(50);
+            }
           }
           setX(0);
           setIsTouched(false);

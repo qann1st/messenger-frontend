@@ -14,14 +14,9 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*'],
       },
-      injectManifest: {
-        globPatterns: ['**/*'],
-      },
-      strategies: 'injectManifest',
       devOptions: {
         enabled: true,
       },
-      filename: 'notification-sw.js',
       manifest: {
         name: 'Elysium Messenger',
         short_name: 'Elysium Messenger',
