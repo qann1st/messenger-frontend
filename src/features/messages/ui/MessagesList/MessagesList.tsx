@@ -61,6 +61,7 @@ const MessagesList: FC<TMessagesListProps> = memo(({ scrollRef, isLoading }) => 
         scrollRef={scrollRef}
         messagesRef={messagesRef}
         onContextMenu={handleContextMenu}
+        onClick={handleContextMenu}
       />
       <ScrollToBottomButton scrollRef={scrollRef} />
     </MessagesListLayout>

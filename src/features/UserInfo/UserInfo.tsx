@@ -28,7 +28,7 @@ const UserInfo: FC<TUserInfoProps> = memo(({ recipient, printing, hasAvatar = tr
           }}
           className={styles.back}
         >
-          <IoArrowBack size={32} />
+          <IoArrowBack size={24} />
         </button>
       )}
       {hasAvatar && !recipient ? (

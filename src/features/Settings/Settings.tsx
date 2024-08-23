@@ -4,7 +4,7 @@ import { LuLogOut, LuMoreVertical } from 'react-icons/lu';
 import { useNavigate } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
 
-import { Avatar, messengerApi, useOutsideClick, useUserStore } from '~/shared';
+import { Avatar, messengerApi, useOutsideClick, usePopStateCloseModal, useUserStore } from '~/shared';
 import { SidebarLayout } from '~/shared/ui/SidebarLayout';
 
 import styles from './Settings.module.css';
@@ -25,13 +25,21 @@ const Settings: FC<TSettingsProps> = ({ isOpened, onClose }) => {
   const dropdownButtonRef = useRef<HTMLButtonElement>(null);
 
   useOutsideClick(dropdownRef, () => setIsToggledDropdownMenu(false), isToggledDropdownMenu, dropdownButtonRef);
+  usePopStateCloseModal(() => {
+    if (!isEditProfileVisible) {
+      onClose();
+    }
+  });
 
   return (
     <>
       <SidebarLayout
         isSlide={isEditProfileVisible}
         isOpened={isOpened}
-        onClose={onClose}
+        onClose={() => {
+          window.history.pushState('settings', '', '');
+          onClose();
+        }}
         setIsVisible={setIsToggledDropdownMenu}
         title='Settings'
         right={

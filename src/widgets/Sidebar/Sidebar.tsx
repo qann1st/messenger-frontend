@@ -89,6 +89,7 @@ const Sidebar: FC = () => {
                 onClick: () => {
                   setIsSettingsOpened(true);
                   setIsToggledDropdownMenu(false);
+                  window.history.pushState('settings', '', '');
                 },
                 text: 'Settings',
               },

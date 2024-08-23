@@ -1,3 +1,5 @@
+import { RefObject } from 'react';
+
 import { Message, User } from '~/shared';
 
 export type TMessageProps = {
@@ -14,6 +16,7 @@ export type TMessageProps = {
   isEdited?: boolean;
   readed: string[];
   voiceMessage?: string;
+  scrollRef?: RefObject<HTMLDivElement>;
   voiceLoading?: boolean;
   scrollToMessage: (id: string) => void;
 };

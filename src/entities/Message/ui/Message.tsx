@@ -36,6 +36,7 @@ const Message: FC<TMessageProps> = memo(
     status,
     message,
     scrollToMessage,
+    scrollRef,
     forwardedMessage,
     voiceLoading = false,
   }) => {
@@ -49,11 +50,10 @@ const Message: FC<TMessageProps> = memo(
     const [x, setX] = useState(0);
     const [startX, setStartX] = useState(0);
     const [isTouched, setIsTouched] = useState(false);
+    const [isScrolling, setIsScrolling] = useState(false);
 
     const messageRef = useRef<HTMLDivElement>(null);
     const imageRef = useRef<HTMLImageElement>(null);
-
-    const [smallMessage, setSmallMessage] = useState(false);
 
     const [isImageLoading, setIsImageLoading] = useState(true);
 
@@ -65,24 +65,42 @@ const Message: FC<TMessageProps> = memo(
     const isMyMessage = sender?.id === user?.id;
 
     useEffect(() => {
-      if (imageRef.current) {
-        if (imageRef.current.width && imageRef.current.width < 150) {
-          setSmallMessage(true);
-        }
-      }
-    }, [imageRef.current]);
+      const handleScroll = () => {
+        setIsScrolling(true);
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => setIsScrolling(false), 200);
+      };
+
+      let scrollTimeout: NodeJS.Timeout;
+
+      scrollRef?.current?.addEventListener('scroll', handleScroll);
+
+      return () => {
+        scrollRef?.current?.removeEventListener('scroll', handleScroll);
+        clearTimeout(scrollTimeout);
+      };
+    }, [scrollRef]);
 
     return (
       <article
         onTouchStart={(e) => {
+          if (isScrolling) {
+            return;
+          }
           setStartX(e.changedTouches[0].clientX);
           setIsTouched(true);
         }}
         onTouchMove={(e) => {
+          if (isScrolling) {
+            return;
+          }
           const newX = startX - e.changedTouches[0].clientX;
           setX(newX < 64 ? (newX < 0 ? 0 : newX) : 64);
         }}
         onTouchEnd={(e) => {
+          if (isScrolling) {
+            return;
+          }
           if (x > 30) {
             setReplyMessage(message);
             setIsVisibleReplyMessage(true);
@@ -109,7 +127,6 @@ const Message: FC<TMessageProps> = memo(
             !isMyMessage && styles.content_reverse,
             images[0] && replyMessage.content && styles.content_image_reply,
             images[0] && styles.content_image,
-            smallMessage && styles.small_message,
           )}
         >
           {forwardedMessage.id && (
@@ -154,27 +171,29 @@ const Message: FC<TMessageProps> = memo(
           {(images[0] || (forwardedMessage.images && forwardedMessage.images[0])) && isImageLoading && (
             <Skeleton.Rectangle borderRadius='var(--border-radius-8)' width={400} height={300} />
           )}
-          {(images[0] || (forwardedMessage.images && forwardedMessage.images[0])) && (
-            <img
-              onClick={() => {
-                setImageLink(images[0] ?? forwardedMessage.images[0]);
-                openModal();
-              }}
-              onLoad={() => setIsImageLoading(false)}
-              ref={imageRef}
-              className={classNames(
-                styles.image,
-                replyMessage.id && styles.image_reply,
-                replyMessage.id && !content && styles.image_radius,
-                !replyMessage.id && !content && styles.image_circle,
-                !content && styles.only_image,
-                type === 'mobile' && styles.image_mobile,
-                !isImageLoading && styles.image_loaded,
-              )}
-              src={images[0] ?? forwardedMessage.images[0]}
-              alt=''
-            />
-          )}
+          <div className={styles.image_wrapper}>
+            {(images[0] || (forwardedMessage.images && forwardedMessage.images[0])) && (
+              <img
+                onClick={() => {
+                  setImageLink(images[0] ?? forwardedMessage.images[0]);
+                  openModal();
+                }}
+                onLoad={() => setIsImageLoading(false)}
+                ref={imageRef}
+                className={classNames(
+                  styles.image,
+                  replyMessage.id && styles.image_reply,
+                  replyMessage.id && !content && styles.image_radius,
+                  !replyMessage.id && !content && styles.image_circle,
+                  !content && styles.only_image,
+                  type === 'mobile' && styles.image_mobile,
+                  !isImageLoading && styles.image_loaded,
+                )}
+                src={images[0] ?? forwardedMessage.images[0]}
+                alt=''
+              />
+            )}
+          </div>
           <div
             className={classNames(
               styles.content_info,

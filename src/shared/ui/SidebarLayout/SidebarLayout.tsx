@@ -32,7 +32,7 @@ const SidebarLayout: FC<TSidebarLayoutProps> = ({
       </div>
       {right && <div className={styles.top_right}>{right}</div>}
     </div>
-    {children}
+    <div className={styles.content}>{children}</div>
   </div>
 );
 

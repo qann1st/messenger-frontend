@@ -101,7 +101,7 @@ const Gg: FC<TProps & { dialog: TChat; onContextMenu: (e: MouseEvent<HTMLAnchorE
 
   const dialogId = useParams().dialogId ?? (type !== 'desktop' ? lastChat : '');
 
-  const recipient = useMemo(() => getRecipientFromUsers(dialog.users ?? [], user?.id ?? ''), []);
+  const recipient = useMemo(() => getRecipientFromUsers(dialog.users ?? [], user?.id ?? ''), [user]);
   const messages = dialog?.messages?.[0] ?? [];
   return (
     <UserBadge

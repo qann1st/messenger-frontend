@@ -17,7 +17,13 @@ import styles from './MessagesByDateList.module.css';
 
 import { TMessagesByDateListProps } from './MessagesByDateList.types';
 
-const MessagesByDateList: FC<TMessagesByDateListProps> = ({ onContextMenu, onClick, messagesRef, loadMorePages }) => {
+const MessagesByDateList: FC<TMessagesByDateListProps> = ({
+  onContextMenu,
+  onClick,
+  messagesRef,
+  loadMorePages,
+  scrollRef,
+}) => {
   const { type, lastChat } = useMobileStore();
 
   const params = useParams();
@@ -98,6 +104,7 @@ const MessagesByDateList: FC<TMessagesByDateListProps> = ({ onContextMenu, onCli
               hasAvatar={false}
               content={message.content}
               sender={message.sender}
+              scrollRef={scrollRef}
               isEdited={message.isEdited}
               updatedAt={message.updatedAt}
               status={message.status}

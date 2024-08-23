@@ -26,7 +26,7 @@ const SearchInput: FC<TSearchInputProps> = memo(({ className }) => {
 
   return (
     <form onSubmit={handleSubmit} className={className}>
-      <Input minLength={1} value={inputValue} onChange={handleChange} leftIcon={<FaSearch />} placeholder='Search' />
+      <Input minLength={1} value={inputValue} onChange={handleChange} height={40} leftIcon={<FaSearch />} placeholder='Search' />
     </form>
   );
 });

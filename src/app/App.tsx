@@ -2,8 +2,7 @@ import { type FC } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { useThemeStore } from '~/shared';
-import { useAppInit } from '~/shared';
+import { useAppInit, useThemeStore } from '~/shared';
 
 import { Providers } from './Providers';
 import { AppRoutes } from './Providers/AppRoutes';

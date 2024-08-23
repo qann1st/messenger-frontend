@@ -29,6 +29,10 @@
   align-self: flex-end;
 }
 
+.image_small {
+  border-radius: 0;
+}
+
 .forward {
   color: var(--black);
   display: flex;
@@ -106,13 +110,20 @@
 }
 
 .image {
-  border-top-left-radius: var(--border-radius-8);
-  border-top-right-radius: var(--border-radius-8);
   max-width: fit-content;
   width: auto;
   height: 0;
   user-select: none;
   max-height: 60vh;
+}
+
+.image_wrapper {
+  width: 100%;
+  border-top-left-radius: var(--border-radius-8);
+  border-top-right-radius: var(--border-radius-8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .image_loaded {

@@ -11,7 +11,10 @@ export const useImageSendModalStore = create<TImageSendModalState>((set, get) =>
   error: '',
   setInputValue: (inputValue) => set({ inputValue }),
   addInputValue: (inputValue) => set({ inputValue: get().inputValue + inputValue }),
-  openModal: () => set({ isModalOpen: true, dialogId: '', recipient: '' }),
+  openModal: () => {
+    window.history.pushState('imageSend', '', '');
+    set({ isModalOpen: true, dialogId: '', recipient: '' });
+  },
   closeModal: () => set({ isModalOpen: false }),
   setFile: (file) => set({ file }),
   setRecipient: (recipient) => set({ recipient }),

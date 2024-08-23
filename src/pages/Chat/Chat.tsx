@@ -1,5 +1,4 @@
 import { DragEvent, type FC, RefObject, memo, useEffect, useMemo, useRef } from 'react';
-import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
 
@@ -21,7 +20,6 @@ import {
   groupMessagesByDate,
   messengerApi,
   useMobileStore,
-  useThemeStore,
   useUserStore,
 } from '~/shared';
 
@@ -29,7 +27,6 @@ import styles from './Chat.module.css';
 
 const Chat: FC = () => {
   const { user } = useUserStore();
-  const { theme } = useThemeStore();
   const { type, lastChat, setLastChat } = useMobileStore();
   const setIsDragging = useMessageInputStore(useShallow((state) => state.setIsDragging));
 
@@ -47,8 +44,6 @@ const Chat: FC = () => {
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const chatRef = useRef<HTMLDivElement>(null);
-
-  const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
   useEffect(() => {
     setLastChat(params.dialogId ?? '');
@@ -74,42 +69,25 @@ const Chat: FC = () => {
     };
   }, [user, data]);
 
-  const recipient = useMemo(() => getRecipientFromUsers(data?.users ?? [], user?.id ?? ''), [data]);
-
-  const isDark = theme === 'dark';
+  const recipient = useMemo(
+    () => getRecipientFromUsers(user?.dialogs.find((el) => el.id === dialogId)?.users ?? [], user?.id ?? ''),
+    [data, user],
+  );
 
   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(true);
   };
 
-  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    setTouchStartX(e.targetTouches[0].clientX);
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (touchStartX !== null && e.changedTouches[0].clientX !== null) {
-      const swipeDistance = e.changedTouches[0].clientX - touchStartX;
-
-      if (swipeDistance > 75) {
-        navigate('/');
-      }
-    }
-
-    setTouchStartX(null);
-  };
-
   return (
     <>
       <main
         ref={chatRef}
-        className={classNames(styles.root, isDark && styles.root_dark, styles[type], !params.dialogId && styles.slide)}
+        className={classNames(styles.root, styles[type], !params.dialogId && styles.slide)}
         onDragOver={handleDragOver}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
       >
         <UserInfo hasAvatar recipient={recipient} printing={data?.printing ?? false} />
-        <Ggg isLoading={isLoading} scrollRef={scrollRef} isDark={isDark} />
+        <Ggg isLoading={isLoading} scrollRef={scrollRef} />
         <Fff scrollRef={scrollRef} recipient={recipient} />
       </main>
       <ForwardMessageModal />
@@ -121,13 +99,11 @@ const Chat: FC = () => {
 
 export { Chat };
 
-const Ggg: FC<{ scrollRef: RefObject<HTMLDivElement>; isLoading: boolean; isDark: boolean }> = memo(
-  ({ isLoading, scrollRef, isDark }) => (
-    <div className={classNames(styles.background, isDark && styles.background_dark)}>
-      <MessagesList isLoading={isLoading} scrollRef={scrollRef} />
-    </div>
-  ),
-);
+const Ggg: FC<{ scrollRef: RefObject<HTMLDivElement>; isLoading: boolean }> = memo(({ isLoading, scrollRef }) => (
+  <div className={classNames(styles.background)}>
+    <MessagesList isLoading={isLoading} scrollRef={scrollRef} />
+  </div>
+));
 
 const Fff: FC<{ recipient?: User; scrollRef?: RefObject<HTMLDivElement> }> = memo(({ recipient, scrollRef }) => {
   const { inputValue, setInputValue, addInputValue } = useMessageInputStore();

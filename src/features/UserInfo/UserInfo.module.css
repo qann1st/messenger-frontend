@@ -32,11 +32,7 @@
 .back {
   background-color: transparent;
   border: none;
-  color: var(--black);
+  color: var(--outline-icon-button-color);
   cursor: pointer;
   transition: var(--transition);
-}
-
-.back:hover {
-  color: var(--message-background);
 }

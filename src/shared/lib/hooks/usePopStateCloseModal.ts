@@ -1,13 +1,10 @@
 import { useEffect } from 'react';
 
-export const usePopStateCloseModal = (callback: () => void) => {
+export const usePopStateCloseModal = (callback: (e?: PopStateEvent) => void) => {
   useEffect(() => {
-    const listener = () => {
-      callback();
-    };
-    window.addEventListener('popstate', listener);
+    window.addEventListener('popstate', callback);
     return () => {
-      window.removeEventListener('popstate', listener);
+      window.removeEventListener('popstate', callback);
     };
   }, []);
 };

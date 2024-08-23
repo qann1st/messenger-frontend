@@ -2,7 +2,7 @@
   max-width: 372px;
   width: 100%;
   border: none;
-  border-radius: var(--border-radius-15);
+  border-radius: var(--border-radius-6);
   padding: 15px 0;
   background: var(--active-user-badge-background);
   color: var(--white);

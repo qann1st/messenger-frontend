@@ -27,7 +27,7 @@ body[theme='light'] {
   --time-color: rgb(170, 170, 170);
   --time-not-color: rgb(33, 33, 33);
 
-  --sidebar-background: #f8f8f8;
+  --sidebar-background: #ffffff;
   --chat-background: #ffffff;
 
   --avatar-gradient: linear-gradient(var(--white), 8%, #81cb6a);
@@ -71,7 +71,7 @@ body[theme='dark'] {
   --time-color: rgb(255, 255, 255, 0.533);
   --time-not-color: rgb(100, 100, 100);
 
-  --sidebar-background: #212425;
+  --sidebar-background: #212325;
   --chat-background: #181a1b;
 
   --avatar-gradient: linear-gradient(var(--black), 8%, #5a9f46);
