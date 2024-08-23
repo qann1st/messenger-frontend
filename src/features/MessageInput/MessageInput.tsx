@@ -131,10 +131,9 @@ const MessageInput: FC<TMessageInputProps> = memo(
     );
 
     const uploadFile = (files: File) => {
-      if (isRecording || !files || !files.type.includes('image')) {
+      if (isRecording || !files || !files.type.includes('image') || files.type.includes('image/svg')) {
         return;
       }
-
       setFile({ type: files.type, url: '' });
       setRecipient('');
       setDialogId('');
@@ -205,7 +204,12 @@ const MessageInput: FC<TMessageInputProps> = memo(
             ref={filesInputRef}
           />
           <div className={styles.content}>
-            <div className={classNames(styles.wrapper, isVisibleReplyMessage && styles.wrapper_reply)}>
+            <div
+              style={{
+                height: isVisibleEditMessage || isVisibleReplyMessage || isVisibleForwardMessage ? '118px' : '50px',
+              }}
+              className={classNames(styles.wrapper, isVisibleReplyMessage && styles.wrapper_reply)}
+            >
               {isVisibleForwardMessage && forwardMessage && (
                 <MessagePreview
                   isColor

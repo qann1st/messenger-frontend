@@ -1,24 +1,21 @@
 import { FC, useRef, useState } from 'react';
 import { HiOutlineSpeakerWave } from 'react-icons/hi2';
-import { LuLogOut } from 'react-icons/lu';
-import { MdDarkMode, MdMenu } from 'react-icons/md';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useShallow } from 'zustand/react/shallow';
+import { LuSettings } from 'react-icons/lu';
+import { MdDarkMode, MdMenu, MdOutlineHelpOutline } from 'react-icons/md';
+import { useParams } from 'react-router-dom';
 
-import { DialogsList, Resizer, SearchDialogsList, SearchInput } from '~/features';
-import { Dropdown } from '~/features';
+import { DialogsList, Dropdown, Resizer, SearchDialogsList, SearchInput } from '~/features';
+import { Settings } from '~/features/Settings';
 import {
+  TSettings,
   classNames,
-  messengerApi,
+  toggleDarkMode,
+  useLocalStorage,
   useMobileStore,
   useOutsideClick,
   useSearchStore,
   useThemeStore,
-  useUserStore,
 } from '~/shared';
-import { toggleDarkMode } from '~/shared';
-import { useLocalStorage } from '~/shared';
-import { TSettings } from '~/shared';
 
 import styles from './Sidebar.module.css';
 
@@ -30,15 +27,14 @@ const Sidebar: FC = () => {
   const dropdownButtonRef = useRef<HTMLButtonElement>(null);
 
   const [settings, setSettings] = useLocalStorage<TSettings>('settings', { isSoundNotifications: true });
+  const [isSettingsOpened, setIsSettingsOpened] = useState(false);
 
   useOutsideClick(dropdownRef, () => setIsToggledDropdownMenu(false), isToggledDropdownMenu, dropdownButtonRef);
 
   const isSearch = useSearchStore((state) => state.isSearch);
-  const [setSocket, setUser] = useUserStore(useShallow((state) => [state.setSocket, state.setUser]));
   const { type } = useMobileStore();
   const { theme, toggleTheme } = useThemeStore();
 
-  const navigate = useNavigate();
   const { dialogId } = useParams();
 
   return (
@@ -54,6 +50,7 @@ const Sidebar: FC = () => {
           styles.root,
           type === 'mobile' && styles.mobile,
           dialogId && type !== 'desktop' && styles.root_slide,
+          isSettingsOpened && styles.root_translated,
         )}
         ref={sidebarRef}
       >
@@ -88,15 +85,20 @@ const Sidebar: FC = () => {
                 isActive: settings.isSoundNotifications,
               },
               {
-                icon: LuLogOut,
-                text: 'Log out',
-                isDelete: true,
-                onClick: async () => {
-                  await messengerApi.logout();
-                  setSocket(null);
-                  setUser(null);
-                  navigate('/');
+                icon: LuSettings,
+                onClick: () => {
+                  setIsSettingsOpened(true);
+                  setIsToggledDropdownMenu(false);
                 },
+                text: 'Settings',
+              },
+              {
+                icon: MdOutlineHelpOutline,
+                onClick: () => {
+                  window.open('https://t.me/qann1st');
+                  setIsToggledDropdownMenu(false);
+                },
+                text: 'Report a bug',
               },
             ]}
             isToggled={isToggledDropdownMenu}
@@ -104,9 +106,9 @@ const Sidebar: FC = () => {
           />
           <SearchInput className={styles.input} />
         </div>
-
-        {isSearch ? <SearchDialogsList /> : <DialogsList />}
+        {isSearch ? <SearchDialogsList /> : <DialogsList hasIsActive={type !== 'mobile'} />}
       </nav>
+      <Settings isOpened={isSettingsOpened} onClose={() => setIsSettingsOpened(false)} />
       <Resizer elementRef={sidebarRef} />
     </aside>
   );

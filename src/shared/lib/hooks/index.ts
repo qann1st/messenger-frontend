@@ -12,6 +12,7 @@ export * from './useMessagesListSize';
 export * from './useMessagesPagination';
 export * from './useOptimistSendMessage';
 export * from './useOutsideClick';
+export * from './usePopStateCloseModal';
 export * from './useRecordAudio';
 export * from './useSendMessage';
 export * from './useTextareaAutoResize';

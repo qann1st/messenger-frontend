@@ -26,6 +26,8 @@ dev-dist
 *.njsproj
 *.sln
 *.sw?
+*sw.js
+firebase.ts
 
 # Environment
 .env

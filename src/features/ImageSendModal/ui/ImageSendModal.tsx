@@ -7,6 +7,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 
 import { MessageInput, useMessageInputStore } from '~/features';
 import { Skeleton, classNames, queryClient, useEscCloseModal, useMobileStore } from '~/shared';
+import { usePopStateCloseModal } from '~/shared';
 
 import styles from './ImageSendModal.module.css';
 
@@ -14,8 +15,18 @@ import { useImageSendModalStore } from '../model';
 
 const ImageSendModal = () => {
   const [setMessageInputValue] = useMessageInputStore(useShallow((state) => [state.setInputValue]));
-  const { isModalOpen, file, closeModal, recipient, dialogId, inputValue, setInputValue, error, addInputValue } =
-    useImageSendModalStore();
+  const {
+    isModalOpen,
+    file,
+    closeModal,
+    recipient,
+    setError,
+    dialogId,
+    inputValue,
+    setInputValue,
+    error,
+    addInputValue,
+  } = useImageSendModalStore();
   const { type } = useMobileStore();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -23,10 +34,12 @@ const ImageSendModal = () => {
   const onClose = () => {
     setMessageInputValue(inputValue);
     setInputValue('');
+    setError('');
     closeModal();
   };
 
   useEscCloseModal(onClose);
+  usePopStateCloseModal(onClose);
 
   useEffect(() => {
     if (isModalOpen) {

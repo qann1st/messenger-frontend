@@ -7,7 +7,7 @@ type UseLongPressOptions = {
 
 export const useLongPress = ({ delay = 500, onLongPress }: UseLongPressOptions) => {
   const [isPressing, setIsPressing] = useState(false);
-  const timeoutRef = useRef<number | null>(null);
+  const timeoutRef = useRef<any>();
 
   const startPress = useCallback(
     (e: any) => {

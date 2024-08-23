@@ -3,9 +3,6 @@
   flex-direction: column-reverse;
 }
 
-.scrollContainer {
-}
-
 .info {
   position: sticky;
   top: 10px;
@@ -13,10 +10,6 @@
   justify-content: center;
   pointer-events: none;
   padding: 10px 0;
-}
-
-.pad {
-  padding: 3px 10px;
 }
 
 .text {

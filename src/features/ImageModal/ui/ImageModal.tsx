@@ -2,6 +2,7 @@ import { createPortal } from 'react-dom';
 import { IoClose } from 'react-icons/io5';
 
 import { useEscCloseModal } from '~/shared';
+import { usePopStateCloseModal } from '~/shared';
 
 import styles from './ImageModal.module.css';
 
@@ -11,6 +12,7 @@ const ImageModal = () => {
   const { isModalOpen, closeModal, imageLink } = useImageModalStore();
 
   useEscCloseModal(closeModal);
+  usePopStateCloseModal(closeModal);
 
   if (!isModalOpen) {
     return null;

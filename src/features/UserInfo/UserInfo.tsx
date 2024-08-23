@@ -21,7 +21,7 @@ const UserInfo: FC<TUserInfoProps> = memo(({ recipient, printing, hasAvatar = tr
         <button
           onClick={() => {
             if (params.dialogId) {
-              navigate(-1);
+              navigate('/');
             } else {
               navigate(dialogId);
             }

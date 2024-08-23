@@ -1,5 +1,10 @@
 export const formatMessageDate = (dateString: string | number) => {
   const date = new Date(dateString);
+
+  if (isNaN(date.getTime())) {
+    return 'Invalid date';
+  }
+
   const now = new Date();
   const yesterday = new Date(now);
   yesterday.setDate(now.getDate() - 1);

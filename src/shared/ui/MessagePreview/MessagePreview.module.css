@@ -96,6 +96,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  width: 100%;
 }
 
 .reply_text_black {
@@ -110,4 +111,8 @@
   width: 36px;
   height: 36px;
   object-fit: cover;
+}
+
+.wrapper {
+  width: 100%;
 }

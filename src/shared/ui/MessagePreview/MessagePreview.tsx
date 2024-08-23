@@ -28,7 +28,7 @@ const MessagePreview: FC<TMessagePreviewProps> = memo(
           )}
         >
           {image && <img draggable={false} src={image} alt='' className={styles.image} />}
-          <div>
+          <div className={styles.wrapper}>
             <p
               className={classNames(
                 styles.reply_name,
@@ -36,7 +36,7 @@ const MessagePreview: FC<TMessagePreviewProps> = memo(
                 type === 'message' && styles.reply_text,
               )}
             >
-              {message?.sender.firstname}
+              {`${message?.sender.firstname} ${message?.sender.lastname}`}
             </p>
             <p className={classNames(styles.reply_text, isColor && styles.reply_text_black)}>
               {message?.voiceMessage && '🎤 Voice message'}
@@ -53,9 +53,9 @@ const MessagePreview: FC<TMessagePreviewProps> = memo(
           )}
         >
           {image && <img draggable={false} src={image} alt='' className={styles.image} />}
-          <div>
+          <div className={styles.wrapper}>
             <p className={classNames(styles.reply_name, isColor && styles.reply_text_color)}>
-              {message?.sender.firstname}
+              {`${message?.sender.firstname} ${message?.sender.lastname}`}
             </p>
             <p className={classNames(styles.reply_text, isColor && styles.reply_text_black)}>
               {message?.voiceMessage && '🎤 Voice message'}

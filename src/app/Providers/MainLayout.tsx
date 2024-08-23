@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 
 import { useHandleMessageSocket, useMobileStore } from '~/shared';
@@ -8,12 +7,6 @@ const MainLayout = () => {
   const { type } = useMobileStore();
 
   useHandleMessageSocket();
-
-  useEffect(() => {
-    if ('Notification' in window) {
-      Notification.requestPermission();
-    }
-  }, []);
 
   if (type !== 'desktop') {
     return (

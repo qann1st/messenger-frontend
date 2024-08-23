@@ -115,7 +115,11 @@ const UserBadge: FC<TUserBadgeProps> = memo(
           ref={linkRef}
           role='button'
           draggable='false'
-          onContextMenu={showContextMenu}
+          onContextMenu={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            showContextMenu?.(e);
+          }}
           className={styles.link}
           onClick={(e) => {
             setIsVisibleForwardMessage(false);

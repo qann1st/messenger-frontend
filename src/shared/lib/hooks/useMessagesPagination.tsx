@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useRef, useState } from 'react';
+import { RefObject, useCallback, useEffect, useRef, useState } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -71,27 +71,30 @@ export const useMessagePagination = (
     };
   }, [queryData]);
 
-  const loadMorePages = async (pagesToLoad: number) => {
-    const newMessages = await messengerApi.getChatMessages(
-      dialogId ?? '',
-      pageRef.current,
-      pageSize,
-      pageSize * pagesToLoad,
-    );
-    queryClient.setQueryData(['chat', dialogId], (oldData: ChatWithPagination) => {
-      if (!oldData) {
-        return {};
-      }
+  const loadMorePages = useCallback(
+    async (pagesToLoad: number) => {
+      const newMessages = await messengerApi.getChatMessages(
+        dialogId ?? '',
+        pageRef.current,
+        pageSize,
+        pageSize * pagesToLoad,
+      );
+      queryClient.setQueryData(['chat', dialogId], (oldData: ChatWithPagination) => {
+        if (!oldData) {
+          return {};
+        }
 
-      return {
-        ...oldData,
-        data: [...oldData.data, ...newMessages.data],
-        groupedMessages: groupMessagesByDate([...oldData.data, ...newMessages.data]),
-        total: newMessages.total,
-      };
-    });
-    pageRef.current += pagesToLoad;
-  };
+        return {
+          ...oldData,
+          data: [...oldData.data, ...newMessages.data],
+          groupedMessages: groupMessagesByDate([...oldData.data, ...newMessages.data]),
+          total: newMessages.total,
+        };
+      });
+      pageRef.current += pagesToLoad;
+    },
+    [dialogId, pageSize],
+  );
 
   return { isFetching, loadMorePages };
 };

@@ -8,6 +8,6 @@ export type TMessagesByDateListProps = {
   }>;
   scrollRef: RefObject<HTMLDivElement>;
   onContextMenu: (e: MouseEvent<HTMLDivElement>, message: Message) => void;
-  onClick: (e: MouseEvent<HTMLDivElement>, message: Message) => void;
+  onClick?: (e: MouseEvent<HTMLDivElement>, message: Message) => void;
   loadMorePages: (page: number) => Promise<void>;
 };

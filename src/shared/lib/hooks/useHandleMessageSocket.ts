@@ -60,6 +60,11 @@ export const useHandleMessageSocket = () => {
         });
       } else {
         if (document.hidden && settings?.isSoundNotifications) {
+          new Notification(`${message.sender.firstname} ${message.sender.lastname}`, {
+            body: message.content || (message.voiceMessage && '🎤 Voice message'),
+            icon: '/assets/pwa-192x192.png',
+          });
+
           audio.play().catch((error) => {
             console.error('Failed to play sound:', error);
           });

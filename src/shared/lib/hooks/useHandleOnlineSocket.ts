@@ -25,16 +25,16 @@ export const useHandleOnlineSocket = () => {
 
   const updateDialogUsers = useCallback(
     (id: string, isOnline: boolean, lastOnline?: number) => {
-      const userDialogs = user?.dialogs.find((el) => el.id === id);
-      if (!userDialogs) {
+      if (!user) {
         return;
       }
-      if (!user) {
+      const userDialog = user.dialogs.find((el) => !!el.users.find((u) => u.id === id));
+      if (!userDialog) {
         return;
       }
 
       const updatedUserDialogs = user.dialogs.map((dialog) =>
-        dialog.id === id
+        dialog.id === userDialog.id
           ? {
               ...dialog,
               users: dialog.users.map((u) => ({
@@ -64,8 +64,9 @@ export const useHandleOnlineSocket = () => {
       return;
     }
 
-    const handleOnline = (id: string) => updateDialogUsers(id, true);
-    const handleOffline = (id: string, lastOnline: number) => updateDialogUsers(id, false, lastOnline);
+    const handleOnline = ({ userId }: { userId: string }) => updateDialogUsers(userId, true);
+    const handleOffline = ({ userId, lastOnline }: { userId: string; lastOnline: number }) =>
+      updateDialogUsers(userId, false, lastOnline);
 
     socket.on('online', handleOnline);
     socket.on('offline', handleOffline);

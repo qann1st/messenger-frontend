@@ -3,6 +3,25 @@
   gap: var(--spacing-2);
   align-items: center;
   width: 100%;
+  padding: 3px 10px;
+}
+
+.root_transition {
+  transition: var(--transition);
+}
+
+.reply {
+  position: absolute;
+  right: -96px;
+  z-index: 1;
+  color: var(--white);
+  background-color: var(--message-background-transparent-reply);
+  padding: 5px;
+  border-radius: var(--border-radius-circle);
+}
+
+.reply_slide {
+  transition: var(--transition);
 }
 
 .reverse {
@@ -47,6 +66,10 @@
   flex-direction: column;
   gap: var(--spacing-1);
   position: relative;
+
+  @media screen and (max-width: 992px) {
+    max-width: 90vw;
+  }
 }
 
 .small_message {
@@ -70,6 +93,7 @@
 
 .only_image {
   border-radius: var(--border-radius-8);
+  padding: 1px;
 }
 
 .content_image {

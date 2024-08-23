@@ -1,0 +1,48 @@
+.icon_button {
+  color: var(--outline-icon-button-color);
+  border-radius: var(--border-radius-10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  height: 24px;
+}
+
+.icon_button:hover {
+  color: var(--message-background);
+}
+
+.dropdown_menu {
+  top: 55px;
+  right: 27px;
+  min-width: 200px;
+  width: 150px;
+}
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+  gap: 10px;
+}
+
+.profile_bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile__name {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.profile__status {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--input-placeholder);
+}

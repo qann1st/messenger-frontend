@@ -10,6 +10,7 @@ body[theme='light'] {
 
   --message-background: #476cff;
   --message-background-transparent: rgba(55, 82, 166, 0.1);
+  --message-background-transparent-reply: rgba(71, 108, 255, 0.5);
   --message-input-background: #ffffff;
   --recipient-message-background: #ffffff;
   --recipient-message-text: #000000;
@@ -53,6 +54,7 @@ body[theme='dark'] {
 
   --message-background: #476cff;
   --message-background-transparent: rgba(55, 82, 166, 0.1);
+  --message-background-transparent-reply: rgba(71, 108, 255, 0.3);
   --message-input-background: #212425;
   --recipient-message-background: #212425;
   --recipient-message-text: #ffffff;

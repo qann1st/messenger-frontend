@@ -1,5 +1,6 @@
 import { type FC, memo, useEffect, useRef, useState } from 'react';
 import { BiErrorCircle } from 'react-icons/bi';
+import { BsReplyFill } from 'react-icons/bs';
 import { FaRegClock } from 'react-icons/fa';
 import { IoCheckmark, IoCheckmarkDone } from 'react-icons/io5';
 import { useShallow } from 'zustand/react/shallow';
@@ -17,6 +18,7 @@ import {
 
 import styles from './Message.module.css';
 
+import { useMessageStore } from '../model';
 import { TMessageProps } from './Message.types';
 
 const Message: FC<TMessageProps> = memo(
@@ -32,13 +34,21 @@ const Message: FC<TMessageProps> = memo(
     createdAt,
     images,
     status,
+    message,
     scrollToMessage,
     forwardedMessage,
     voiceLoading = false,
   }) => {
     const { user } = useUserStore();
     const [openModal, setImageLink] = useImageModalStore(useShallow((state) => [state.openModal, state.setImageLink]));
+    const [setReplyMessage, setIsVisibleReplyMessage] = useMessageStore(
+      useShallow((state) => [state.setReplyMessage, state.setIsVisibleReplyMessage]),
+    );
     const { type } = useMobileStore();
+
+    const [x, setX] = useState(0);
+    const [startX, setStartX] = useState(0);
+    const [isTouched, setIsTouched] = useState(false);
 
     const messageRef = useRef<HTMLDivElement>(null);
     const imageRef = useRef<HTMLImageElement>(null);
@@ -50,9 +60,9 @@ const Message: FC<TMessageProps> = memo(
     const date = new Date(isEdited ? updatedAt : createdAt);
 
     const timeFormatter = new Intl.DateTimeFormat('default', { hour: '2-digit', minute: '2-digit', hour12: false });
-    const formattedTime = timeFormatter.format(date);
+    const formattedTime = isNaN(date.getTime()) ? 'Invalid date' : timeFormatter.format(date);
 
-    const isMyMessage = sender.id === user?.id;
+    const isMyMessage = sender?.id === user?.id;
 
     useEffect(() => {
       if (imageRef.current) {
@@ -63,7 +73,32 @@ const Message: FC<TMessageProps> = memo(
     }, [imageRef.current]);
 
     return (
-      <article ref={messageRef} className={classNames(styles.root, isMyMessage && styles.reverse)}>
+      <article
+        onTouchStart={(e) => {
+          setStartX(e.changedTouches[0].clientX);
+          setIsTouched(true);
+        }}
+        onTouchMove={(e) => {
+          const newX = startX - e.changedTouches[0].clientX;
+          setX(newX < 64 ? (newX < 0 ? 0 : newX) : 64);
+        }}
+        onTouchEnd={(e) => {
+          if (x > 30) {
+            setReplyMessage(message);
+            setIsVisibleReplyMessage(true);
+          }
+          setX(0);
+          setIsTouched(false);
+        }}
+        style={{ transform: `translateX(${-x}px)` }}
+        ref={messageRef}
+        className={classNames(styles.root, isMyMessage && styles.reverse, !isTouched && styles.root_transition)}
+      >
+        <BsReplyFill
+          style={{ transform: `translateX(${-x}px)` }}
+          className={classNames(styles.reply, !isTouched && styles.reply_slide)}
+          size={32}
+        />
         {hasAvatar && <Avatar firstName={sender.firstname} lastName={sender.lastname} size='medium' />}
         <div
           className={classNames(

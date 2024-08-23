@@ -17,12 +17,7 @@ import styles from './MessagesByDateList.module.css';
 
 import { TMessagesByDateListProps } from './MessagesByDateList.types';
 
-const MessagesByDateList: FC<TMessagesByDateListProps> = ({
-  onContextMenu,
-  onClick,
-  messagesRef,
-  loadMorePages,
-}) => {
+const MessagesByDateList: FC<TMessagesByDateListProps> = ({ onContextMenu, onClick, messagesRef, loadMorePages }) => {
   const { type, lastChat } = useMobileStore();
 
   const params = useParams();
@@ -82,8 +77,12 @@ const MessagesByDateList: FC<TMessagesByDateListProps> = ({
                 return (messagesRef.current[message.id] = el);
               }
             }}
-            onContextMenu={(e) => onContextMenu(e, message)}
-            onClick={(e) => onClick(e, message)}
+            onContextMenu={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              onContextMenu(e, message);
+            }}
+            onClick={(e) => onClick?.(e, message)}
             onDoubleClick={(e) => {
               e.preventDefault();
               setIsVisibleReplyMessage(true);
@@ -102,6 +101,7 @@ const MessagesByDateList: FC<TMessagesByDateListProps> = ({
               isEdited={message.isEdited}
               updatedAt={message.updatedAt}
               status={message.status}
+              message={message}
               readed={message.readed ?? []}
               images={(message.images ? message.images : message.forwardedMessage?.images) ?? []}
               voiceMessage={message.voiceMessage ? message.voiceMessage : message.forwardedMessage?.voiceMessage}

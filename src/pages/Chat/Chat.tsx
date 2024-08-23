@@ -1,4 +1,5 @@
 import { DragEvent, type FC, RefObject, memo, useEffect, useMemo, useRef } from 'react';
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
 
@@ -47,6 +48,8 @@ const Chat: FC = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const chatRef = useRef<HTMLDivElement>(null);
 
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+
   useEffect(() => {
     setLastChat(params.dialogId ?? '');
   }, []);
@@ -80,15 +83,33 @@ const Chat: FC = () => {
     setIsDragging(true);
   };
 
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    setTouchStartX(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (touchStartX !== null && e.changedTouches[0].clientX !== null) {
+      const swipeDistance = e.changedTouches[0].clientX - touchStartX;
+
+      if (swipeDistance > 75) {
+        navigate('/');
+      }
+    }
+
+    setTouchStartX(null);
+  };
+
   return (
     <>
       <main
         ref={chatRef}
         className={classNames(styles.root, isDark && styles.root_dark, styles[type], !params.dialogId && styles.slide)}
         onDragOver={handleDragOver}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
       >
-        <UserInfo recipient={recipient} printing={data?.printing ?? false} />
-        <Ggg isLoading={isLoading} recipient={recipient} scrollRef={scrollRef} isDark={isDark} />
+        <UserInfo hasAvatar recipient={recipient} printing={data?.printing ?? false} />
+        <Ggg isLoading={isLoading} scrollRef={scrollRef} isDark={isDark} />
         <Fff scrollRef={scrollRef} recipient={recipient} />
       </main>
       <ForwardMessageModal />
@@ -100,10 +121,10 @@ const Chat: FC = () => {
 
 export { Chat };
 
-const Ggg: FC<{ recipient?: User; scrollRef: RefObject<HTMLDivElement>; isLoading: boolean; isDark: boolean }> = memo(
-  ({ isLoading, recipient, scrollRef, isDark }) => (
+const Ggg: FC<{ scrollRef: RefObject<HTMLDivElement>; isLoading: boolean; isDark: boolean }> = memo(
+  ({ isLoading, scrollRef, isDark }) => (
     <div className={classNames(styles.background, isDark && styles.background_dark)}>
-      <MessagesList isLoading={isLoading} scrollRef={scrollRef} recipient={recipient} />
+      <MessagesList isLoading={isLoading} scrollRef={scrollRef} />
     </div>
   ),
 );

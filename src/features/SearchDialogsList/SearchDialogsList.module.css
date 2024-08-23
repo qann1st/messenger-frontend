@@ -3,7 +3,7 @@
   flex-direction: column;
   gap: 3px;
   transition: var(--transition);
-  overflow-y: scr;
+  overflow-y: auto;
   scrollbar-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
   scrollbar-width: thin;
   height: 100%;

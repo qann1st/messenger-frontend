@@ -10,6 +10,7 @@ export type TMessageProps = {
   updatedAt: string;
   images: string[];
   status: Message['status'];
+  message: Message;
   isEdited?: boolean;
   readed: string[];
   voiceMessage?: string;
