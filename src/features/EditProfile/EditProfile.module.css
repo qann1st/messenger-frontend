@@ -38,10 +38,12 @@
   border-radius: var(--border-radius-circle);
   transition: var(--transition);
   visibility: hidden;
-  transform: translateY(74px);
+  transform: translateY(20px);
+  opacity: 0;
 }
 
 .submit_visible {
-  transform: translateY(0);
   visibility: visible;
+  transform: translateY(0);
+  opacity: 1;
 }

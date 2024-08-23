@@ -19,6 +19,7 @@ import {
   messengerApi,
   useEscCloseModal,
   useFocusOnMount,
+  useMobileStore,
   useOutsideClick,
   useRecordAudio,
   useSendMessage,
@@ -102,6 +103,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
       handleCancelRecording,
       scrollRef,
     );
+    const { type: deviceType } = useMobileStore();
 
     useTextareaAutoResize(textAreaRef, inputValue);
     useOutsideClick(emojiRef, () => setIsVisibleEmojiPicker(false), true, buttonRef);
@@ -113,7 +115,8 @@ const MessageInput: FC<TMessageInputProps> = memo(
         e.key === 'Enter' &&
         !e.shiftKey &&
         (inputValue.length || forwardMessage || type === 'not-absolute') &&
-        !isDisabled
+        !isDisabled &&
+        deviceType !== 'desktop'
       ) {
         e.preventDefault();
         handleSubmit();

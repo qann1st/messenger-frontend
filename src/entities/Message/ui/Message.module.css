@@ -110,20 +110,22 @@
 }
 
 .image {
-  max-width: fit-content;
-  width: auto;
-  height: 0;
-  user-select: none;
+  max-width: 100%;
   max-height: 60vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  user-select: none;
 }
 
 .image_wrapper {
-  width: 100%;
-  border-top-left-radius: var(--border-radius-8);
-  border-top-right-radius: var(--border-radius-8);
+  max-width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  border-top-left-radius: var(--border-radius-8);
+  border-top-right-radius: var(--border-radius-8);
+  overflow: hidden;
 }
 
 .image_loaded {

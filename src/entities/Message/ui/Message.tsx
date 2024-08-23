@@ -50,7 +50,6 @@ const Message: FC<TMessageProps> = memo(
     const [x, setX] = useState(0);
     const [startX, setStartX] = useState(0);
     const [isTouched, setIsTouched] = useState(false);
-    const [isScrolling, setIsScrolling] = useState(false);
 
     const messageRef = useRef<HTMLDivElement>(null);
     const imageRef = useRef<HTMLImageElement>(null);
@@ -64,43 +63,17 @@ const Message: FC<TMessageProps> = memo(
 
     const isMyMessage = sender?.id === user?.id;
 
-    useEffect(() => {
-      const handleScroll = () => {
-        setIsScrolling(true);
-        clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(() => setIsScrolling(false), 200);
-      };
-
-      let scrollTimeout: NodeJS.Timeout;
-
-      scrollRef?.current?.addEventListener('scroll', handleScroll);
-
-      return () => {
-        scrollRef?.current?.removeEventListener('scroll', handleScroll);
-        clearTimeout(scrollTimeout);
-      };
-    }, [scrollRef]);
-
     return (
       <article
         onTouchStart={(e) => {
-          if (isScrolling) {
-            return;
-          }
           setStartX(e.changedTouches[0].clientX);
           setIsTouched(true);
         }}
         onTouchMove={(e) => {
-          if (isScrolling) {
-            return;
-          }
           const newX = startX - e.changedTouches[0].clientX;
           setX(newX < 64 ? (newX < 0 ? 0 : newX) : 64);
         }}
         onTouchEnd={(e) => {
-          if (isScrolling) {
-            return;
-          }
           if (x > 30) {
             setReplyMessage(message);
             setIsVisibleReplyMessage(true);
@@ -171,8 +144,8 @@ const Message: FC<TMessageProps> = memo(
           {(images[0] || (forwardedMessage.images && forwardedMessage.images[0])) && isImageLoading && (
             <Skeleton.Rectangle borderRadius='var(--border-radius-8)' width={400} height={300} />
           )}
-          <div className={styles.image_wrapper}>
-            {(images[0] || (forwardedMessage.images && forwardedMessage.images[0])) && (
+          {(images[0] || (forwardedMessage.images && forwardedMessage.images[0])) && (
+            <div className={styles.image_wrapper}>
               <img
                 onClick={() => {
                   setImageLink(images[0] ?? forwardedMessage.images[0]);
@@ -192,8 +165,8 @@ const Message: FC<TMessageProps> = memo(
                 src={images[0] ?? forwardedMessage.images[0]}
                 alt=''
               />
-            )}
-          </div>
+            </div>
+          )}
           <div
             className={classNames(
               styles.content_info,

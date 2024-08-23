@@ -9,6 +9,10 @@ export const formatCreatedTime = (createdAt: string, updatedAt: string) => {
     hour12: false,
   });
 
+  if (!createdAt || !updatedAt) {
+    return 'Invalid date';
+  }
+
   const createdAtFormatted = formatter.format(new Date(createdAt));
 
   if (updatedAt !== createdAt) {

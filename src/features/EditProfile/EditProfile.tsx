@@ -21,7 +21,7 @@ const EditProfile: FC<TEditProfileProps> = ({ isOpened, onClose, setIsVisible })
       socket.emit('update-user', values);
 
       if (user && values.firstname && values.lastname) {
-        setUser({ ...user, firstname: values.firstname, lastname: values.lastname });
+        setUser({ ...user, firstname: values.firstname.trim(), lastname: values.lastname.trim() });
         onClose();
       }
     }
@@ -34,7 +34,7 @@ const EditProfile: FC<TEditProfileProps> = ({ isOpened, onClose, setIsVisible })
       </div>
       <form className={styles.edit_form} onSubmit={handleSubmit}>
         <div className={styles.edit_form_item}>
-          <label htmlFor='firstname'>Name</label>
+          <label htmlFor='firstname'>First Name</label>
           <Input error={errors.firstname} required name='firstname' value={values.firstname} onChange={onChange} />
         </div>
         <div className={styles.edit_form_item}>

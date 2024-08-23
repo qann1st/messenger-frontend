@@ -73,7 +73,7 @@ export const useHandleOnlineSocket = () => {
 
   useEffect(() => {
     emitReadMessages();
-  }, []);
+  }, [emitReadMessages]);
 
   useEffect(() => {
     if (!socket || !user) {

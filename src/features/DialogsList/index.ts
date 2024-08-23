@@ -1,3 +1,1 @@
-import { lazy } from 'react';
-
-export const DialogsList = lazy(() => import('./DialogsList').then(({ DialogsList }) => ({ default: DialogsList })));
+export * from './DialogsList'

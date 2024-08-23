@@ -153,7 +153,7 @@ export const useOptimistSendMessage = (scrollRef?: RefObject<HTMLDivElement>) =>
     }
 
     queryClient.setQueryData(['chat', message.chatId], (oldData: ChatWithPagination) => {
-      if (!user) {
+      if (!oldData) {
         return oldData;
       }
 
@@ -164,8 +164,12 @@ export const useOptimistSendMessage = (scrollRef?: RefObject<HTMLDivElement>) =>
         [messageDate]: oldData?.groupedMessages[messageDate]?.filter((msg) => msg.id !== message.id),
       };
 
+      if (groupedMessages[messageDate]?.length === 0) {
+        delete groupedMessages[messageDate];
+      }
+
       if (dialog) {
-        dialog.messages = [oldData.data[1]];
+        dialog.messages = oldData?.data.filter((msg) => msg.id !== message.id);
       }
 
       if (getReplyMessage()?.id === message.id) {
@@ -176,7 +180,7 @@ export const useOptimistSendMessage = (scrollRef?: RefObject<HTMLDivElement>) =>
 
       return {
         ...oldData,
-        data: [...[oldData?.data.filter((msg) => msg.id !== message.id)]],
+        data: oldData?.data.filter((msg) => msg.id !== message.id),
         total: oldData.total - 1,
         groupedMessages,
       };

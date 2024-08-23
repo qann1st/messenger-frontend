@@ -88,7 +88,7 @@ const MessagesByDateList: FC<TMessagesByDateListProps> = ({
               e.preventDefault();
               onContextMenu(e, message);
             }}
-            onClick={(e) => onClick?.(e, message)}
+            // onClick={(e) => onClick?.(e, message)}
             onDoubleClick={(e) => {
               e.preventDefault();
               setIsVisibleReplyMessage(true);
