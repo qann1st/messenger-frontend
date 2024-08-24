@@ -116,6 +116,7 @@
 
 .images_row {
   display: flex;
+  justify-content: center;
   gap: 1px;
 }
 
@@ -134,12 +135,14 @@
   border-radius: 0;
   border-top-left-radius: var(--border-radius-8);
   border-bottom-left-radius: var(--border-radius-8);
+  max-height: 40vh;
 }
 
 .image_right {
   border-radius: 0;
   border-top-right-radius: var(--border-radius-8);
   border-bottom-right-radius: var(--border-radius-8);
+  max-height: 40vh;
 }
 
 .image_loaded {

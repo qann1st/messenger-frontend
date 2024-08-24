@@ -152,7 +152,7 @@ const Message: FC<TMessageProps> = memo(
                   <div data-index={i} key={image} className={classNames(styles.image_wrapper)}>
                     <img
                       onClick={() => {
-                        setImageLink(images[0] ?? forwardedMessage.images[0]);
+                        setImageLink(image);
                         openModal();
                       }}
                       onLoad={() => setIsImageLoading(false)}
