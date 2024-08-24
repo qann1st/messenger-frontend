@@ -91,8 +91,10 @@ const MessagesByDateList: FC<TMessagesByDateListProps> = ({
             // onClick={(e) => onClick?.(e, message)}
             onDoubleClick={(e) => {
               e.preventDefault();
-              setIsVisibleReplyMessage(true);
-              setReplyMessage(message);
+              if (type === 'desktop') {
+                setIsVisibleReplyMessage(true);
+                setReplyMessage(message);
+              }
             }}
             key={message.id}
             className={styles.pad}

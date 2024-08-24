@@ -194,6 +194,12 @@
 .time {
   color: var(--time-color);
   font-size: 12px;
+  text-wrap: nowrap;
+}
+
+.image_content {
+  border-top-left-radius: var(--border-radius-6);
+  border-top-right-radius: var(--border-radius-6);
 }
 
 .time_not_my {

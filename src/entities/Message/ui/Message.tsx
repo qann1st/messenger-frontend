@@ -14,6 +14,7 @@ import {
   classNames,
   formatCreatedTime,
   useMobileStore,
+  usePopStateCloseModal,
   useUserStore,
 } from '~/shared';
 
@@ -52,6 +53,8 @@ const Message: FC<TMessageProps> = memo(
     const [startX, setStartX] = useState(0);
     const [isTouched, setIsTouched] = useState(false);
 
+    usePopStateCloseModal(() => setX(0));
+
     const messageRef = useRef<HTMLDivElement>(null);
     const imageRef = useRef<HTMLImageElement>(null);
 
@@ -64,27 +67,41 @@ const Message: FC<TMessageProps> = memo(
 
     const isMyMessage = sender?.id === user?.id;
 
+    const handleTouchStart = (e: React.TouchEvent) => {
+      const touchStartX = e.changedTouches[0].clientX;
+
+      if (touchStartX > 40 && touchStartX < window.innerWidth - 40) {
+        setStartX(touchStartX);
+        setIsTouched(true);
+      }
+    };
+
+    const handleTouchMove = (e: React.TouchEvent) => {
+      if (!isTouched) {
+        return;
+      }
+
+      const newX = startX - e.changedTouches[0].clientX;
+      setX(newX < 64 ? (newX < 0 ? 0 : newX) : 64);
+    };
+
+    const handleTouchEnd = () => {
+      if (x > 30) {
+        setReplyMessage(message);
+        setIsVisibleReplyMessage(true);
+        if ('vibrate' in navigator) {
+          navigator.vibrate(50);
+        }
+      }
+      setX(0);
+      setIsTouched(false);
+    };
+
     return (
       <article
-        onTouchStart={(e) => {
-          setStartX(e.changedTouches[0].clientX);
-          setIsTouched(true);
-        }}
-        onTouchMove={(e) => {
-          const newX = startX - e.changedTouches[0].clientX;
-          setX(newX < 64 ? (newX < 0 ? 0 : newX) : 64);
-        }}
-        onTouchEnd={(e) => {
-          if (x > 30) {
-            setReplyMessage(message);
-            setIsVisibleReplyMessage(true);
-            if ('vibrate' in navigator) {
-              navigator.vibrate(50);
-            }
-          }
-          setX(0);
-          setIsTouched(false);
-        }}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
         style={{ transform: `translateX(${-x}px)` }}
         ref={messageRef}
         className={classNames(styles.root, isMyMessage && styles.reverse, !isTouched && styles.root_transition)}
@@ -148,7 +165,7 @@ const Message: FC<TMessageProps> = memo(
           {(images[0] || (forwardedMessage.images && forwardedMessage.images[0])) &&
             chunkArray(images || forwardedMessage.images, 2).map((arr) => (
               <div className={styles.images_row} key={arr.join('')}>
-                {arr.map((image, i) => (
+                {arr.map((image, i, array) => (
                   <div data-index={i} key={image} className={classNames(styles.image_wrapper)}>
                     <img
                       onClick={() => {
@@ -165,8 +182,9 @@ const Message: FC<TMessageProps> = memo(
                         !content && styles.only_image,
                         type === 'mobile' && styles.image_mobile,
                         !isImageLoading && styles.image_loaded,
-                        i === 0 && styles.image_left,
+                        i === 0 && array.length > 1 && styles.image_left,
                         i === 1 && styles.image_right,
+                        i === 0 && array.length === 1 && message.content && styles.image_content,
                       )}
                       src={image}
                       alt=''

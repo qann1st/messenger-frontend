@@ -198,6 +198,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
           onSubmit={(e) => {
             e.preventDefault();
             if (!isDisabled) {
+              textAreaRef.current?.focus();
               handleSubmit();
             }
           }}

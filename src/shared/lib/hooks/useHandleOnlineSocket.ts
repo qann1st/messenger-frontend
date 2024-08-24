@@ -62,7 +62,6 @@ export const useHandleOnlineSocket = () => {
       ...dialog,
       users: dialog.users.map((u) => (u.id === updatedUser.id ? { ...u, ...updatedUser } : u)),
     }));
-    console.log(updatedDialogs);
 
     queryClient.setQueryData(['chat', updatedUser.id], (oldData: ChatWithPagination) => {
       return { ...oldData, users: { ...updatedDialogs.find((el) => el.id === updatedUser.id)?.users, ...updatedUser } };
