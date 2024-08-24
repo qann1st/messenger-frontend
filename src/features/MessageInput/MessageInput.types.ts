@@ -4,7 +4,7 @@ export type TMessageInputProps = {
   recipient: string;
   inputValue: string;
   dialogId?: string;
-  file?: string;
+  files?: { url: string; type: string }[];
   type?: 'absolute' | 'not-absolute';
   haveButtons?: boolean;
   isDisabled?: boolean;

@@ -1,3 +1,4 @@
+export * from './chunkArray';
 export * from './classNames';
 export * from './formatCreatedTime';
 export * from './formatMessageDate';

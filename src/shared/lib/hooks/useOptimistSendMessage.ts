@@ -15,13 +15,13 @@ export const useOptimistSendMessage = (scrollRef?: RefObject<HTMLDivElement>) =>
   const queryClient = useQueryClient();
 
   const sendMessage = ({
-    file,
+    files,
     formattedMessage,
     size,
     voiceMessage,
   }: {
     formattedMessage?: string;
-    file?: string;
+    files?: { url: string; type: string }[];
     voiceMessage?: Blob;
     size?: number;
   }) => {
@@ -45,7 +45,7 @@ export const useOptimistSendMessage = (scrollRef?: RefObject<HTMLDivElement>) =>
       voiceMessage: voiceMessage ? URL.createObjectURL(voiceMessage) : '',
       createdAt: msgDateString,
       updatedAt: msgDateString,
-      images: file ? [file] : [],
+      images: files?.length ? files.map((f) => f.url) : [],
       sender: user,
       readed: [user.id],
       status: 'pending',
@@ -125,7 +125,7 @@ export const useOptimistSendMessage = (scrollRef?: RefObject<HTMLDivElement>) =>
       chatId: dialogId,
       replyMessage: replyMessage?.id,
       forwardedMessage: forwardMessage?.id,
-      images: file ? [file] : [],
+      images: files?.length ? files.map((f) => f.url) : [],
       size,
       voiceMessage,
     });

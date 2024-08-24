@@ -1,4 +1,4 @@
-import { type FC, memo, useEffect, useRef, useState } from 'react';
+import { type FC, memo, useRef, useState } from 'react';
 import { BiErrorCircle } from 'react-icons/bi';
 import { BsReplyFill } from 'react-icons/bs';
 import { FaRegClock } from 'react-icons/fa';
@@ -10,6 +10,7 @@ import {
   Avatar,
   MessagePreview,
   Skeleton,
+  chunkArray,
   classNames,
   formatCreatedTime,
   useMobileStore,
@@ -144,33 +145,40 @@ const Message: FC<TMessageProps> = memo(
           {(images[0] || (forwardedMessage.images && forwardedMessage.images[0])) && isImageLoading && (
             <Skeleton.Rectangle borderRadius='var(--border-radius-8)' width={400} height={300} />
           )}
-          {(images[0] || (forwardedMessage.images && forwardedMessage.images[0])) && (
-            <div className={styles.image_wrapper}>
-              <img
-                onClick={() => {
-                  setImageLink(images[0] ?? forwardedMessage.images[0]);
-                  openModal();
-                }}
-                onLoad={() => setIsImageLoading(false)}
-                ref={imageRef}
-                className={classNames(
-                  styles.image,
-                  replyMessage.id && styles.image_reply,
-                  replyMessage.id && !content && styles.image_radius,
-                  !replyMessage.id && !content && styles.image_circle,
-                  !content && styles.only_image,
-                  type === 'mobile' && styles.image_mobile,
-                  !isImageLoading && styles.image_loaded,
-                )}
-                src={images[0] ?? forwardedMessage.images[0]}
-                alt=''
-              />
-            </div>
-          )}
+          {(images[0] || (forwardedMessage.images && forwardedMessage.images[0])) &&
+            chunkArray(images || forwardedMessage.images, 2).map((arr) => (
+              <div className={styles.images_row} key={arr.join('')}>
+                {arr.map((image, i) => (
+                  <div data-index={i} key={image} className={classNames(styles.image_wrapper)}>
+                    <img
+                      onClick={() => {
+                        setImageLink(images[0] ?? forwardedMessage.images[0]);
+                        openModal();
+                      }}
+                      onLoad={() => setIsImageLoading(false)}
+                      ref={imageRef}
+                      className={classNames(
+                        styles.image,
+                        replyMessage.id && styles.image_reply,
+                        replyMessage.id && !content && styles.image_radius,
+                        !replyMessage.id && !content && styles.image_circle,
+                        !content && styles.only_image,
+                        type === 'mobile' && styles.image_mobile,
+                        !isImageLoading && styles.image_loaded,
+                        i === 0 && styles.image_left,
+                        i === 1 && styles.image_right,
+                      )}
+                      src={image}
+                      alt=''
+                    />
+                  </div>
+                ))}
+              </div>
+            ))}
           <div
             className={classNames(
               styles.content_info,
-              images[0] && styles.content_info_image,
+              images.length && styles.content_info_image,
               !content && styles.empty_content_info,
             )}
           >

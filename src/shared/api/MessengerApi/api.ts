@@ -122,9 +122,9 @@ class MessengerApi {
     return this.api.delete<Chat>(`chat/deleteChat/${roomId}/${recipeintId}`).then((response) => response.data);
   }
 
-  uploadFile(file: File) {
+  uploadFile(files: File[]) {
     const formData = new FormData();
-    formData.append('file', file, file.name);
+    files.forEach((file) => formData.append('file', file));
 
     return this.api
       .post<string[]>('files/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } })

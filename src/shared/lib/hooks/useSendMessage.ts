@@ -10,7 +10,7 @@ import { useOptimistSendMessage } from './useOptimistSendMessage';
 export const useSendMessage = (
   dialogId?: string,
   recipient?: string,
-  file?: string,
+  files?: { url: string; type: string }[],
   isVoice?: boolean,
   inputValue?: string,
   setInputValue?: (inputValue: string) => void,
@@ -115,7 +115,7 @@ export const useSendMessage = (
       setEditMessage(null);
       setIsVisibleEditMessage(false);
     } else {
-      sendMessage({ formattedMessage, file });
+      sendMessage({ formattedMessage, files });
       if (forwardMessage && isVisibleForwardMessage) {
         setForwardMessage(null);
         setIsVisibleForwardMessage(false);

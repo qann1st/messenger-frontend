@@ -1,6 +1,6 @@
 export type TImageSendModalState = {
   isModalOpen: boolean;
-  file: { url: string; type: string };
+  files: { url: string; type: string }[];
   recipient: string;
   dialogId: string;
   inputValue: string;
@@ -9,7 +9,7 @@ export type TImageSendModalState = {
   setInputValue: (value: string) => void;
   openModal: () => void;
   closeModal: () => void;
-  setFile: (file: TImageSendModalState['file']) => void;
+  setFiles: (file: TImageSendModalState['files']) => void;
   setRecipient: (recipient: string) => void;
   setDialogId: (dialogId: string) => void;
   setError: (error: string) => void;

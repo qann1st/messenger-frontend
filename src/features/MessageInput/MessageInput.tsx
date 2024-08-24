@@ -40,15 +40,15 @@ const MessageInput: FC<TMessageInputProps> = memo(
     inputValue,
     setInputValue,
     addInputValue,
-    file,
+    files,
     scrollRef,
     isDisabled = false,
     haveButtons = true,
     type = 'absolute',
   }) => {
-    const [setFile, setRecipient, setDialogId, openModal, setError, setImageInputValue] = useImageSendModalStore(
+    const [setFiles, setRecipient, setDialogId, openModal, setError, setImageInputValue] = useImageSendModalStore(
       useShallow((state) => [
-        state.setFile,
+        state.setFiles,
         state.setRecipient,
         state.setDialogId,
         state.openModal,
@@ -96,7 +96,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
     const { handleSubmit, timer, setIsPrinting, isVisibleEmojiPicker, setIsVisibleEmojiPicker } = useSendMessage(
       dialogId,
       recipient,
-      file,
+      files,
       isRecording,
       inputValue,
       setInputValue,
@@ -116,7 +116,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
         !e.shiftKey &&
         (inputValue.length || forwardMessage || type === 'not-absolute') &&
         !isDisabled &&
-        deviceType !== 'desktop'
+        deviceType === 'desktop'
       ) {
         e.preventDefault();
         handleSubmit();
@@ -133,20 +133,24 @@ const MessageInput: FC<TMessageInputProps> = memo(
       [isRecording, isDisabled, forwardMessage],
     );
 
-    const uploadFile = (files: File) => {
-      if (isRecording || !files || !files.type.includes('image') || files.type.includes('image/svg')) {
+    const uploadFile = (fileList: FileList) => {
+      const filesArr = new Array(...fileList);
+
+      if (isRecording || !fileList || !filesArr.find((f) => f.type.includes('image'))) {
         return;
       }
-      setFile({ type: files.type, url: '' });
+
+      const filesTypes = filesArr.map((f) => ({ type: f.type, url: '' }));
+      setFiles(filesTypes);
       setRecipient('');
       setDialogId('');
       openModal();
       setImageInputValue(inputValue);
       setInputValue('');
       messengerApi
-        .uploadFile(files)
+        .uploadFile(filesArr)
         .then((data) => {
-          setFile({ url: data[0], type: files.type });
+          setFiles(data.map((f, i) => ({ type: filesTypes[i].type, url: f })));
           setRecipient(recipient);
           setDialogId(dialogId ?? '');
           if (textAreaRef.current) {
@@ -160,13 +164,13 @@ const MessageInput: FC<TMessageInputProps> = memo(
 
     const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
       if (e.target.files) {
-        uploadFile(e.target.files[0]);
+        uploadFile(e.target.files);
       }
     };
 
     const handleClipboard = (e: ClipboardEvent<HTMLTextAreaElement>) => {
       if (e.clipboardData.files.length > 0) {
-        uploadFile(e.clipboardData.files[0]);
+        uploadFile(e.clipboardData.files);
       }
     };
 
@@ -184,7 +188,7 @@ const MessageInput: FC<TMessageInputProps> = memo(
             }}
             onDrop={(e) => {
               e.preventDefault();
-              uploadFile(e.dataTransfer.files[0]);
+              uploadFile(e.dataTransfer.files);
               setIsDragging(false);
             }}
             className={classNames(styles.drag_drop, isDragging && styles.drag_drop_active)}
@@ -204,12 +208,16 @@ const MessageInput: FC<TMessageInputProps> = memo(
             className={styles.files_input}
             type='file'
             accept='image/*'
+            multiple
             ref={filesInputRef}
           />
           <div className={styles.content}>
             <div
               style={{
-                height: isVisibleEditMessage || isVisibleReplyMessage || isVisibleForwardMessage ? '118px' : '50px',
+                height:
+                  (isVisibleEditMessage || isVisibleReplyMessage || isVisibleForwardMessage) && !inputValue
+                    ? '118px'
+                    : 'auto',
               }}
               className={classNames(styles.wrapper, isVisibleReplyMessage && styles.wrapper_reply)}
             >

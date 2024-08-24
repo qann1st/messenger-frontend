@@ -90,9 +90,6 @@ importers:
       eslint-plugin-react-refresh:
         specifier: ^0.4.3
         version: 0.4.9(eslint@8.57.0)
-      lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
       swagger-typescript-api:
         specifier: ^13.0.13
         version: 13.0.13

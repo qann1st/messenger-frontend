@@ -4,7 +4,7 @@ import { TImageSendModalState } from './modal.types';
 
 export const useImageSendModalStore = create<TImageSendModalState>((set, get) => ({
   isModalOpen: false,
-  file: { url: '', type: '' },
+  files: [],
   recipient: '',
   dialogId: '',
   inputValue: '',
@@ -16,7 +16,7 @@ export const useImageSendModalStore = create<TImageSendModalState>((set, get) =>
     set({ isModalOpen: true, dialogId: '', recipient: '' });
   },
   closeModal: () => set({ isModalOpen: false }),
-  setFile: (file) => set({ file }),
+  setFiles: (files) => set({ files }),
   setRecipient: (recipient) => set({ recipient }),
   setDialogId: (dialogId) => set({ dialogId }),
   setError: (error) => set({ error }),
